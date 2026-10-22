@@ -2,8 +2,10 @@
   "success": false,
   "checks": [
     "3D fish swim continuously",
-    "Feeding reaches Godot and rewards the quest once"
+    "Feeding reaches Godot and rewards the quest once",
+    "English voice mode is default; typed answer completes a lesson",
+    "Purchased decoration appears in 3D and uses earned coins"
   ],
-  "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-person=\"lily\"]')\n    - locator resolved to <button data-person=\"lily\" class=\"map-spot lily\">…</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not stable\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is not stable\n    - retrying click action\n      - waiting 100ms\n    56 × waiting for element to be visible, enabled and stable\n       - element is not stable\n     - retrying click action\n       - waiting 500ms\n",
+  "error": "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded.",
   "errors": []
 }
