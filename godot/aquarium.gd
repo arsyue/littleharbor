@@ -179,7 +179,7 @@ func _plant(parent: Node3D, height: float, color: Color) -> void:
 shader_type spatial;
 render_mode cull_disabled;
 uniform vec4 leaf:source_color;
-void vertex(){VERTEX.x+=sin(TIME*0.8+VERTEX.y*2.5+INSTANCE_ID)*VERTEX.y*0.035;}
+void vertex(){VERTEX.x+=sin(TIME*0.8+VERTEX.y*2.5+float(INSTANCE_ID))*VERTEX.y*0.035;}
 void fragment(){ALBEDO=leaf.rgb*(0.65+UV.x*0.4);ROUGHNESS=0.52;}
 """
 	var material:=ShaderMaterial.new();material.shader=shader;material.set_shader_parameter("leaf",color)
