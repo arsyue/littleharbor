@@ -1,23 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
-VERSION=4.7.2
+# All work runs on the GitHub-hosted runner. The browser renderer has no engine dependency.
 node cloud/assets.mjs
-mkdir -p "$RUNNER_TEMP/godot" "$HOME/.local/share/godot/export_templates/$VERSION.stable" public/aquarium
-if [ ! -f "$RUNNER_TEMP/godot/Godot_v$VERSION-stable_linux.x86_64" ]; then
-curl --fail --location --retry 3 "https://downloads.godotengine.org/?version=$VERSION&flavor=stable&slug=linux.x86_64.zip" -o "$RUNNER_TEMP/godot/editor.zip"
-curl --fail --location --retry 3 "https://downloads.godotengine.org/?version=$VERSION&flavor=stable&slug=export_templates.tpz" -o "$RUNNER_TEMP/godot/templates.zip"
-unzip -q "$RUNNER_TEMP/godot/editor.zip" -d "$RUNNER_TEMP/godot"
-unzip -q "$RUNNER_TEMP/godot/templates.zip" "templates/web_*.zip" -d "$RUNNER_TEMP/godot"
-cp "$RUNNER_TEMP/godot/templates/web_"*.zip "$HOME/.local/share/godot/export_templates/$VERSION.stable/"
-fi
-GODOT="$RUNNER_TEMP/godot/Godot_v$VERSION-stable_linux.x86_64"
-chmod +x "$GODOT"
-"$GODOT" --headless --path godot --editor --import 2>&1 | tee "$RUNNER_TEMP/import.log"
-if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script' "$RUNNER_TEMP/import.log"; then exit 1; fi
+mkdir -p public
 cp -R legacy/. public/
 cp -R web/. public/
-"$GODOT" --headless --path godot --export-release Web ../public/aquarium/index.html 2>&1 | tee "$RUNNER_TEMP/export.log"
-if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script' "$RUNNER_TEMP/export.log"; then exit 1; fi
-test -s public/aquarium/index.wasm
-test -s public/aquarium/index.pck
 touch public/.nojekyll
+test -s public/aquarium/aquarium.mjs
+if find public -type f -name '*.wasm' | grep -q .; then
+  echo "Unexpected engine binary in lightweight build" >&2
+  exit 1
+fi
+node --check public/app.mjs
+node --check public/aquarium/aquarium.mjs
+node -e "const fs=require('fs');const files=['index.html','app.mjs','style.css','aquarium.css','content.mjs','state.mjs','voice.mjs','aquarium/index.html','aquarium/aquarium.mjs'];let total=0;for(const p of files)total+=fs.statSync('public/'+p).size;console.log('Initial game source:',total,'bytes');if(total>180000)throw Error('Initial download budget exceeded');"

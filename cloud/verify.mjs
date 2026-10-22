@@ -9,7 +9,7 @@ await new Promise(r=>server.listen(4173,'127.0.0.1',r));
 await mkdir('qa-output',{recursive:true});
 const browser=await chromium.launch({args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-dev-shm-usage']});
 const page=await browser.newPage({viewport:{width:1440,height:1100},deviceScaleFactor:1});
-const errors=[];const checks=[];
+const errors=[];const checks=[];const requests=[];let startupMs=0;page.on('request',r=>requests.push(r.url()));
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon'))errors.push(m.text());});
 const base='http://127.0.0.1:4173';
@@ -17,17 +17,25 @@ const readSave=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('little-har
 async function engine(count){await page.locator('#aquarium-engine').waitFor();await page.waitForFunction(()=>document.querySelector('#aquarium-engine')?.contentWindow?.location.href.includes('/aquarium/'));const f=page.frames().find(x=>x.url().includes('/aquarium/'));await f.waitForFunction(n=>window.harborDiagnostics?.fish.length===n,count,{timeout:90000});return f;}
 async function answer(text){await page.getByRole('button',{name:'Type instead',exact:true}).click();await page.locator('#answer-input').fill(text);await page.locator('#answer-form button').click();}
 try{
- await page.goto(base+'/index.html');
- let frame=await engine(2);
+ const startTime=Date.now();await page.goto(base+'/index.html');
+ let frame=await engine(2);startupMs=Date.now()-startTime;
+ assert.ok(startupMs<5000,'Aquarium must start within 5 seconds in cloud QA');
+ assert.ok(!requests.some(url=>/\.wasm|\.pck/.test(url)),'No game engine downloaded');
+ checks.push('Aquarium starts within five seconds without an engine download');
  const before=await frame.evaluate(()=>window.harborDiagnostics.fish);
  await frame.waitForFunction(old=>window.harborDiagnostics.fish.some((f,i)=>Math.hypot(f.x-old[i].x,f.y-old[i].y,f.z-old[i].z)>0.1),before,{timeout:30000});
- checks.push('3D fish swim continuously');
+ checks.push('Fish swim continuously');
+ await frame.locator('#pause').click();const stopped=await frame.evaluate(()=>window.harborDiagnostics.fish);await page.waitForTimeout(300);
+ assert.deepEqual(await frame.evaluate(()=>window.harborDiagnostics.fish),stopped);await frame.locator('#pause').click();
+ await frame.locator('#light').click();assert.equal(await frame.evaluate(()=>window.harborDiagnostics.night),true);await frame.locator('#light').click();
+ checks.push('Pause and day/night controls work');
  await page.screenshot({path:'qa-output/initial-aquarium.jpg',quality:80});
  console.log('Initial renderer',await frame.evaluate(()=>window.harborDiagnostics));
- await page.locator('[data-action="feed"]').click();
+ await frame.locator('canvas').click({position:{x:700,y:150}});
  await frame.waitForFunction(()=>window.harborDiagnostics.feeding);
  assert.equal((await readSave()).coins,40);
- checks.push('Feeding reaches Godot and rewards the quest once');
+ await page.locator('[data-action="feed"]').click();assert.equal((await readSave()).coins,40);
+ checks.push('Clicking water feeds fish and rewards the quest once');
  await page.locator('[data-nav="town"]').first().click();
  await page.locator('[data-person="lily"]').click();
  await page.locator('#visit-task').click();
@@ -44,7 +52,7 @@ try{
  frame=await engine(2);
  await frame.waitForFunction(()=>window.harborDiagnostics.decor.length===1);
  assert.equal((await readSave()).coins,125);
- checks.push('Purchased decoration appears in 3D and uses earned coins');
+ checks.push('Purchased decoration appears in the aquarium and uses earned coins');
  await page.locator('[data-action="decorate"]').click();
  frame=await engine(2);
  const d=await frame.evaluate(()=>window.harborDiagnostics.decor[0]);
@@ -52,12 +60,12 @@ try{
  await page.mouse.move(rect.x+d.sx,rect.y+d.sy);
  await page.mouse.down();await page.waitForTimeout(500);await page.mouse.move(rect.x+d.sx+70,rect.y+d.sy+12,{steps:18});await page.waitForTimeout(500);await page.mouse.up();
  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('little-harbor-save-v1')).completed.includes('place'));
- checks.push('Dragging a 3D decoration saves placement and awards its quest');
+ checks.push('Dragging a decoration saves placement and awards its quest');
  await page.locator('[data-action="decorate"]').click();
  await page.locator('[data-action="fish-shop"]').click();
  await page.locator('[data-buy="clownfish"]').click();await answer('Yes please');await page.locator('#dialogue-next').click();
  frame=await engine(3);
- checks.push('Purchased fish joins the 3D simulation');
+ checks.push('Purchased fish joins the aquarium');
  await page.screenshot({path:'qa-output/starter-desktop.jpg',quality:80});
  const old=await readSave();
  await page.evaluate(s=>{s.coins=600;localStorage.setItem('little-harbor-save-v1',JSON.stringify(s));},old);
@@ -66,7 +74,7 @@ try{
  frame=await engine(3);
  assert.equal((await readSave()).tank,1);
  await frame.waitForFunction(()=>window.harborDiagnostics.tier===1);
- checks.push('Tank upgrade enlarges the Godot habitat and increases capacity');
+ checks.push('Tank upgrade enlarges the habitat and increases capacity');
  // A separately seeded QA save lets reviewers see all purchased models together.
  await page.evaluate(async()=>{
   const {newState}=await import('./state.mjs');const {fish,decor}=await import('./content.mjs');
@@ -80,13 +88,14 @@ try{
  const diag=await frame.evaluate(()=>window.harborDiagnostics);
  assert.ok(diag.fish.every(f=>Math.abs(f.x)<diag.width&&Math.abs(f.z)<diag.depth&&f.y>0&&f.y<diag.height));
  checks.push('All eight species and eight decorations load inside tank bounds');
+ const f0=diag.fish[0];await frame.locator('canvas').click({position:{x:f0.sx,y:f0.sy}});await page.locator('.fish-modal').waitFor();await page.locator('.modal-close').click();checks.push('Clicking a fish opens its details');
  await page.setViewportSize({width:390,height:844});await page.reload();await engine(8);
  await page.waitForTimeout(1500);await page.screenshot({path:'qa-output/aquarium-mobile.jpg',fullPage:true,quality:78});
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  checks.push('Mobile layout fits viewport');
  assert.deepEqual(errors,[]);
  checks.push('No browser or engine console errors');
- await writeFile('qa-output/results.json',JSON.stringify({success:true,checks},null,2));
+ await writeFile('qa-output/results.json',JSON.stringify({success:true,checks,startupMs,rendererBytes:Buffer.byteLength(await readFile('public/aquarium/aquarium.mjs'))},null,2));
  console.log(JSON.stringify({success:true,checks},null,2));
 }catch(error){
  await page.screenshot({path:'qa-output/failure.jpg',fullPage:true,quality:78}).catch(()=>{});

@@ -1,4 +1,4 @@
-name: Build and verify Godot aquarium
+name: Build and verify Little Harbor
 on:
   push:
     branches: [main]
@@ -9,7 +9,7 @@ permissions:
   pages: write
   id-token: write
 concurrency:
-  group: godot-web
+  group: little-harbor-web
   cancel-in-progress: true
 jobs:
   build:
@@ -17,22 +17,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache/restore@v4
-        id: godot-cache
-        with:
-          key: godot-web-4.7.2-linux
-          path: |
-            ${{ runner.temp }}/godot/Godot_v4.7.2-stable_linux.x86_64
-            ~/.local/share/godot/export_templates/4.7.2.stable
-      - name: Export Godot entirely in the cloud
+      - name: Prepare lightweight aquarium in the cloud
         run: bash cloud/build.sh
-      - uses: actions/cache/save@v4
-        if: steps.godot-cache.outputs.cache-hit != 'true'
-        with:
-          key: godot-web-4.7.2-linux
-          path: |
-            ${{ runner.temp }}/godot/Godot_v4.7.2-stable_linux.x86_64
-            ~/.local/share/godot/export_templates/4.7.2.stable
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

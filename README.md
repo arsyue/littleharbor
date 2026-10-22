@@ -1,31 +1,30 @@
 # Little Harbor
 
-An English-learning aquarium game with a Godot 4.7.2 3D aquarium and an accessible English browser interface.
+An English-learning aquarium game with an original lightweight Canvas aquarium and an English interface.
 
 ## Cloud-only development
 
-Source is edited through GitHub. GitHub Actions downloads the official Godot editor and matching web templates, exports the game, and runs Chromium checks on an Ubuntu cloud runner. No local engine installation, source checkout, or build output is needed.
+Source is edited through GitHub. GitHub Actions prepares and verifies the game in Chromium on a cloud runner, then publishes it. No local source checkout, engine installation, or build output is needed.
 
-- `godot/`: 3D fish geometry, swimming, aquarium lighting, water, and owned decorations.
-- `web/`: updated game interface and the validated message bridge to Godot.
-- `legacy/`: preserved published game logic, dialogue, voice input, and original production artwork.
-- `cloud/`: asset preservation, export, and browser verification.
-- `review/`: cloud-generated screenshots and verification results.
-
-The original public site remains available at https://little-harbor-english-aquarium.abloom-chub-6743.chatgpt.site/
+- web/aquarium/: original fish drawing, gradual steering, feeding, plants, depth, glass, water, and movable purchased ornaments.
+- web/: game interface and same-origin validated aquarium messages.
+- legacy/: preserved lessons, voice input, game rules and independently generated shop/town artwork.
+- godot/: archived previous 3D implementation, excluded from the current deployment.
+- cloud/: packaging and browser verification.
+- review/: cloud-generated review screenshots and test results.
 
 ## Gameplay
 
-Start with Sunny and Bubbles. Meet Lily, Mia, Ben, and Captain Finn in town. Answer English prompts to earn coins, buy fish and ornaments, and upgrade from Cozy Lagoon to Wonder Bay and Ocean Palace. Voice input is the default; Type instead is always available. The game stores progress in the browser and supports progress export/import from Settings.
+Start with Sunny and Bubbles. Meet Lily, Mia, Ben, and Captain Finn. Answer English prompts to earn coins, buy fish and decorations, and upgrade your aquarium. Every conversation starts with voice input and always offers Type instead. Progress is stored in the browser and supports export/import.
 
-The aquarium uses solid species-specific geometry, animated tails and fins, speed-limited steering, separation, wall avoidance, depth, and feeding attraction. Purchased decorations can be dragged across the substrate. It is a make-believe mixed-species aquarium, not an animal-care simulator.
+Click empty water or use Feed fish to feed the aquarium. Click a fish to meet and name it. In Decorate mode, drag purchased ornaments. Daylight, pause and immersion controls are in the aquarium. The aquarium uses 2D drawings, layered depth, shading and perspective; it is not a full 3D scene.
 
-## Publication
+## Performance and publication
 
-In repository Settings → Pages, set Source to GitHub Actions once. The build workflow uploads its web output only after browser checks pass, then publishes it through GitHub Pages. Build and review artifacts stay in GitHub.
+The aquarium renderer has no package dependencies, engine download, fonts or external imagery. Main aquarium visuals draw immediately from code. Town and shop artwork is requested when those screens are opened. The cloud build enforces a 180 KB budget for initial uncompressed HTML, styles and JavaScript.
 
-The initial render is a procedural 3D art pass; the repository keeps original generated shop and town artwork independently for further visual refinement.
+The GitHub Pages workflow only publishes after browser checks pass. The original GPT Site is a separate publication and is not automatically updated by this workflow.
 
-## Credits
+## Art and reference
 
-The aquarium uses [Godot Engine](https://godotengine.org/license/) under the MIT license. [Godot third-party notices](https://github.com/godotengine/godot/blob/4.7.2-stable/COPYRIGHT.txt). Original production raster artwork was generated for this project.
+Polyquarium was selected by the user as an experience reference: calm swimming, feeding interaction and a planted aquarium. No Polyquarium source or artwork is included. The Canvas code and drawings are original to Little Harbor. Existing raster shop and town artwork was generated independently for this project.
