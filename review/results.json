@@ -15,6 +15,6 @@
     "Mobile layout fits viewport",
     "No browser or engine console errors"
   ],
-  "startupMs": 501,
-  "rendererBytes": 22177
+  "startupMs": 529,
+  "rendererBytes": 22208
 }
