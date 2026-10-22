@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Little Harbor Aquarium</title>
+<style>html,body,canvas{margin:0;width:100%;height:100%;overflow:hidden;background:#09202a}canvas{display:block;outline:none;touch-action:none}#loading{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#d9f7ef;font:16px system-ui;background:radial-gradient(ellipse at 50% 40%,#164d55,#08222d)}#loading b{font-size:28px;font-weight:500;margin-bottom:12px}#loading small{opacity:.7}#error{max-width:340px;line-height:1.5}</style>$GODOT_HEAD_INCLUDE</head>
+<body><canvas id="canvas" aria-label="Interactive three dimensional aquarium"></canvas><div id="loading"><b>Your little ocean is waking up</b><p id="progress">Filling the aquarium…</p><small>Swim. Explore. Discover.</small></div>
+<script src="$GODOT_URL"></script><script>
+window.harborQueue=[];
+window.harborSend=data=>parent.postMessage({littleHarbor:true,...data},location.origin);
+addEventListener('message',e=>{if(e.origin===location.origin && e.source===parent && e.data?.littleHarbor)window.harborQueue.push(e.data);});
+const engine=new Engine($GODOT_CONFIG);
+engine.startGame({canvas:document.getElementById('canvas'),onProgress:(n,total)=>{if(total)document.getElementById('progress').textContent='Opening your aquarium · '+Math.round(100*n/total)+'%';}}).then(()=>{document.getElementById('loading').style.display='none';window.harborSend({type:'ready'});}).catch(err=>{document.getElementById('loading').innerHTML='<b>Your aquarium needs a moment</b><p id="error">Please reload this page in a browser with WebGL 2 enabled.</p>';console.error(err);window.harborSend({type:'error'});});
+</script></body></html>

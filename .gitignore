@@ -1,0 +1,5 @@
+.godot/
+public/
+node_modules/
+qa-output/
+*.tmp
