@@ -14,7 +14,7 @@ page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon'))errors.push(m.text());});
 const base='http://127.0.0.1:4173';
 const readSave=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('little-harbor-save-v1')));
-async function engine(count){await page.locator('#aquarium-engine').waitFor();const f=page.frames().find(x=>x.url().includes('/aquarium/'));await f.waitForFunction(n=>window.harborDiagnostics?.fish.length===n,count,{timeout:90000});return f;}
+async function engine(count){await page.locator('#aquarium-engine').waitFor();await page.waitForFunction(()=>document.querySelector('#aquarium-engine')?.contentWindow?.location.href.includes('/aquarium/'));const f=page.frames().find(x=>x.url().includes('/aquarium/'));await f.waitForFunction(n=>window.harborDiagnostics?.fish.length===n,count,{timeout:90000});return f;}
 async function answer(text){await page.getByRole('button',{name:'Type instead',exact:true}).click();await page.locator('#answer-input').fill(text);await page.locator('#answer-form button').click();}
 try{
  await page.goto(base+'/index.html');

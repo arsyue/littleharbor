@@ -33,7 +33,7 @@ func _ready() -> void:
 	env.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color=Color("#a2d8d4")
 	env.ambient_light_energy=0.65
-	env.reflected_light_source=Environment.REFLECTED_SOURCE_DISABLED
+	env.reflected_light_source=Environment.REFLECTION_SOURCE_DISABLED
 	env.tonemap_mode=Environment.TONE_MAPPER_FILMIC
 	environment.environment=env;add_child(environment)
 	var key := DirectionalLight3D.new()
