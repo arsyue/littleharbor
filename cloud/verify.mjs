@@ -4,7 +4,7 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,extname} from 'node:path';
 import assert from 'node:assert/strict';
 const root=resolve('public');
-const server=createServer(async(req,res)=>{try{const path=resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));if(!path.startsWith(root+'/'))throw Error();const file=path.endsWith('/')?path+'index.html':path;const type={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.wasm':'application/wasm','.css':'text/css','.webp':'image/webp','.png':'image/png'}[extname(file)]||'application/octet-stream';res.setHeader('Content-Type',type);res.end(await readFile(file));}catch{res.statusCode=404;res.end('Not found');}});
+const server=createServer(async(req,res)=>{try{const path=resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));if(!path.startsWith(root+'/'))throw Error();const file=path.endsWith('/')?path+'index.html':path;const type={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.wasm':'application/wasm','.css':'text/css','.webp':'image/webp','.jpg':'image/png'}[extname(file)]||'application/octet-stream';res.setHeader('Content-Type',type);res.end(await readFile(file));}catch{res.statusCode=404;res.end('Not found');}});
 await new Promise(r=>server.listen(4173,'127.0.0.1',r));
 await mkdir('qa-output',{recursive:true});
 const browser=await chromium.launch({args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-dev-shm-usage']});
@@ -22,6 +22,8 @@ try{
  const before=await frame.evaluate(()=>window.harborDiagnostics.fish);
  await frame.waitForFunction(old=>window.harborDiagnostics.fish.some((f,i)=>Math.hypot(f.x-old[i].x,f.y-old[i].y,f.z-old[i].z)>0.1),before,{timeout:30000});
  checks.push('3D fish swim continuously');
+ await page.screenshot({path:'qa-output/initial-aquarium.jpg',quality:80});
+ console.log('Initial renderer',await frame.evaluate(()=>window.harborDiagnostics));
  await page.locator('[data-action="feed"]').click();
  await frame.waitForFunction(()=>window.harborDiagnostics.feeding);
  assert.equal((await readSave()).coins,40);
@@ -56,7 +58,7 @@ try{
  await page.locator('[data-buy="clownfish"]').click();await answer('Yes please');await page.locator('#dialogue-next').click();
  frame=await engine(3);
  checks.push('Purchased fish joins the 3D simulation');
- await page.screenshot({path:'qa-output/starter-desktop.png'});
+ await page.screenshot({path:'qa-output/starter-desktop.jpg',quality:80});
  const old=await readSave();
  await page.evaluate(s=>{s.coins=600;localStorage.setItem('little-harbor-save-v1',JSON.stringify(s));},old);
  await page.reload();await engine(3);
@@ -74,12 +76,12 @@ try{
   localStorage.setItem('little-harbor-save-v1',JSON.stringify(s));
  });
  await page.reload();frame=await engine(8);await page.waitForTimeout(4000);
- await page.screenshot({path:'qa-output/aquarium-desktop.png'});
+ await page.screenshot({path:'qa-output/aquarium-desktop.jpg',quality:80});
  const diag=await frame.evaluate(()=>window.harborDiagnostics);
  assert.ok(diag.fish.every(f=>Math.abs(f.x)<diag.width&&Math.abs(f.z)<diag.depth&&f.y>0&&f.y<diag.height));
  checks.push('All eight species and eight decorations load inside tank bounds');
  await page.setViewportSize({width:390,height:844});await page.reload();await engine(8);
- await page.waitForTimeout(1500);await page.screenshot({path:'qa-output/aquarium-mobile.png',fullPage:true});
+ await page.waitForTimeout(1500);await page.screenshot({path:'qa-output/aquarium-mobile.jpg',fullPage:true,quality:78});
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  checks.push('Mobile layout fits viewport');
  assert.deepEqual(errors,[]);
@@ -87,7 +89,7 @@ try{
  await writeFile('qa-output/results.json',JSON.stringify({success:true,checks},null,2));
  console.log(JSON.stringify({success:true,checks},null,2));
 }catch(error){
- await page.screenshot({path:'qa-output/failure.png',fullPage:true}).catch(()=>{});
+ await page.screenshot({path:'qa-output/failure.jpg',fullPage:true,quality:78}).catch(()=>{});
  await writeFile('qa-output/results.json',JSON.stringify({success:false,checks,error:String(error),errors},null,2));
  console.error(error);console.error(errors);process.exitCode=1;
 }finally{await browser.close();await new Promise(r=>server.close(r));}
