@@ -16,8 +16,8 @@ var fins: Array[Node3D] = []
 var skin: ShaderMaterial
 var rng := RandomNumberGenerator.new()
 var bounds := Vector3(4.2, 3.5, 1.5)
-var body_color := Color("#d88b22")
-var fin_color := Color("#f4ac39")
+var body_color := Color("#e67e2c")
+var fin_color := Color("#df873b")
 var pattern := 0
 var resting := false
 
@@ -88,12 +88,12 @@ void fragment(){
 	vec3 col=body_color.rgb;
 	float shade=0.7+0.3*sin(UV.y*6.283);
 	col*=shade;
-	float belly=smoothstep(0.0,-0.15,local_pos.y);
+	float belly=1.0-smoothstep(-0.15,0.0,local_pos.y);
 	col=mix(col,vec3(0.78,0.78,0.63),belly*0.38);
 	vec2 cell=vec2(UV.x*38.0,UV.y*18.0);
 	cell.x+=mod(floor(cell.y),2.0)*0.5;
 	float scale_edge=smoothstep(0.36,0.5,length(fract(cell)-0.5));
-	col*=1.0-scale_edge*0.12;
+	col*=1.0-scale_edge*0.06;
 	if(pattern==1){
 		float bands=max(max(1.0-smoothstep(0.065,0.09,abs(UV.x-0.28)),1.0-smoothstep(0.075,0.10,abs(UV.x-0.59))),1.0-smoothstep(0.045,0.065,abs(UV.x-0.83)));
 		float borders=max(max(1.0-smoothstep(0.09,0.11,abs(UV.x-0.28)),1.0-smoothstep(0.10,0.12,abs(UV.x-0.59))),1.0-smoothstep(0.065,0.08,abs(UV.x-0.83)));
@@ -105,7 +105,7 @@ void fragment(){
 	if(pattern==5){vec2 p=fract(vec2(UV.x*14.0,UV.y*9.0))-0.5;col=mix(col,vec3(0.10,0.105,0.065),1.0-smoothstep(0.08,0.15,length(p)));}
 	float gill=(1.0-smoothstep(0.007,0.018,abs(UV.x-0.77)))*(1.0-smoothstep(0.10,0.19,abs(local_pos.y)));
 	col*=1.0-gill*0.25;
-	ALBEDO=col;ROUGHNESS=0.3;METALLIC=0.22;SPECULAR=0.6;
+	ALBEDO=col;ROUGHNESS=0.42;METALLIC=0.05;SPECULAR=0.5;
 }
 """
 	skin = ShaderMaterial.new(); skin.shader = shader
@@ -134,7 +134,7 @@ void fragment(){
 	tail = Node3D.new(); add_child(tail); tail.position.x = -body_length*0.43
 	var fan := 0.27 if species in ["goldfish","guppy","betta"] else 0.17
 	if species == "betta": fan = 0.37
-	_fin(tail,[Vector3(0,0,0),Vector3(-0.32,fan,0),Vector3(-0.27,0,0),Vector3(-0.32,-fan,0)],fin_color)
+	_tail_fan(tail,fan,0.38 if species in ["guppy","betta"] else 0.30,fin_color)
 	var top := 0.46 if species == "angelfish" else 0.16
 	var dorsal := Node3D.new(); add_child(dorsal); fins.append(dorsal)
 	_fin(dorsal,[Vector3(0.18,body_height*0.7,0),Vector3(-0.12,body_height+top,0),Vector3(-body_length*0.4,body_height*0.25,0)],fin_color)
@@ -147,24 +147,51 @@ void fragment(){
 		for side in [-1.0,1.0]:
 			_fin(self,[Vector3(0.13,-0.19,side*0.03),Vector3(-0.02,-0.69,side*0.035),Vector3(0.09,-0.24,side*0.035)],Color("#c2c8b0"))
 
-func _fin(parent: Node3D, points: Array, color: Color) -> void:
-	var st := SurfaceTool.new();st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for i in range(1,points.size()-1):
-		for index in [0,i,i+1]:
-			st.set_uv(Vector2(float(index)/points.size(),0.0 if index==0 else 1.0))
-			st.add_vertex(points[index])
-	st.generate_normals()
-	var n := MeshInstance3D.new();n.mesh = st.commit()
+func _fin_material(color: Color) -> ShaderMaterial:
 	var sh := Shader.new()
 	sh.code = """
 shader_type spatial;
 render_mode cull_disabled, blend_mix, depth_prepass_alpha;
 uniform vec4 fin_color:source_color;
-void vertex(){VERTEX.z+=sin(TIME*6.0+VERTEX.x*17.0)*UV.y*0.018;}
-void fragment(){float rays=pow(abs(sin(UV.x*90.0)),10.0);ALBEDO=fin_color.rgb*(0.82+rays*0.24);ALPHA=0.75+0.20*rays;ROUGHNESS=0.4;}
+void vertex(){VERTEX.z+=sin(TIME*6.0+VERTEX.x*17.0)*UV.y*UV.y*0.018;}
+void fragment(){
+	float rays=pow(abs(sin(UV.x*75.0)),16.0);
+	ALBEDO=fin_color.rgb*(0.78+rays*0.18);
+	ALPHA=mix(0.88,0.50,UV.y)+rays*0.10;
+	ROUGHNESS=0.48;SPECULAR=0.38;
+}
 """
-	var mat := ShaderMaterial.new();mat.shader=sh;mat.set_shader_parameter("fin_color",color)
-	n.material_override=mat;parent.add_child(n)
+	var material := ShaderMaterial.new();material.shader=sh;material.set_shader_parameter("fin_color",color)
+	return material
+
+func _tail_fan(parent: Node3D, height: float, length: float, color: Color) -> void:
+	var st := SurfaceTool.new();st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for sector in range(28):
+		for band in range(5):
+			for point in [Vector2i(sector,band),Vector2i(sector+1,band),Vector2i(sector+1,band+1),Vector2i(sector,band),Vector2i(sector+1,band+1),Vector2i(sector,band+1)]:
+				var t := float(point.x)/28.0
+				var r := float(point.y)/5.0
+				var angle := lerpf(-1.34,1.34,t)
+				var fork := 0.72+0.28*absf(sin(angle)) if species in ["goldfish","blue-tang"] else 0.78+0.22*cos(angle)
+				st.set_uv(Vector2(t,r))
+				st.add_vertex(Vector3(-length*fork*r,sin(angle)*height*r,sin(angle*2.0)*0.015*r))
+	st.generate_normals()
+	var n := MeshInstance3D.new();n.mesh=st.commit();n.material_override=_fin_material(color);parent.add_child(n)
+
+func _fin(parent: Node3D, points: Array, color: Color) -> void:
+	var st := SurfaceTool.new();st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var a:Vector3=points[0];var b:Vector3=points[1];var c:Vector3=points[2]
+	var base:Vector3=(a+c)*0.5
+	var control:Vector3=b*1.7-base*0.7
+	for i in range(24):
+		var t0:=float(i)/24.0;var t1:=float(i+1)/24.0
+		var p0:Vector3=a*pow(1-t0,2)+control*2*t0*(1-t0)+c*t0*t0
+		var p1:Vector3=a*pow(1-t1,2)+control*2*t1*(1-t1)+c*t1*t1
+		st.set_uv(Vector2(0.5,0));st.add_vertex(base)
+		st.set_uv(Vector2(t0,1));st.add_vertex(p0)
+		st.set_uv(Vector2(t1,1));st.add_vertex(p1)
+	st.generate_normals()
+	var n := MeshInstance3D.new();n.mesh=st.commit();n.material_override=_fin_material(color);parent.add_child(n)
 
 func _build_seahorse() -> void:
 	var mat := _material(body_color,0.15)

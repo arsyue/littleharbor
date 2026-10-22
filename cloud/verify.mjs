@@ -50,7 +50,7 @@ try{
  const d=await frame.evaluate(()=>window.harborDiagnostics.decor[0]);
  const rect=await page.locator('#aquarium-engine').boundingBox();
  await page.mouse.move(rect.x+d.sx,rect.y+d.sy);
- await page.mouse.down();await page.mouse.move(rect.x+d.sx+70,rect.y+d.sy+12,{steps:12});await page.mouse.up();
+ await page.mouse.down();await page.waitForTimeout(500);await page.mouse.move(rect.x+d.sx+70,rect.y+d.sy+12,{steps:18});await page.waitForTimeout(500);await page.mouse.up();
  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('little-harbor-save-v1')).completed.includes('place'));
  checks.push('Dragging a 3D decoration saves placement and awards its quest');
  await page.locator('[data-action="decorate"]').click();

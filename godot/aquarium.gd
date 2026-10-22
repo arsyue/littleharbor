@@ -32,16 +32,16 @@ func _ready() -> void:
 	env.background_color=Color("#0b2028")
 	env.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color=Color("#a2d8d4")
-	env.ambient_light_energy=0.65
+	env.ambient_light_energy=0.48
 	env.reflected_light_source=Environment.REFLECTION_SOURCE_DISABLED
 	env.tonemap_mode=Environment.TONE_MAPPER_FILMIC
 	environment.environment=env;add_child(environment)
 	var key := DirectionalLight3D.new()
-	key.rotation_degrees=Vector3(-65,-20,-12);key.light_color=Color("#e0f4e0");key.light_energy=1.5
+	key.rotation_degrees=Vector3(-65,-20,-12);key.light_color=Color("#e0f4e0");key.light_energy=1.05
 	key.shadow_enabled=true;key.directional_shadow_max_distance=30
 	add_child(key)
 	var fill := DirectionalLight3D.new()
-	fill.rotation_degrees=Vector3(-20,145,0);fill.light_color=Color("#68aab9");fill.light_energy=0.75;add_child(fill)
+	fill.rotation_degrees=Vector3(-20,145,0);fill.light_color=Color("#68aab9");fill.light_energy=0.40;add_child(fill)
 	camera=Camera3D.new();add_child(camera);camera.current=true;camera.fov=39
 	habitat=Node3D.new();add_child(habitat)
 	decor_root=Node3D.new();add_child(decor_root)
@@ -96,8 +96,8 @@ void vertex(){world=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz;}
 void fragment(){
 	float grains=hash(floor(world.xz*80.0));
 	float wave=sin(world.x*8.0+sin(world.z*8.0+TIME*0.5)*2.0)*sin(world.z*11.0+TIME*0.7);
-	vec3 sand=mix(vec3(0.38,0.32,0.23),vec3(0.76,0.70,0.52),grains);
-	ALBEDO=sand+pow(abs(wave),14.0)*0.17;ROUGHNESS=0.95;
+	vec3 sand=mix(vec3(0.19,0.16,0.115),vec3(0.34,0.30,0.22),grains);
+	ALBEDO=sand+pow(abs(wave),14.0)*0.045;ROUGHNESS=0.95;
 }
 """
 	var sm:=ShaderMaterial.new();sm.shader=substrate
@@ -202,7 +202,7 @@ func _ornament(n: Node3D,id: String) -> void:
 	var sand:=mat(Color("#c8ac74"),0.9)
 	var wood:=mat(Color("#624333"),0.8)
 	match id:
-		"seaweed":_plant(n,1.8,Color("#3d8050"))
+		"seaweed":_plant(n,1.8,Color("#305f3e"))
 		"coral":
 			for i in range(11):
 				var a:=i*2.399;var tip:=Vector3(cos(a)*0.43,rng.randf_range(0.55,1.1),sin(a)*0.38)
