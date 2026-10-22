@@ -34,8 +34,9 @@ jobs:
           name: aquarium-review
           path: qa-output/
       - name: Save review images in the cloud
-        if: success()
+        if: always()
         run: |
+          if [ ! -f qa-output/results.json ]; then exit 0; fi
           mkdir -p review
           cp qa-output/*.png qa-output/results.json review/
           git config user.name "Little Harbor Cloud"

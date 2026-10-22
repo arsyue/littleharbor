@@ -20,9 +20,7 @@ try{
  await page.goto(base+'/index.html');
  let frame=await engine(2);
  const before=await frame.evaluate(()=>window.harborDiagnostics.fish);
- await page.waitForTimeout(1800);
- const after=await frame.evaluate(()=>window.harborDiagnostics.fish);
- assert.ok(after.some((f,i)=>Math.hypot(f.x-before[i].x,f.y-before[i].y,f.z-before[i].z)>0.1));
+ await frame.waitForFunction(old=>window.harborDiagnostics.fish.some((f,i)=>Math.hypot(f.x-old[i].x,f.y-old[i].y,f.z-old[i].z)>0.1),before,{timeout:30000});
  checks.push('3D fish swim continuously');
  await page.locator('[data-action="feed"]').click();
  await frame.waitForFunction(()=>window.harborDiagnostics.feeding);

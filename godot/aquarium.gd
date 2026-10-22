@@ -143,7 +143,7 @@ void fragment(){float ripple=pow(abs(sin(world.x*4.0+TIME*0.7)*sin(world.z*6.0+T
 		var b:=sphere(habitat,Vector3(-half_width+0.28,rng.randf_range(0.2,water_height),-depth+0.25),Vector3.ONE*rng.randf_range(0.014,0.038),mat(Color(0.62,0.9,0.9,0.23),0.08,0.2))
 		bubbles.append(b)
 	var aspect:=get_viewport().get_visible_rect().size.aspect()
-	camera.position=Vector3(half_width*0.17,water_height*0.80, maxf(13.6+tier*1.3,half_width*2.9/maxf(aspect,0.8)))
+	camera.position=Vector3(half_width*0.17,water_height*0.80, maxf(9.4+tier*0.8,half_width*1.12/(tan(deg_to_rad(camera.fov)*0.5)*maxf(aspect,0.5))+depth))
 	camera.look_at(Vector3(0,water_height*0.43,0))
 	for f in fish_nodes:f.bounds=Vector3(half_width-0.4,water_height-0.2,depth-0.2)
 
@@ -249,7 +249,7 @@ func _process(dt: float) -> void:
 		for id in decor_nodes:
 			var point:=camera.unproject_position(decor_nodes[id].position+Vector3(0,0.35,0))
 			decor_info.append({"uid":id,"sx":point.x,"sy":point.y})
-		JavaScriptBridge.eval("window.harborDiagnostics="+JSON.stringify({"fish":fish_info,"decor":decor_info,"tier":tank_tier,"feeding":feed_time>0,"width":half_width,"height":water_height,"depth":depth}))
+		JavaScriptBridge.eval("window.harborDiagnostics="+JSON.stringify({"fish":fish_info,"decor":decor_info,"elapsed":elapsed,"fps":Engine.get_frames_per_second(),"tier":tank_tier,"feeding":feed_time>0,"width":half_width,"height":water_height,"depth":depth}))
 		var raw=JavaScriptBridge.eval("JSON.stringify(window.harborQueue.splice(0))")
 		if raw:
 			var messages=JSON.parse_string(raw)
