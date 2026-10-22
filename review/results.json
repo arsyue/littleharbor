@@ -1,15 +1,20 @@
 {
   "success": true,
   "checks": [
-    "3D fish swim continuously",
-    "Feeding reaches Godot and rewards the quest once",
+    "Aquarium starts within five seconds without an engine download",
+    "Fish swim continuously",
+    "Pause and day/night controls work",
+    "Clicking water feeds fish and rewards the quest once",
     "English voice mode is default; typed answer completes a lesson",
-    "Purchased decoration appears in 3D and uses earned coins",
-    "Dragging a 3D decoration saves placement and awards its quest",
-    "Purchased fish joins the 3D simulation",
-    "Tank upgrade enlarges the Godot habitat and increases capacity",
+    "Purchased decoration appears in the aquarium and uses earned coins",
+    "Dragging a decoration saves placement and awards its quest",
+    "Purchased fish joins the aquarium",
+    "Tank upgrade enlarges the habitat and increases capacity",
     "All eight species and eight decorations load inside tank bounds",
+    "Clicking a fish opens its details",
     "Mobile layout fits viewport",
     "No browser or engine console errors"
-  ]
+  ],
+  "startupMs": 508,
+  "rendererBytes": 21612
 }
