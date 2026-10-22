@@ -4,3 +4,14 @@
 .aquarium-world:fullscreen,.aquarium-world.immersed{width:100vw!important;height:100vh!important;min-height:100vh!important;border-radius:0!important}
 .aquarium-world.immersed{position:fixed!important;inset:0;z-index:90}
 .aquarium-world:fullscreen .scene-label,.aquarium-world:fullscreen .expand-card,.aquarium-world:fullscreen .scene-tools,.aquarium-world:fullscreen .tank-capacity,.aquarium-world.immersed .scene-label,.aquarium-world.immersed .expand-card,.aquarium-world.immersed .scene-tools,.aquarium-world.immersed .tank-capacity{display:none}
+
+@media(max-width:700px){
+ .godot-world{min-height:480px;height:480px}
+ .godot-world .expand-card{top:14px;right:12px;padding:7px;gap:5px}
+ .godot-world .expand-card>span{font-size:0}
+ .godot-world .expand-card strong{font-size:10px}
+ .godot-world .expand-card .icon{width:14px;height:14px}
+ .godot-world .expand-card>.icon:last-child{display:none}
+ .godot-world .tank-capacity{bottom:101px;font-size:10px}
+ .engine-editing-tip{top:94px;font-size:11px;padding:7px 10px}
+}
