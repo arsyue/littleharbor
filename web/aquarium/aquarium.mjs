@@ -114,7 +114,7 @@ function rebuildBackground(){
  shape(c,[['M',area.x,floor-17],['Q',w*.35,floor-29,w*.5,floor-11],['Q',w*.8,floor-19,w-area.x,floor-18],['L',w-10,floorFront-2],['L',10,floorFront-2],['Z']],sand);
  for(let i=0;i<1000;i++){const x=r()*w,y=floor-12+r()*Math.max(1,floorFront-floor+10);oval(c,x,y,.4+r()*1.5,.4+r()*.7,i%3?'#2f402d22':'#fff6cd33');}
  // Established background planting is part of the habitat, purchased ornaments remain separate.
- for(let i=0;i<13;i++){const x=(.04+i*.075+r()*.02)*w,edge=Math.abs(x/w-.5);const height=clamp(h*(.18+edge*.30+r()*.13),55,235);plant(c,x,floor-11-r()*20,height,r,0,i%3===0);}
+ for(let i=0;i<13;i++){const x=(.04+i*.075+r()*.02)*w,edge=Math.abs(x/w-.5);const height=clamp((area.bottom-area.top)*(.26+edge*.32+r()*.15),55,235);plant(c,x,floor-11-r()*20,height,r,0,i%3===0);}
  for(let i=0;i<18;i++){const x=r()*w;stone(c,x,floor+r()*28,5+r()*16,['#6a7b70','#a4a189','#879489'][i%3],r);}
  // Driftwood forms a quiet central focal point.
  c.save();c.translate(w*.25,floor+5);c.rotate(-.12);
@@ -122,7 +122,7 @@ function rebuildBackground(){
  shape(c,[['M',-w*.08,5],['C',-10,-20,w*.08,-1,w*.15,-20],['L',w*.21,-65],['L',w*.195,-14],['L',w*.32,-27],['L',w*.25,-8],['Q',w*.13,17,-w*.08,5]],wood);
  c.strokeStyle='#b0a17535';c.lineWidth=2;for(let i=0;i<4;i++){c.beginPath();c.moveTo(-w*.05,i*3);c.quadraticCurveTo(w*.08,-8+i*3,w*.24,-13+i*2);c.stroke();}c.restore();
  for(let i=0;i<7;i++)stone(c,w*(.15+i*.04),floor+11,12+r()*20,['#7b8e7c','#6a7e74','#a0a18b'][i%3],r);
- plantSprites=[.065,.935].map((x,i)=>{const size=Math.min(h*(i?.42:.35),area.bottom-50);const img=document.createElement('canvas');img.width=180;img.height=Math.ceil(size+30);plant(img.getContext('2d'),90,size+15,size,seed('front-'+x),0,1);return {img,x};});
+ plantSprites=[.065,.935].map((x,i)=>{const size=Math.min((area.bottom-area.top)*(i?.58:.48),235);const img=document.createElement('canvas');img.width=180;img.height=Math.ceil(size+30);plant(img.getContext('2d'),90,size+15,size,seed('front-'+x),0,1);return {img,x};});
 }
 function resize(){w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,1.75);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);rebuildBackground();if(paused)draw();}
 function decorationPoint(d){return{x:area.x+d.x/100*area.w,y:mix(area.bottom-7,floorFront-10,(d.y-60)/34)};}
