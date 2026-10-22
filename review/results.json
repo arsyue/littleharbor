@@ -1,11 +1,15 @@
 {
-  "success": false,
+  "success": true,
   "checks": [
     "3D fish swim continuously",
     "Feeding reaches Godot and rewards the quest once",
     "English voice mode is default; typed answer completes a lesson",
-    "Purchased decoration appears in 3D and uses earned coins"
-  ],
-  "error": "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded.",
-  "errors": []
+    "Purchased decoration appears in 3D and uses earned coins",
+    "Dragging a 3D decoration saves placement and awards its quest",
+    "Purchased fish joins the 3D simulation",
+    "Tank upgrade enlarges the Godot habitat and increases capacity",
+    "All eight species and eight decorations load inside tank bounds",
+    "Mobile layout fits viewport",
+    "No browser or engine console errors"
+  ]
 }
