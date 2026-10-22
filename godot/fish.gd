@@ -194,19 +194,31 @@ func _fin(parent: Node3D, points: Array, color: Color) -> void:
 	var n := MeshInstance3D.new();n.mesh=st.commit();n.material_override=_fin_material(color);parent.add_child(n)
 
 func _build_seahorse() -> void:
-	var mat := _material(body_color,0.15)
-	_sphere(self,Vector3(0,0.05,0),Vector3(0.11,0.26,0.085),mat)
-	_sphere(self,Vector3(0.055,0.31,0),Vector3(0.10,0.09,0.07),mat)
-	_sphere(self,Vector3(0.15,0.30,0),Vector3(0.12,0.035,0.035),mat)
-	var eye := _material(Color("#131913"))
+	var material := _material(Color("#a68c57"),0.04)
+	material.roughness=0.64
+	var ridge := _material(Color("#b9a06c"),0.03)
+	_sphere(self,Vector3(-0.02,0.02,0),Vector3(0.072,0.21,0.063),material)
+	var neck := _sphere(self,Vector3(0.0,0.19,0),Vector3(0.045,0.12,0.046),material)
+	neck.rotation.z=-0.24
+	var head := _sphere(self,Vector3(0.055,0.28,0),Vector3(0.083,0.062,0.048),material)
+	head.rotation.z=-0.28
+	_sphere(self,Vector3(0.14,0.25,0),Vector3(0.09,0.020,0.023),material)
+	var eye := _material(Color("#11180f"))
 	for side in [-1.0,1.0]:
-		_sphere(self,Vector3(0.09,0.34,side*0.065),Vector3.ONE*0.019,eye)
-	for i in range(17):
-		var t := float(i)/16.0
-		var angle := t*PI*1.6
-		_sphere(self,Vector3(-0.04-0.13*sin(angle),-0.20-t*0.19+0.08*cos(angle),0),Vector3.ONE*(0.033-t*0.018),mat)
+		_sphere(self,Vector3(0.080,0.30,side*0.043),Vector3.ONE*0.012,eye)
+	for i in range(9):
+		var y := -0.13+i*0.035
+		_sphere(self,Vector3(-0.062,y,0),Vector3(0.027,0.012,0.065),ridge)
+	_sphere(self,Vector3(-0.025,-0.21,0),Vector3(0.029,0.075,0.028),material)
+	for i in range(30):
+		var t := float(i)/29.0
+		var angle := PI+t*TAU*1.12
+		var radius := 0.13*(1.0-t*0.75)
+		_sphere(self,Vector3(0.10+cos(angle)*radius,-0.30+sin(angle)*radius,0),Vector3.ONE*lerpf(0.031,0.009,t),material)
+	for i in range(3):
+		_sphere(self,Vector3(0.015+i*0.019,0.33+sin(i+0.6)*0.024,0),Vector3(0.012,0.026,0.017),ridge)
 	tail=Node3D.new();add_child(tail)
-	_fin(tail,[Vector3(-0.08,0.12,0),Vector3(-0.21,0.18,0),Vector3(-0.15,-0.03,0)],fin_color)
+	_fin(tail,[Vector3(-0.075,0.12,0),Vector3(-0.19,0.15,0),Vector3(-0.09,-0.03,0)],fin_color)
 
 func _pick_target() -> void:
 	target = Vector3(rng.randf_range(-bounds.x+0.7,bounds.x-0.7),rng.randf_range(0.65,bounds.y-0.45),rng.randf_range(-bounds.z+0.45,bounds.z-0.45))

@@ -38,7 +38,7 @@ func _ready() -> void:
 	environment.environment=env;add_child(environment)
 	var key := DirectionalLight3D.new()
 	key.rotation_degrees=Vector3(-65,-20,-12);key.light_color=Color("#e0f4e0");key.light_energy=1.05
-	key.shadow_enabled=true;key.directional_shadow_max_distance=30
+	key.shadow_enabled=true;key.shadow_opacity=0.42;key.directional_shadow_max_distance=30
 	add_child(key)
 	var fill := DirectionalLight3D.new()
 	fill.rotation_degrees=Vector3(-20,145,0);fill.light_color=Color("#68aab9");fill.light_energy=0.40;add_child(fill)
@@ -86,7 +86,7 @@ func _build_tank(tier: int) -> void:
 	var edge:=mat(Color(0.29,0.67,0.66,0.42),0.12,0.2)
 	box(habitat,Vector3(0,-0.65,0),Vector3(half_width*2+0.30,0.86,depth*2+0.30),mat(Color("#294044"),0.4,0.1))
 	box(habitat,Vector3(0,-0.18,0),Vector3(half_width*2+0.18,0.16,depth*2+0.18),dark)
-	box(habitat,Vector3(0,-0.055,0),Vector3(half_width*2,0.15,depth*2),mat(Color("#c9bda0")))
+	box(habitat,Vector3(0,-0.055,0),Vector3(half_width*2,0.15,depth*2),mat(Color("#91836b")))
 	var substrate:=Shader.new()
 	substrate.code="""
 shader_type spatial;
@@ -96,7 +96,7 @@ void vertex(){world=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz;}
 void fragment(){
 	float grains=hash(floor(world.xz*80.0));
 	float wave=sin(world.x*8.0+sin(world.z*8.0+TIME*0.5)*2.0)*sin(world.z*11.0+TIME*0.7);
-	vec3 sand=mix(vec3(0.19,0.16,0.115),vec3(0.34,0.30,0.22),grains);
+	vec3 sand=vec3(0.40,0.32,0.23)*(0.94+grains*0.12);
 	ALBEDO=sand+pow(abs(wave),14.0)*0.045;ROUGHNESS=0.95;
 }
 """
@@ -135,10 +135,16 @@ void fragment(){float ripple=pow(abs(sin(world.x*4.0+TIME*0.7)*sin(world.z*6.0+T
 	box(habitat,Vector3(0,water_height+0.19,-0.35),Vector3(half_width*1.7,0.08,0.20),dark)
 	box(habitat,Vector3(0,water_height+0.145,-0.35),Vector3(half_width*1.65,0.025,0.14),lightmat)
 	# Neutral gravel forms the built-in habitat. Ornaments are only added from owned inventory.
+	var gravel_mesh:=SphereMesh.new();gravel_mesh.radius=1.0;gravel_mesh.height=2.0;gravel_mesh.radial_segments=12;gravel_mesh.rings=8
+	var gravel_mat:=mat(Color.WHITE,0.9);gravel_mat.vertex_color_use_as_albedo=true
+	gravel_mesh.material=gravel_mat
+	var gravel:=MultiMesh.new();gravel.transform_format=MultiMesh.TRANSFORM_3D;gravel.use_colors=true;gravel.mesh=gravel_mesh;gravel.instance_count=90
 	for i in range(90):
 		var p:=Vector3(rng.randf_range(-half_width+0.1,half_width-0.1),0.07,rng.randf_range(-depth+0.1,depth-0.1))
 		var s:=rng.randf_range(0.028,0.085)
-		sphere(habitat,p,Vector3(s,s*0.5,s*0.7),mat(Color("#8d9483").lerp(Color("#d5c9a7"),rng.randf())))
+		gravel.set_instance_transform(i,Transform3D(Basis().scaled(Vector3(s,s*0.5,s*0.7)),p))
+		gravel.set_instance_color(i,Color("#7d8577").lerp(Color("#c1b79d"),rng.randf()))
+	var gravel_node:=MultiMeshInstance3D.new();gravel_node.multimesh=gravel;habitat.add_child(gravel_node)
 	for i in range(22):
 		var b:=sphere(habitat,Vector3(-half_width+0.28,rng.randf_range(0.2,water_height),-depth+0.25),Vector3.ONE*rng.randf_range(0.014,0.038),mat(Color(0.62,0.9,0.9,0.23),0.08,0.2))
 		bubbles.append(b)
