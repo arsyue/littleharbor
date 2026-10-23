@@ -38,7 +38,7 @@ jobs:
         run: |
           if [ ! -f qa-output/results.json ]; then exit 0; fi
           mkdir -p review
-          cp qa-output/*.jpg qa-output/results.json review/
+          cp qa-output/*.jpg qa-output/*.json review/
           git config user.name "Little Harbor Cloud"
           git config user.email "little-harbor@users.noreply.github.com"
           git add review legacy/assets

@@ -1,3 +1,4 @@
+import {advanceFish} from './motion.mjs';
 // Original Little Harbor aquarium. No third-party aquarium code or artwork.
 const canvas=document.querySelector('canvas'), ctx=canvas.getContext('2d',{alpha:false});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), mix=(a,b,t)=>a+(b-a)*t;
@@ -167,24 +168,7 @@ function feed(point){
 function update(dt){
  for(const pellet of food){pellet.y+=dt*.018;pellet.life-=dt;}
  food=food.filter(p=>p.life>0&&p.y<.88);
- for(const f of fish){
-  const sp=species[f.id]||species.goldfish;
-  if(time>f.retarget){f.target={x:rand(.08,.92),y:rand(.10,.77),z:rand(.12,.95)};f.retarget=time+rand(5,12);}
-  let target=f.target,nearest=null,min=Infinity;
-  for(const p of food){const d=Math.hypot(p.x-f.x,(p.y-f.y)*.65);if(d<min){min=d;nearest=p;}}
-  if(nearest){target={x:nearest.x,y:nearest.y,z:.72};if(min<.025){nearest.life=0;f.retarget=time+1;}}
-  let dx=target.x-f.x,dy=(target.y-f.y)*.55;
-  // Gentle personal space and loose alignment; each fish keeps its own cruising pace.
-  for(const n of fish){if(n===f)continue;const xx=f.x-n.x,yy=(f.y-n.y)*.7,dist=Math.hypot(xx,yy);
-   if(dist<.095&&dist>.001){dx+=xx/dist*(.095-dist)*3;dy+=yy/dist*(.095-dist)*2;}
-   if(n.id===f.id&&dist<.25&&!nearest){dx+=n.vx*.2;dy+=n.vy*.15;}
-  }
-  for(const d of decor){const yy=.85+(d.y-60)/300,dist=Math.hypot(f.x-d.x/100,f.y-yy);if(dist<.13){dx+=(f.x-d.x/100)*.8;dy-=.11;}}
-  const len=Math.hypot(dx,dy)||1,burst=.85+Math.sin(time*.55+f.phase)*.22,speed=sp.speed*burst*(nearest?1.65:1)*(1-tank*.1);
-  f.vx=mix(f.vx,dx/len*speed,1-Math.exp(-dt*1.5));f.vy=mix(f.vy,dy/len*speed,1-Math.exp(-dt*1.6));
-  f.x=clamp(f.x+f.vx*dt,.045,.955);f.y=clamp(f.y+f.vy*dt,.045,.86);f.z=mix(f.z,target.z,dt*.12);
-  const desired=f.vx>=0?0:Math.PI;let turn=((desired-f.heading+Math.PI*3)%TAU)-Math.PI;f.heading+=turn*Math.min(1,dt*2);
- }
+ advanceFish(fish,food,decor,dt,time,tank);
  if(bubbles.length<28&&Math.random()<dt*8)bubbles.push({x:rand(.86,.9),y:.94,r:rand(1.2,3),phase:rand(0,TAU)});
  bubbles.forEach(b=>{b.y-=dt*(.05+b.r*.008);});bubbles=bubbles.filter(b=>b.y>0);
 }
@@ -212,7 +196,7 @@ function draw(){
  glass();
  if(night){ctx.fillStyle='#07183277';ctx.fillRect(0,0,w,h);const moon=ctx.createRadialGradient(w*.65,20,0,w*.65,20,w*.7);moon.addColorStop(0,'#609bb11a');moon.addColorStop(1,'#609bb100');ctx.fillStyle=moon;ctx.fillRect(0,0,w,h);}
  if(!firstFrameMs&&fish.length){firstFrameMs=performance.now()-started;}
- window.harborDiagnostics={renderer:'canvas2d',fish:fish.map(f=>({uid:f.uid,id:f.id,x:f.x,y:f.y,z:f.z,sx:f.sx,sy:f.sy})),decor:decor.map(d=>({uid:d.uid,id:d.id,sx:d.sx,sy:d.sy,x:d.x,y:d.y})),tier:tank,width:1,height:1,depth:1,feeding:time<feedingUntil,food:food.length,paused,night,fps:Math.round(fps),elapsed:time,firstFrameMs};
+ window.harborDiagnostics={renderer:'canvas2d',fish:fish.map(f=>({uid:f.uid,id:f.id,x:f.x,y:f.y,z:f.z,sx:f.sx,sy:f.sy,heading:f.heading,vx:f.vx,vy:f.vy})),decor:decor.map(d=>({uid:d.uid,id:d.id,sx:d.sx,sy:d.sy,x:d.x,y:d.y})),tier:tank,width:1,height:1,depth:1,feeding:time<feedingUntil,food:food.length,paused,night,fps:Math.round(fps),elapsed:time,firstFrameMs};
 }
 function loop(now){const dt=previous?Math.min((now-previous)/1000,.05):.016;previous=now;if(dt>0)fps=mix(fps,1/dt,.03);if(!paused&&!document.hidden){time+=dt;update(dt);}if(!document.hidden&&!paused)draw();requestAnimationFrame(loop);}
 function coords(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}

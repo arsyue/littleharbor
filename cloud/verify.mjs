@@ -37,6 +37,15 @@ try{
  const before=await frame.evaluate(()=>window.harborDiagnostics.fish);
  await frame.waitForFunction(old=>window.harborDiagnostics.fish.some((f,i)=>Math.hypot(f.x-old[i].x,f.y-old[i].y,f.z-old[i].z)>0.1),before,{timeout:30000});
  checks.push('Fish swim continuously');
+ const motionReview=await frame.evaluate(async()=>{
+  const samples=[];for(let i=0;i<36;i++){samples.push({t:window.harborDiagnostics.elapsed,fish:window.harborDiagnostics.fish});await new Promise(r=>setTimeout(r,100));}return samples;
+ });
+ for(let i=1;i<motionReview.length;i++)for(let j=0;j<motionReview[i].fish.length;j++){
+  const f=motionReview[i].fish[j],old=motionReview[i-1].fish[j],dt=motionReview[i].t-motionReview[i-1].t;
+  const delta=Math.atan2(Math.sin(f.heading-old.heading),Math.cos(f.heading-old.heading));
+  assert.ok(Number.isFinite(f.heading)&&Math.abs(delta)<=2.21*dt+.01,'Visible fish turns are gradual');
+ }
+ checks.push('Browser-rendered fish turn smoothly without abrupt direction snaps');
  await frame.locator('#pause').click();const stopped=await frame.evaluate(()=>window.harborDiagnostics.fish);await page.waitForTimeout(300);
  assert.deepEqual(await frame.evaluate(()=>window.harborDiagnostics.fish),stopped);await frame.locator('#pause').click();
  await frame.locator('#light').click();assert.equal(await frame.evaluate(()=>window.harborDiagnostics.night),true);await frame.locator('#light').click();
