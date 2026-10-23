@@ -56,7 +56,7 @@ try{
  async function talk(id){await walk(id);await town.locator('#interact').click();await page.locator('#visit-task').click();}
  const initialTown=await town.evaluate(()=>window.townDiagnostics);
  assert.deepEqual(initialTown.world,{width:2600,height:1800});
- await town.locator('#world').focus();await page.keyboard.down('ArrowRight');await page.waitForTimeout(450);await page.keyboard.up('ArrowRight');
+ await town.locator('#world').focus();await page.keyboard.down('ArrowRight');try{await town.waitForFunction(x=>window.townDiagnostics.player.x>x+40,initialTown.player.x,{timeout:10000});}finally{await page.keyboard.up('ArrowRight');}
  assert.ok((await town.evaluate(()=>window.townDiagnostics.player.x))>initialTown.player.x+40);
  checks.push('Large continuous town supports keyboard walking and follows the explorer');
  await page.screenshot({path:'qa-output/town-desktop.jpg',quality:84});
@@ -153,7 +153,7 @@ try{
  const mobileBefore=await town.evaluate(()=>window.townDiagnostics.player.x);
  const right=await town.locator('[data-key="ArrowRight"]').boundingBox(),iframeBox=await page.locator('#town-engine').boundingBox();
  await page.mouse.move(right.x+right.width/2,right.y+right.height/2);
- await page.mouse.down();await page.waitForTimeout(400);await page.mouse.up();
+ await page.mouse.down();try{await town.waitForFunction(x=>window.townDiagnostics.player.x>x+30,mobileBefore,{timeout:10000});}finally{await page.mouse.up();}
  assert.ok((await town.evaluate(()=>window.townDiagnostics.player.x))>mobileBefore+30);
  await page.screenshot({path:'qa-output/town-mobile.jpg',fullPage:true,quality:82});
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
