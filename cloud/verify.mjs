@@ -11,6 +11,13 @@ await new Promise(r=>server.listen(4173,'127.0.0.1',r));
 await mkdir('qa-output',{recursive:true});
 const browser=await chromium.launch({args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-dev-shm-usage']});
 const page=await browser.newPage({viewport:{width:1440,height:1100},deviceScaleFactor:1});
+await page.addInitScript(()=>{
+ const NativeAudio=window.Audio;window.__recordedAudio=[];window.__speechFallbacks=[];
+ window.Audio=function(src){const a=new NativeAudio(src);window.__recordedAudio.push(a);return a;};window.Audio.prototype=NativeAudio.prototype;
+ if(window.speechSynthesis)window.speechSynthesis.speak=u=>window.__speechFallbacks.push(u.text);
+ class TestRecognition{start(){this.onstart?.();}abort(){this.onend?.();}stop(){this.onend?.();}}
+ window.SpeechRecognition=TestRecognition;
+});
 const errors=[];const checks=[];const requests=[];let startupMs=0;page.on('request',r=>requests.push(r.url()));
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon'))errors.push(m.text());});
@@ -18,7 +25,17 @@ const base='http://127.0.0.1:4173';
 const readSave=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('little-harbor-save-v1')));
 async function engine(count){await page.locator('#aquarium-engine').waitFor();await page.waitForFunction(()=>document.querySelector('#aquarium-engine')?.contentWindow?.location.href.includes('/aquarium/'));const f=page.frames().find(x=>x.url().includes('/aquarium/'));await f.waitForFunction(n=>window.harborDiagnostics?.fish.length===n,count,{timeout:90000});return f;}
 async function answer(text){if(await page.getByRole('button',{name:'Type instead',exact:true}).count())await page.getByRole('button',{name:'Type instead',exact:true}).click();await page.locator('#answer-input').fill(text);await page.locator('#answer-form button').click();}
+async function audioPlaying(key){
+ await page.waitForFunction(key=>window.__recordedAudio.some(a=>a.src.includes('/'+key+'-')&&!a.paused&&a.currentTime>.02),key,{timeout:15000});
+}
 try{
+ const manifest=JSON.parse(await readFile('public/audio/manifest.json','utf8'));
+ assert.equal(manifest.engine,'kokoro');assert.equal(Object.keys(manifest.clips).length,88);
+ for(const m of adventures)for(const [i,s] of m.steps.entries())for(const kind of ['say','hint','feedback']){
+  const c=manifest.clips[m.id+'-'+i+'-'+kind];assert.equal(c.text,s[kind]);assert.ok(c.duration>1&&c.duration<45);
+  assert.ok((await readFile('public/'+c.url)).length>1000);
+ }
+ checks.push('All 88 Kokoro recordings match the live dialogue and exist in the published build');
  for(const mission of adventures){
   for(const step of mission.steps){assert.equal(checkAnswer(step.hint,step).ok,true,mission.id+' example must work');assert.equal(checkAnswer('yes',step).ok,false);}
   const s=newState();ensureAdventures(s);assert.equal(finishAdventure(s,mission.id),null);
@@ -62,7 +79,7 @@ try{
  let town=await townFrame();
  async function arrived(id){await town.waitForFunction(id=>window.townDiagnostics.near===id&&window.townDiagnostics.pathLength===0,id,{timeout:45000});assert.equal(await town.evaluate(()=>window.townDiagnostics.blocked),false);}
  async function walk(id){await town.locator('#destination').selectOption(id);await arrived(id);}
- async function talk(id){await walk(id);await town.locator('#interact').click();await page.locator('#visit-task').click();}
+ async function talk(id){await walk(id);await town.locator('#interact').click();await audioPlaying(id+'-greeting');await page.locator('#visit-task').click();}
  const initialTown=await town.evaluate(()=>window.townDiagnostics);
  assert.deepEqual(initialTown.world,{width:2600,height:1800});
  await town.locator('#world').focus();await page.keyboard.down('ArrowRight');try{await town.waitForFunction(x=>window.townDiagnostics.player.x>x+40,initialTown.player.x,{timeout:10000});}finally{await page.keyboard.up('ArrowRight');}
@@ -81,6 +98,15 @@ try{
     assert.ok((await readSave()).adventures.discovered.includes(step.requires));
     await talk(mission.person);
    }
+   await audioPlaying(mission.id+'-'+i+'-say');
+   await page.locator('.sentence-help summary').click();
+   await page.locator('#hear-hint').click();await audioPlaying(mission.id+'-'+i+'-hint');
+   await page.locator('#hear-question').click();await audioPlaying(mission.id+'-'+i+'-say');
+   if(mission.id==='welcome'&&i===0){
+    await page.locator('#mic-button').click();
+    assert.ok(await page.evaluate(()=>window.__recordedAudio.every(a=>a.paused)),'Starting microphone stops narration');
+    await page.locator('#mic-button').click();
+   }
    assert.equal(await page.getByRole('button',{name:'Tap to speak',exact:true}).count(),1);
    if(mission.id==='welcome'&&i===0){
     await answer('yes');assert.equal(await page.locator('#dialogue-next').count(),0);
@@ -88,9 +114,9 @@ try{
    }
    if(mission.id==='welcome'&&i===2)await page.screenshot({animations:'disabled',path:'qa-output/story-dialogue.jpg',quality:85});
    await answer(step.hint);
-   await page.locator('#dialogue-next').waitFor();
+   await page.locator('#dialogue-next').waitFor();await audioPlaying(mission.id+'-'+i+'-feedback');
    if(mission.id==='welcome'&&i===0){
-    await page.locator('.modal-close').click();await page.reload();await engine(2);
+    await page.locator('.modal-close').click();assert.ok(await page.evaluate(()=>window.__recordedAudio.every(a=>a.paused)),'Closing a conversation stops narration');await page.reload();await engine(2);
     await page.locator('[data-nav="town"]').first().click();town=await townFrame();
     assert.equal((await readSave()).adventures.progress.welcome,1);
     await talk('lily');
@@ -99,6 +125,9 @@ try{
   assert.ok((await readSave()).adventures.completed.includes(mission.id));
  }
  assert.equal((await readSave()).coins,590);
+ assert.deepEqual(await page.evaluate(()=>window.__speechFallbacks),[],'Story audio must use recorded voices instead of browser fallback');
+ checks.push('Four greetings and all 84 story lines, hints and feedback play real Kokoro MP3s');
+ checks.push('Replay works; microphone start and dialog close interrupt narration immediately');
  assert.notEqual(await page.locator('.task-preview strong').textContent(),adventures[0].title);
  checks.push('All four seven-turn stories complete, with default voice input and full-sentence checks');
  checks.push('Five clue gates require walking to notices; story progress survives reload');

@@ -14,14 +14,51 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare lightweight aquarium in the cloud
-        run: bash cloud/build.sh
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check reusable character recordings
+        id: voice-check
+        run: |
+          node cloud/voice-plan.mjs
+          python cloud/voices.py --check
+      - name: Install cloud voice tools
+        if: steps.voice-check.outputs.needed == 'true' || steps.voice-check.outputs.audit_needed == 'true'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y espeak-ng ffmpeg
+          python -m pip install --disable-pip-version-check torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --disable-pip-version-check kokoro==0.9.4 soundfile "faster-whisper>=1.1,<2"
+      - name: Record all character dialogue with Kokoro
+        if: steps.voice-check.outputs.needed == 'true'
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+          TOKENIZERS_PARALLELISM: 'false'
+        run: python -u cloud/voices.py
+      - name: Save generated recordings in the cloud
+        if: steps.voice-check.outputs.needed == 'true'
+        run: |
+          git config user.name "Little Harbor Cloud"
+          git config user.email "little-harbor@users.noreply.github.com"
+          git add web/audio
+          if ! git diff --cached --quiet; then
+            git commit -m "Save Kokoro character recordings [skip ci]"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Decode and independently check spoken dialogue
+        if: steps.voice-check.outputs.audit_needed == 'true'
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python -u cloud/voice-audit.py
+      - name: Prepare lightweight aquarium in the cloud
+        run: bash cloud/build.sh
       - name: Install cloud browser
         run: |
           npm install --no-save playwright@1.55.0
@@ -32,18 +69,21 @@ jobs:
         if: always()
         with:
           name: aquarium-review
-          path: qa-output/
-      - name: Save review images in the cloud
+          path: |
+            qa-output/
+            review/voice-audit.json
+      - name: Save review results in the cloud
         if: always()
         run: |
-          if [ ! -f qa-output/results.json ]; then exit 0; fi
           mkdir -p review
-          cp qa-output/*.jpg qa-output/*.json review/
+          if [ -f qa-output/results.json ]; then
+            cp qa-output/*.jpg qa-output/*.json review/
+          fi
           git config user.name "Little Harbor Cloud"
           git config user.email "little-harbor@users.noreply.github.com"
           git add review legacy/assets
           if ! git diff --cached --quiet; then
-            git commit -m "Update cloud browser review images [skip ci]"
+            git commit -m "Update cloud browser and voice review [skip ci]"
             git pull --rebase origin main
             git push origin HEAD:main
           fi

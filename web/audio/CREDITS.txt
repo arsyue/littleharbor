@@ -1,0 +1,7 @@
+Little Harbor character voice recordings
+Generated with Kokoro 0.9.4 and hexgrad/Kokoro-82M.
+Model and implementation: https://huggingface.co/hexgrad/Kokoro-82M and https://github.com/hexgrad/kokoro
+The upstream model and implementation are offered under Apache License 2.0.
+No model weights are included in the website. Only generated recordings are shipped.
+Lily: af_heart. Mia: af_bella. Ben: am_michael. Finn: bm_george.
+The original English dialogue is in web/adventures.mjs.
