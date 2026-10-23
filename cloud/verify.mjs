@@ -49,7 +49,7 @@ try{
  await page.locator('[data-action="feed"]').click();assert.equal((await readSave()).coins,40);
  checks.push('Clicking water feeds fish and rewards the quest once');
  await page.locator('[data-nav="town"]').first().click();
- async function townFrame(){await page.locator('#town-engine').waitFor();const f=page.frames().find(x=>x.url().includes('/town/'));await f.waitForFunction(()=>window.townDiagnostics);return f;}
+ async function townFrame(){await page.locator('#town-engine').waitFor();await page.waitForFunction(()=>document.querySelector('#town-engine')?.contentWindow?.location.href.includes('/town/'));const f=page.frames().find(x=>x.url().includes('/town/'));await f.waitForFunction(()=>window.townDiagnostics);return f;}
  let town=await townFrame();
  async function arrived(id){await town.waitForFunction(id=>window.townDiagnostics.near===id&&window.townDiagnostics.pathLength===0,id,{timeout:45000});assert.equal(await town.evaluate(()=>window.townDiagnostics.blocked),false);}
  async function walk(id){await town.locator('#destination').selectOption(id);await arrived(id);}
