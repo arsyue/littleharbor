@@ -35,13 +35,33 @@ for(const a of spec.assets){
    rowEdges.push(best);
   }
   rowEdges.push(height);
-  for(let y=0;y<rows;y++)for(let x=0;x<columns;x++){
-   const left=Math.floor(x*width/columns),top=rowEdges[y];
-   const right=Math.floor((x+1)*width/columns),bottom=rowEdges[y+1];
-   entry.frames.push(bounds(data,width,height,{x:left,y:top,w:right-left,h:bottom-top}));
+  for(let y=0;y<rows;y++){
+   const top=rowEdges[y],bottom=rowEdges[y+1],columnEdges=[0];
+   for(let column=1;column<columns;column++){
+    const expected=column*width/columns,radius=width/columns*.2;let best=Math.floor(expected),bestScore=Infinity;
+    for(let x=Math.ceil(expected-radius);x<Math.floor(expected+radius);x++){
+     let count=0;for(let yy=top;yy<bottom;yy++)if(data[(yy*width+x)*4+3]>32)count++;
+     const score=count+Math.abs(x-expected)*.005;if(score<bestScore){best=x;bestScore=score;}
+    }
+    columnEdges.push(best);
+   }
+   columnEdges.push(width);
+   for(let x=0;x<columns;x++){
+    const left=columnEdges[x],right=columnEdges[x+1];
+    const frame=bounds(data,width,height,{x:left,y:top,w:right-left,h:bottom-top});
+    if(a.id==='explorer')assert.ok(frame.w/frame.h<.78,'Explorer frame must not contain a neighboring pose');
+    entry.frames.push(frame);
+   }
   }
   assert.equal(entry.frames.length,columns*rows);
   const heights=entry.frames.map(f=>f.h);assert.ok(Math.max(...heights)/Math.min(...heights)<1.35,a.id+' poses must be consistent');
+ }
+ if(a.id==='town-friends'){
+  result.portraits={};const ids=['lily','mia','ben','finn'];
+  for(let i=0;i<ids.length;i++){
+   const f=entry.frames[i],portrait=await sharp(buffer).extract({left:f.x,top:f.y,width:f.w,height:Math.round(f.h*.63)}).resize({width:320,height:320,fit:'contain',background:{r:0,g:0,b:0,alpha:0}}).webp({quality:90,alphaQuality:100}).toBuffer();
+   const name='portrait-'+ids[i]+'.webp';await writeFile(out+'/'+name,portrait);total+=portrait.length;result.portraits[ids[i]]='assets/town-art/'+name;
+  }
  }
  result.assets[a.id]=entry;console.log(a.id,width+'x'+height,buffer.length+' bytes',entry.transparent+'% transparent');
 }
