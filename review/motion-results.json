@@ -11,19 +11,19 @@
     },
     {
       "name": "crowded",
-      "count": 20,
+      "count": 36,
       "tier": 2,
       "eaten": 0,
-      "minimumTurnGap": 12.299999999999999,
-      "minimumDistance": 2.036364033142487
+      "minimumTurnGap": 11.516666666666666,
+      "minimumDistance": 2.0338653462528153
     },
     {
       "name": "continuous feeding",
-      "count": 20,
+      "count": 36,
       "tier": 2,
-      "eaten": 356,
-      "minimumTurnGap": 1.9999999999999982,
-      "minimumDistance": 2.558246704437226
+      "eaten": 302,
+      "minimumTurnGap": 1.9999999999999998,
+      "minimumDistance": 2.616436192824533
     },
     {
       "name": "wall",

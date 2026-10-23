@@ -8,11 +8,11 @@
     "Browser-rendered fish turn smoothly without abrupt direction snaps",
     "Pause and day/night controls work",
     "Clicking water feeds fish and rewards the quest once",
-    "All 13 independent ImageGen town assets load with transparency within the artwork budget",
+    "All 14 ImageGen town asset packages load with transparency within the artwork budget",
     "Large continuous town supports keyboard walking, directional character sprites and follows the explorer",
     "Four greetings and all 84 story lines, hints and feedback play real Kokoro MP3s",
     "Replay works; microphone start and dialog close interrupt narration immediately",
-    "All four seven-turn stories complete, with default voice input and full-sentence checks",
+    "All four seven-turn stories complete, with default voice input and configurable speaking support",
     "Five clue gates require walking to notices; story progress survives reload",
     "Story rewards total 550 coins, paid once per first completion",
     "Adventure journal shows all stories and saved field notes",
@@ -29,6 +29,6 @@
     "Mobile fallback fills the viewport, switches scenes and exits with Escape even when the game frame has focus",
     "No browser or engine console errors"
   ],
-  "startupMs": 585,
-  "rendererBytes": 20948
+  "startupMs": 615,
+  "rendererBytes": 21006
 }
