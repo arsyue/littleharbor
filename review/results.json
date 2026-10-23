@@ -1,20 +1,12 @@
 {
-  "success": true,
+  "success": false,
   "checks": [
+    "All 28 model answers validate; old saves remain valid; replays pay only 35 coins",
     "Aquarium starts within five seconds without an engine download",
     "Fish swim continuously",
     "Pause and day/night controls work",
-    "Clicking water feeds fish and rewards the quest once",
-    "English voice mode is default; typed answer completes a lesson",
-    "Purchased decoration appears in the aquarium and uses earned coins",
-    "Dragging a decoration saves placement and awards its quest",
-    "Purchased fish joins the aquarium",
-    "Tank upgrade enlarges the habitat and increases capacity",
-    "All eight species and eight decorations load inside tank bounds",
-    "Clicking a fish opens its details",
-    "Mobile layout fits viewport",
-    "No browser or engine console errors"
+    "Clicking water feeds fish and rewards the quest once"
   ],
-  "startupMs": 582,
-  "rendererBytes": 22208
+  "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok((await town.evaluate(()=>window.townDiagnostics.player.x))>initialTown.player.x+40)\n",
+  "errors": []
 }
