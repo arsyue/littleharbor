@@ -41,7 +41,7 @@ try{
  assert.deepEqual(await frame.evaluate(()=>window.harborDiagnostics.fish),stopped);await frame.locator('#pause').click();
  await frame.locator('#light').click();assert.equal(await frame.evaluate(()=>window.harborDiagnostics.night),true);await frame.locator('#light').click();
  checks.push('Pause and day/night controls work');
- await page.screenshot({path:'qa-output/initial-aquarium.jpg',quality:80});
+ await page.screenshot({animations:'disabled',path:'qa-output/initial-aquarium.jpg',quality:80});
  console.log('Initial renderer',await frame.evaluate(()=>window.harborDiagnostics));
  await frame.locator('canvas').click({position:{x:700,y:150}});
  await frame.waitForFunction(()=>window.harborDiagnostics.feeding);
@@ -59,7 +59,7 @@ try{
  await town.locator('#world').focus();await page.keyboard.down('ArrowRight');try{await town.waitForFunction(x=>window.townDiagnostics.player.x>x+40,initialTown.player.x,{timeout:10000});}finally{await page.keyboard.up('ArrowRight');}
  assert.ok((await town.evaluate(()=>window.townDiagnostics.player.x))>initialTown.player.x+40);
  checks.push('Large continuous town supports keyboard walking and follows the explorer');
- await page.screenshot({path:'qa-output/town-desktop.jpg',quality:84});
+ await page.screenshot({animations:'disabled',path:'qa-output/town-desktop.jpg',quality:84});
  for(const mission of adventures){
   await talk(mission.person);
   for(let i=0;i<mission.steps.length;i++){
@@ -77,7 +77,7 @@ try{
     await answer('yes');assert.equal(await page.locator('#dialogue-next').count(),0);
     assert.match(await page.locator('#speech-feedback').textContent(),/full sentence/);
    }
-   if(mission.id==='welcome'&&i===2)await page.screenshot({path:'qa-output/story-dialogue.jpg',quality:85});
+   if(mission.id==='welcome'&&i===2)await page.screenshot({animations:'disabled',path:'qa-output/story-dialogue.jpg',quality:85});
    await answer(step.hint);
    await page.locator('#dialogue-next').waitFor();
    if(mission.id==='welcome'&&i===0){
@@ -90,6 +90,7 @@ try{
   assert.ok((await readSave()).adventures.completed.includes(mission.id));
  }
  assert.equal((await readSave()).coins,590);
+ assert.notEqual(await page.locator('.task-preview strong').textContent(),adventures[0].title);
  checks.push('All four seven-turn stories complete, with default voice input and full-sentence checks');
  checks.push('Five clue gates require walking to notices; story progress survives reload');
  checks.push('Story rewards total 550 coins, paid once per first completion');
@@ -98,7 +99,7 @@ try{
  checks.push('Adventure journal shows all stories and saved field notes');
  await walk('garden');await town.locator('#interact').click();await page.locator('#notice-done').click();
  await walk('beach');await town.locator('#interact').click();await page.locator('#notice-done').click();
- await page.screenshot({path:'qa-output/town-harbor.jpg',quality:84});
+ await page.screenshot({animations:'disabled',path:'qa-output/town-harbor.jpg',quality:84});
  checks.push('Every story location, garden, beach and lighthouse is reachable on foot');
  await page.locator('[data-nav="home"]').first().click();
  await page.locator('[data-action="decorate"]').click();
@@ -122,7 +123,7 @@ try{
  await page.locator('[data-buy="clownfish"]').click();await answer('Yes please');await page.locator('#dialogue-next').click();
  frame=await engine(3);
  checks.push('Purchased fish joins the aquarium');
- await page.screenshot({path:'qa-output/starter-desktop.jpg',quality:80});
+ await page.screenshot({animations:'disabled',path:'qa-output/starter-desktop.jpg',quality:80});
  const old=await readSave();
  await page.evaluate(s=>{s.coins=600;localStorage.setItem('little-harbor-save-v1',JSON.stringify(s));},old);
  await page.reload();await engine(3);
@@ -140,13 +141,13 @@ try{
   localStorage.setItem('little-harbor-save-v1',JSON.stringify(s));
  });
  await page.reload();frame=await engine(8);await page.waitForTimeout(4000);
- await page.screenshot({path:'qa-output/aquarium-desktop.jpg',quality:80});
+ await page.screenshot({animations:'disabled',path:'qa-output/aquarium-desktop.jpg',quality:80});
  const diag=await frame.evaluate(()=>window.harborDiagnostics);
  assert.ok(diag.fish.every(f=>Math.abs(f.x)<diag.width&&Math.abs(f.z)<diag.depth&&f.y>0&&f.y<diag.height));
  checks.push('All eight species and eight decorations load inside tank bounds');
  const f0=diag.fish[0];await frame.locator('canvas').click({position:{x:f0.sx,y:f0.sy}});await page.locator('.fish-modal').waitFor();await page.locator('.modal-close').click();checks.push('Clicking a fish opens its details');
  await page.setViewportSize({width:390,height:844});await page.reload();await engine(8);
- await page.waitForTimeout(1500);await page.screenshot({path:'qa-output/aquarium-mobile.jpg',fullPage:true,quality:78});
+ await page.waitForTimeout(1500);await page.screenshot({animations:'disabled',path:'qa-output/aquarium-mobile.jpg',fullPage:true,quality:78});
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  checks.push('Mobile layout fits viewport');
  await page.locator('[data-nav="town"]').first().click();town=await townFrame();
@@ -155,7 +156,7 @@ try{
  await page.mouse.move(right.x+right.width/2,right.y+right.height/2);
  await page.mouse.down();try{await town.waitForFunction(x=>window.townDiagnostics.player.x>x+30,mobileBefore,{timeout:10000});}finally{await page.mouse.up();}
  assert.ok((await town.evaluate(()=>window.townDiagnostics.player.x))>mobileBefore+30);
- await page.screenshot({path:'qa-output/town-mobile.jpg',fullPage:true,quality:82});
+ await page.screenshot({animations:'disabled',path:'qa-output/town-mobile.jpg',fullPage:true,quality:82});
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  assert.ok(await town.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  checks.push('Mobile walking pad works and town UI fits the screen');
@@ -164,7 +165,7 @@ try{
  await writeFile('qa-output/results.json',JSON.stringify({success:true,checks,startupMs,rendererBytes:Buffer.byteLength(await readFile('public/aquarium/aquarium.mjs'))},null,2));
  console.log(JSON.stringify({success:true,checks},null,2));
 }catch(error){
- await page.screenshot({path:'qa-output/failure.jpg',fullPage:true,quality:78}).catch(()=>{});
+ await page.screenshot({animations:'disabled',path:'qa-output/failure.jpg',fullPage:true,quality:78}).catch(()=>{});
  await writeFile('qa-output/results.json',JSON.stringify({success:false,checks,error:String(error),errors},null,2));
  console.error(error);console.error(errors);process.exitCode=1;
 }finally{await browser.close();await new Promise(r=>server.close(r));}
