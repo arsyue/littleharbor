@@ -1,0 +1,73 @@
+name: Publish verified Kokoro release
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-verified.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: little-harbor-web
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 469684da940776a4d4e8fce9db62f37e52dcae7b
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: aquarium-review
+          run-id: 39890599798
+          github-token: ${{ github.token }}
+          path: verified-review
+      - name: Confirm exact release passed game and voice checks
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const base='https://api.github.com/repos/arsyue/littleharbor/actions/runs/39890599798';
+          async function get(url){const r=await fetch(url,{headers:{Authorization:'Bearer '+process.env.GH_TOKEN,'X-GitHub-Api-Version':'2022-11-28'}});if(!r.ok)throw Error('Verification request failed: '+r.status);return r.json();}
+          const run=await get(base),jobs=await get(base+'/jobs');
+          if(run.head_sha!=='469684da940776a4d4e8fce9db62f37e52dcae7b')throw Error('Wrong source revision');
+          const build=jobs.jobs.find(j=>j.name==='build');
+          if(!build.steps.some(s=>s.name==='Browser verification'&&s.conclusion==='success'))throw Error('Browser checks did not pass');
+          if(build.steps.some(s=>s.conclusion==='failure'&&s.name!=='Save review results in the cloud'))throw Error('Unexpected build failure');
+          const qa=JSON.parse(fs.readFileSync('verified-review/qa-output/results.json'));
+          const voice=JSON.parse(fs.readFileSync('verified-review/review/voice-audit.json'));
+          const manifest=fs.readFileSync('web/audio/manifest.json');
+          if(!qa.success||!voice.success||voice.clips!==88)throw Error('Verification report failed');
+          if(voice.manifestSha256!==crypto.createHash('sha256').update(manifest).digest('hex'))throw Error('Audio differs from verified recordings');
+          for(const clip of Object.values(JSON.parse(manifest).clips)){
+            if(crypto.createHash('sha256').update(fs.readFileSync('web/'+clip.url)).digest('hex')!==clip.sha256)throw Error('Audio checksum mismatch');
+          }
+          console.log(JSON.stringify({verifiedSource:run.head_sha,checks:qa.checks,voiceClips:voice.clips},null,2));
+          NODE
+      - name: Package the verified source
+        run: bash cloud/build.sh
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Publish verified game
+        id: deployment
+        uses: actions/deploy-pages@v4
