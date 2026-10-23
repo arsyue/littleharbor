@@ -25,8 +25,10 @@
     "Clicking a fish opens its details",
     "Mobile layout fits viewport",
     "Mobile walking pad works and town UI fits the screen",
+    "Native full screen fills town and aquarium, keeps dialogs and feeding usable, and restores normal layout on exit",
+    "Mobile fallback fills the viewport, switches scenes and exits with Escape even when the game frame has focus",
     "No browser or engine console errors"
   ],
-  "startupMs": 753,
+  "startupMs": 585,
   "rendererBytes": 20948
 }
