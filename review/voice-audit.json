@@ -1,0 +1,59 @@
+{
+  "success": true,
+  "engine": "kokoro",
+  "clips": 88,
+  "durationSeconds": 584.8,
+  "totalBytes": 5925872,
+  "allClipsDecoded": true,
+  "manifestSha256": "2c5ff7f5f2150b203308cc0641306edbe0968ddc8834dd82cf556310b7309ac0",
+  "readbacks": [
+    {
+      "id": "lily-greeting",
+      "expected": "Hello again! I am planning a welcome day for new visitors. Could you help me make a thoughtful plan?",
+      "heard": "Hello again, I am planning a welcome day for new visitors. Could you help me make a thoughtful plan?",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "mia-greeting",
+      "expected": "Welcome to the fish market! Today we are helping a customer compare prices and choose fish within a budget.",
+      "heard": "Welcome to the fish market. Today we are helping a customer compare prices and choose fish within a budget.",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "ben-greeting",
+      "expected": "Hello, designer! I have a new aquarium design brief. We need a beautiful layout and a sensible budget.",
+      "heard": "Hello, designer. I have a new aquarium design brief. We need a beautiful layout and a sensible budget.",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "finn-greeting",
+      "expected": "Ahoy, explorer! A boat is waiting for a delivery. Let's check the schedule, count the boxes, and keep an eye on the weather.",
+      "heard": "A hoy explorer. A boat is waiting for a delivery. Let's check the schedule, count the boxes, and keep an eye on the weather.",
+      "wordErrorRate": 0.087
+    },
+    {
+      "id": "welcome-0-say",
+      "expected": "Welcome to Little Harbor! We are planning a welcome day for new visitors. Introduce yourself with an explorer name, and tell me something you enjoy.",
+      "heard": "Welcome to Little Harbor. We are planning a welcome day for new visitors. Introduce yourself with an explorer name and tell me something you enjoy.",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "market-0-say",
+      "expected": "A customer needs help choosing fish for a make-believe aquarium. They have one hundred and ten coins. Offer to help them, using a polite full sentence.",
+      "heard": "A customer needs help choosing fish for a make-believe aquarium. They have 110 coins. Offer to help them using a polite full sentence.",
+      "wordErrorRate": 0.148
+    },
+    {
+      "id": "design-0-say",
+      "expected": "A visitor wants an aquarium that feels peaceful. Describe the kind of aquarium you would design. Include at least one detail about its colors or decorations.",
+      "heard": "A visitor wants an aquarium that feels peaceful. Describe the kind of aquarium you would design. Include at least one detail about its colors or decorations.",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "delivery-0-say",
+      "expected": "Ahoy! We have a delivery to organize before a boat leaves the harbor. Offer to help, and tell me one job you could do.",
+      "heard": "Ahoy, we have a delivery to organise before a boat leaves the harbour. Offer to help and tell me one job you could do.",
+      "wordErrorRate": 0.083
+    }
+  ]
+}
