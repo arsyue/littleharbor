@@ -221,13 +221,13 @@
         {
           "x": 530,
           "y": 947,
-          "w": 306,
+          "w": 174,
           "h": 297
         },
         {
-          "x": 836,
+          "x": 829,
           "y": 947,
-          "w": 172,
+          "w": 179,
           "h": 297
         }
       ]
@@ -272,5 +272,11 @@
       ]
     }
   },
-  "totalBytes": 3263536
+  "portraits": {
+    "lily": "assets/town-art/portrait-lily.webp",
+    "mia": "assets/town-art/portrait-mia.webp",
+    "ben": "assets/town-art/portrait-ben.webp",
+    "finn": "assets/town-art/portrait-finn.webp"
+  },
+  "totalBytes": 3367588
 }

@@ -27,6 +27,6 @@
     "Mobile walking pad works and town UI fits the screen",
     "No browser or engine console errors"
   ],
-  "startupMs": 561,
+  "startupMs": 753,
   "rendererBytes": 20948
 }
