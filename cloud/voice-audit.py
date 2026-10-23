@@ -2,6 +2,8 @@
 """Cloud-only decoding and independent speech readback of each character."""
 import hashlib, json, pathlib, re, subprocess, tempfile
 from faster_whisper import WhisperModel
+from imageio_ffmpeg import get_ffmpeg_exe
+ffmpeg = get_ffmpeg_exe()
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 manifest = json.loads((ROOT / "web/audio/manifest.json").read_text())
 plan = json.loads((ROOT / "cloud/voice-plan.json").read_text())
@@ -11,7 +13,7 @@ for expected in plan["clips"]:
     path = ROOT / "web" / clip["url"]
     assert clip["text"] == expected["text"]
     assert hashlib.sha256(path.read_bytes()).hexdigest() == clip["sha256"]
-    subprocess.run(["ffmpeg", "-v", "error", "-i", str(path), "-f", "null", "-"], check=True)
+    subprocess.run([ffmpeg, "-v", "error", "-i", str(path), "-f", "null", "-"], check=True)
 def words(text):
     return re.findall(r"[a-z]+", text.lower().replace("’", "'").replace("'", ""))
 def wer(expected, actual):

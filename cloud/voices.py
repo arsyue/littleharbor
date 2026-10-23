@@ -53,6 +53,8 @@ def main():
     if todo:
         import numpy as np
         import soundfile as sf
+        from imageio_ffmpeg import get_ffmpeg_exe
+        ffmpeg = get_ffmpeg_exe()
         import torch
         from kokoro import KPipeline
         torch.set_num_threads(min(4, os.cpu_count() or 2))
@@ -80,11 +82,12 @@ def main():
                 fingerprint = identity(clip)
                 filename = clip["id"] + "-" + fingerprint + ".mp3"
                 target = OUT / filename
-                subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(wav),
+                subprocess.run([ffmpeg, "-hide_banner", "-loglevel", "error", "-y", "-i", str(wav),
                     "-af", "loudnorm=I=-18:TP=-2:LRA=9", "-ar", str(RATE), "-ac", "1",
                     "-codec:a", "libmp3lame", "-b:a", "80k", str(target)], check=True)
-                probe = subprocess.check_output(["ffprobe", "-v", "error", "-show_entries",
-                    "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(target)], text=True)
+                decoded = subprocess.check_output([ffmpeg, "-v", "error", "-i", str(target),
+                    "-f", "f32le", "-ac", "1", "-ar", str(RATE), "pipe:1"])
+                probe = len(decoded) / (4 * RATE)
                 clips[clip["id"]] = {"url": "audio/" + filename, "text": clip["text"],
                     "person": clip["person"], "voice": clip["voice"], "speed": clip["speed"],
                     "duration": round(float(probe), 3), "bytes": target.stat().st_size,

@@ -28,12 +28,6 @@ jobs:
         run: |
           node cloud/voice-plan.mjs
           python cloud/voices.py --check
-      - name: Install cloud audio utilities
-        if: steps.voice-check.outputs.needed == 'true' || steps.voice-check.outputs.audit_needed == 'true'
-        timeout-minutes: 4
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y espeak-ng ffmpeg
       - name: Install CPU speech runtime
         if: steps.voice-check.outputs.needed == 'true' || steps.voice-check.outputs.audit_needed == 'true'
         timeout-minutes: 5
@@ -41,7 +35,7 @@ jobs:
       - name: Install Kokoro and speech verification
         if: steps.voice-check.outputs.needed == 'true' || steps.voice-check.outputs.audit_needed == 'true'
         timeout-minutes: 6
-        run: python -m pip install --disable-pip-version-check kokoro==0.9.4 soundfile "faster-whisper>=1.1,<2"
+        run: python -m pip install --disable-pip-version-check kokoro==0.9.4 "misaki[en]==0.9.4" soundfile imageio-ffmpeg "faster-whisper>=1.1,<2"
       - name: Record all character dialogue with Kokoro
         if: steps.voice-check.outputs.needed == 'true'
         env:
