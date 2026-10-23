@@ -204,6 +204,47 @@ try{
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  assert.ok(await town.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  checks.push('Mobile walking pad works and town UI fits the screen');
+ // Full screen keeps the document, including dialogs, in the browser's top layer.
+ await page.setViewportSize({width:1440,height:1000});
+ await page.locator('[data-action="fullscreen"]').click();
+ await page.waitForFunction(()=>document.fullscreenElement===document.documentElement);
+ assert.equal(await page.locator('#screen-exit').isVisible(),true);
+ let box=await page.locator('.world').boundingBox();
+ assert.ok(Math.abs(box.x)<1&&Math.abs(box.y-52)<1&&Math.abs(box.width-1440)<2&&Math.abs(box.height-948)<2);
+ await page.screenshot({path:'qa-output/fullscreen-town.jpg',quality:85});
+ await page.locator('.town-journal').click();
+ assert.equal(await page.locator('[role="dialog"]').isVisible(),true);
+ assert.equal(await page.evaluate(()=>document.fullscreenElement===document.documentElement),true);
+ await page.locator('.modal-close').click();
+ await page.locator('#screen-switch').click();frame=await engine(8);
+ assert.equal(await page.evaluate(()=>document.body.classList.contains('game-fullscreen')),true);
+ await page.locator('[data-action="feed"]').click();
+ await frame.waitForFunction(()=>window.harborDiagnostics.feeding);
+ await page.screenshot({path:'qa-output/fullscreen-aquarium.jpg',quality:85});
+ await page.locator('#screen-exit').click();
+ await page.waitForFunction(()=>!document.fullscreenElement&&!document.body.classList.contains('game-fullscreen'));
+ await frame.locator('#immerse').click();
+ await page.waitForFunction(()=>document.fullscreenElement===document.documentElement);
+ await page.evaluate(()=>document.exitFullscreen());
+ await page.waitForFunction(()=>!document.body.classList.contains('game-fullscreen'));
+ assert.equal(await page.locator('[data-action="fullscreen"]').getAttribute('aria-pressed'),'false');
+ checks.push('Native full screen fills town and aquarium, keeps dialogs and feeding usable, and restores normal layout on exit');
+ // Browsers that deny full screen still receive a reversible viewport-filling mode.
+ await page.evaluate(()=>Object.defineProperty(document.documentElement,'requestFullscreen',{configurable:true,value:()=>Promise.reject(new DOMException('Unavailable','NotAllowedError'))}));
+ await page.setViewportSize({width:390,height:844});
+ await page.locator('[data-action="fullscreen"]').click();
+ await page.waitForFunction(()=>document.body.classList.contains('game-fullscreen')&&!document.fullscreenElement);
+ box=await page.locator('.world').boundingBox();
+ assert.ok(Math.abs(box.width-390)<2&&Math.abs(box.height-792)<2);
+ assert.equal(await page.locator('#screen-exit').isVisible(),true);
+ await page.locator('#screen-switch').click();town=await townFrame();
+ await page.screenshot({path:'qa-output/fullscreen-mobile.jpg',quality:84});
+ await town.locator('#world').focus();await page.keyboard.press('Escape');
+ await page.waitForFunction(()=>!document.body.classList.contains('game-fullscreen'));
+ assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+ await page.evaluate(()=>delete document.documentElement.requestFullscreen);
+ checks.push('Mobile fallback fills the viewport, switches scenes and exits with Escape even when the game frame has focus');
+
  assert.deepEqual(errors,[]);
  checks.push('No browser or engine console errors');
  await writeFile('qa-output/results.json',JSON.stringify({success:true,checks,startupMs,rendererBytes:Buffer.byteLength(await readFile('public/aquarium/aquarium.mjs'))},null,2));

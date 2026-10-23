@@ -92,7 +92,7 @@ function update(dt){
  if(time-savedAt>1&&Math.hypot(position.x-lastSaved.x,position.y-lastSaved.y)>12){savedAt=time;lastSaved={...position};send({type:'position',x:position.x,y:position.y});}
 }
 function frame(now){const dt=last?Math.min((now-last)/1000,.05):.016;last=now;if(!document.hidden){time+=dt;update(dt);draw();}requestAnimationFrame(frame);}
-function resize(){w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,1.6);zoom=w<700?.77:1;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);mini.width=288;mini.height=200;camera={...position};draw();}
+function resize(){w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,1.6);zoom=Math.max(w<700?.77:1,w/W,h/H);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);mini.width=288;mini.height=200;camera={...position};draw();}
 canvas.addEventListener('pointerdown',e=>{if(paused)return;canvas.focus();const r=canvas.getBoundingClientRect(),p={x:(e.clientX-r.left-w/2)/zoom+camera.x,y:(e.clientY-r.top-h/2)/zoom+camera.y};const target=places.find(n=>Math.hypot(n.x-p.x,n.y-38-p.y)<55);if(target){if(Math.hypot(position.x-target.x,position.y-target.y)<115)interact(target);else go(target.id);}else{goal=null;path=route(p.x,p.y);document.querySelector('#status').textContent='Follow the dotted path.';}});
 window.addEventListener('keydown',e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','e'].includes(k)){e.preventDefault();if(k==='e')interact();else held.add(k);}});
 window.addEventListener('keyup',e=>held.delete(e.key.length===1?e.key.toLowerCase():e.key));window.addEventListener('blur',()=>held.clear());
