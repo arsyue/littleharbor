@@ -82,12 +82,18 @@ try{
  async function talk(id){await walk(id);await town.locator('#interact').click();await audioPlaying(id+'-greeting');await page.locator('#visit-task').click();}
  const initialTown=await town.evaluate(()=>window.townDiagnostics);
  assert.deepEqual(initialTown.world,{width:2600,height:1800});
+ assert.equal(initialTown.art.version,3);assert.equal(initialTown.art.loaded,13);assert.deepEqual(initialTown.art.failed,[]);
+ assert.ok(initialTown.art.bytes<4500000);assert.equal(await town.locator('#loading').count(),0);
+ checks.push('All 13 independent ImageGen town assets load with transparency within the artwork budget');
+ await page.locator('#town-engine').screenshot({path:'qa-output/town-art-square.jpg',quality:90});
  await town.locator('#world').focus();await page.keyboard.down('ArrowRight');try{await town.waitForFunction(x=>window.townDiagnostics.player.x>x+40,initialTown.player.x,{timeout:10000});}finally{await page.keyboard.up('ArrowRight');}
  assert.ok((await town.evaluate(()=>window.townDiagnostics.player.x))>initialTown.player.x+40);
- checks.push('Large continuous town supports keyboard walking and follows the explorer');
+ assert.equal(await town.evaluate(()=>window.townDiagnostics.direction),1);
+ checks.push('Large continuous town supports keyboard walking, directional character sprites and follows the explorer');
  await page.screenshot({animations:'disabled',path:'qa-output/town-desktop.jpg',quality:84});
  for(const mission of adventures){
   await talk(mission.person);
+  await page.locator('#town-engine').screenshot({path:'qa-output/town-art-'+mission.person+'.jpg',quality:88});
   for(let i=0;i<mission.steps.length;i++){
    const step=mission.steps[i];
    if(step.requires){

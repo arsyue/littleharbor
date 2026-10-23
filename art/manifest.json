@@ -1,0 +1,80 @@
+{
+  "version": 3,
+  "generator": "ImageGen",
+  "style": "Premium polished cozy 2.5D game asset for a seaside exploration town, children aged 8–12. High-end stylized 3D miniature, rounded hand-crafted shapes, convincing physical depth, layered ceramic tiles, wood grain and plaster material texture, painterly finish with crisp forms, rich warm light from upper left, soft ambient occlusion, sophisticated teal/coral/honey/ivory color palette. Camera: orthographic high front view pitched downward about 30 degrees, front facade faces the viewer, a small RIGHT side visible, vertical edges remain vertical. Clear readable silhouette at small game sizes. Entire object contained with 7% margin. TRUE TRANSPARENT background, no floor or square base plate, no scenery, no horizon, no labels, no letters, no text, no UI, no logo, no watermark. Clean alpha edges, delicate small contact shadow only. Not flat vector, not an icon, not a simple block model.",
+  "assets": [
+    {
+      "id": "fish-market",
+      "source": "source/fish-market.png",
+      "prompt": "One beautiful fish-market cottage. Ivory plaster with timber details, ornate layered turquoise roof, curvy dormer window, teal-and-cream striped awning, wide glowing aquarium display windows containing tiny bright fish, brass lights, a carved fish-shaped hanging sign with no lettering, flower boxes, wooden crates and a small lifebuoy. Front door opens toward bottom center. Charming lively premium seaside shop."
+    },
+    {
+      "id": "workshop",
+      "source": "source/workshop.png",
+      "prompt": "One beautiful artisan aquarium-decoration workshop cottage. Warm cream plaster and timber framing, terracotta scalloped roof with a chimney, coral-red wooden front door, broad arched showcase windows displaying miniature castles, seashells and a planted terrarium, a tiny outdoor workbench with clay pots and paintbrushes, hanging brass lamps, purple wisteria and flower boxes. Front door toward bottom center. Elaborate cozy handmade architectural details."
+    },
+    {
+      "id": "library",
+      "source": "source/library.png",
+      "prompt": "One inviting harbor library building. Two-story creamy stone facade, mossy teal layered roof, elegant rounded central arched entrance, tall glowing mullioned windows showing shelves full of colorful books, round attic window, small decorative open-book emblem with NO letters, curved steps and carved wood railing, climbing ivy, rose planters and hanging brass lanterns. Compact readable seaside architectural charm."
+    },
+    {
+      "id": "aquarium-home",
+      "source": "source/aquarium-home.png",
+      "prompt": "One delightful child's aquarium cottage. Creamy stucco walls, ocean-blue layered roof, scalloped coral trim, round luminous underwater window displaying a magnificent planted fish tank, rounded honey-colored front door, tiny chimney, heart-shaped brass door knocker, shell motifs, flower pots, little wooden doorstep and seaside garden accents. Cozy inviting hero home, exquisite detail."
+    },
+    {
+      "id": "harbor-office",
+      "source": "source/harbor-office.png",
+      "prompt": "One charming harbor master's boathouse office. Weathered ivory clapboard, deep navy-blue layered roof, large round nautical window, coral wood door, short raised timber veranda, sturdy wooden columns, nautical brass lamp, lifebuoy, coiled ropes, stacked wooden cargo crates and a barrel with flowers. A small sculptural anchor emblem without text. No pier or water background, building and close entrance props only."
+    },
+    {
+      "id": "cafe",
+      "source": "source/cafe.png",
+      "prompt": "One charming seaside bakery cafe. Butter-yellow plaster, warm coral tiled gabled roof, cream-and-rust striped awning, curved sage green front door, a large curved bakery window with beautiful bread and pastries visible, a tiny outdoor round table with two chairs and two potted citrus trees, window flowers and charming copper lanterns. No written menu, labels, words or logos. Compact complete cottage and close entrance props."
+    },
+    {
+      "id": "greenhouse",
+      "source": "source/greenhouse.png",
+      "prompt": "One gorgeous little glass conservatory and flower shop. Graceful sage green metal framing, pale turquoise transparent glass panes, curved glass roof with a small ornamental finial, a cream stone low plinth, glass doors at front, lush ferns, flowering plants and climbing vines visible inside, terracotta flowerpots and a watering can just outside. Jewel-like architectural detail, colorful flowers, not boxy."
+    },
+    {
+      "id": "lighthouse",
+      "source": "source/lighthouse.png",
+      "prompt": "SQUARE 1:1 canvas, single fully isolated transparent PNG cutout. A beautiful cozy seaside lighthouse with a short attached keeper cottage, cream plaster tower with coral-red bands, polished teal ceramic conical roof, brass railings, warm windows, climbing flowers and little stone steps. Premium detailed stylized 3D miniature town game asset, warm daylight, orthographic high front view looking downward 30 degrees. Matching ivory, coral and teal storybook town. Compact broad silhouette, lighthouse only twice the cottage height. Entire building comfortably inside square canvas with large empty transparent margins. No background, no glow, no haze, no floor, no backdrop, no square baseplate. Real transparent alpha surrounding the crisp building silhouette, no color outside the object. No text."
+    },
+    {
+      "id": "garden-tree",
+      "source": "source/garden-tree.png",
+      "prompt": "One exquisite lush broadleaf garden tree for the same premium cozy seaside game, fully isolated TRUE transparent background, orthographic camera angled 30 degrees down, complete from canopy to ground roots, entire object inside generous transparent margin. Mature rounded airy crown made of hundreds of layered individual leaves, jade emerald and sunlit lime highlights, softly twisted textured warm-brown trunk, little fern plants and tiny cream daisies hugging its roots, delicate soft contact shadow. Beautifully rendered miniature, physically shaded foliage, rich volume and fine organic detail. Not geometric circles, not flat vector, no words, no square ground base."
+    },
+    {
+      "id": "flower-bed",
+      "source": "source/flower-bed.png",
+      "prompt": "One low elongated lush cottage garden flower bed for a premium cozy 2.5D seaside game. TRUE transparent background, complete isolated cutout, viewed from high front three-quarter orthographic camera about 30 degrees down. Abundant pastel coral roses, purple lavender, creamy daisies, tiny yellow blossoms, velvety sage leaves and lush trailing green foliage, arranged inside a gently curved low cream-stone border. Three-dimensional miniature with finely detailed leaves and petals, sunlit upper-left warm light, gentle ambient occlusion. Width roughly three times height. Generous empty transparent margin. No building, background scene, text, logos or square base. Cohesive elegant vibrant storybook rendering, not simplistic cartoon shapes."
+    },
+    {
+      "id": "fountain",
+      "source": "source/fountain.png",
+      "prompt": "One gorgeous centerpiece fountain for a premium cozy seaside town game. TRUE transparent background, high front orthographic view pitched downward 30 degrees. A circular carved warm limestone basin with turquoise water, scalloped shell carvings around the rim, a beautiful brass dolphin or leaping fish sculpture above a smaller upper bowl, realistic sculpted streams of sparkling water falling between tiers, a few ivy leaves and flowers tucked beside the base. Beautiful detailed 3D miniature, soft warm sun from upper left, gentle ambient occlusion, highly readable silhouette, entire object with 8% margin. No square ground plate, no surroundings, no text. Shape wider at base, physically dimensional and inviting."
+    },
+    {
+      "id": "explorer",
+      "source": "source/explorer.png",
+      "prompt": "Square 1:1 canvas. Transparent PNG game sprite atlas. Exactly 3 columns and 4 rows of the SAME cheerful young explorer. All twelve full-body cutouts have actual empty transparent space between them. Teal jacket, cream shirt, navy shorts, mustard backpack, wavy brown hair, brown boots, appealing polished 3D storybook character with expressive eyes. Row 1 front view, row 2 right profile, row 3 back view, row 4 left profile. Column 1 idle, column 2 walking left leg forward, column 3 walking right leg forward. Same character proportions and same scale in all cells. Distinct alternating leg positions. Feet on the same baseline within each row. No environment, no shadows, no lighting glow, no background whatsoever. Crisp clean alpha cutouts on a TRUE TRANSPARENT background. Square layout, plenty of horizontal transparent space around each character. No text or grid lines.",
+      "grid": [
+        3,
+        4
+      ]
+    },
+    {
+      "id": "town-friends",
+      "source": "source/town-friends.png",
+      "prompt": "Production character SPRITE SHEET for a premium cozy 2.5D seaside town game. TRUE transparent background. EXACTLY 4 equally spaced columns in ONE ROW. Four isolated full-body characters, one per equal-width cell, every person's feet aligned to 94 percent of canvas height, same scale and eye height, generous empty margin. All stand facing toward viewer, orthographic camera slightly elevated 25 degrees, warmly smiling, friendly natural poses. Polished 3D animated-film characters with detailed fabric, rounded appealing heads around one third body height, soft warm light from upper left. COLUMN 1: Lily, friendly young woman with chestnut bob haircut, lilac cardigan over cream blouse, sage skirt, brown ankle boots, holding a small folded town map. COLUMN 2: Mia, friendly woman with medium-brown skin and dark curly hair in a bun, teal apron over cream short sleeve shirt, rust trousers, comfortable shoes, holding a small blue aquarium fish net. COLUMN 3: Ben, friendly young man with short dark brown hair, orange work apron over pale cream shirt, rolled sleeves, navy trousers, brown work boots, holding a little terracotta plant pot. COLUMN 4: Captain Finn, friendly older man with neatly trimmed silver beard, navy nautical cap, navy coat over cream sweater, dark trousers, brown boots, holding a brass telescope angled down. All hands and feet visible. No text, background scenery, gridlines or logos. Crisp detailed clean cutouts, not geometric stick people.",
+      "grid": [
+        4,
+        1
+      ]
+    }
+  ]
+}

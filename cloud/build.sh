@@ -2,6 +2,7 @@
 set -euo pipefail
 # All work runs on the GitHub-hosted runner. The browser renderer has no engine dependency.
 node cloud/assets.mjs
+node cloud/town-assets.mjs
 mkdir -p public
 cp -R legacy/. public/
 cp -R web/. public/
@@ -12,6 +13,7 @@ if find public -type f -name '*.wasm' | grep -q .; then
   exit 1
 fi
 node --check public/town/town.mjs
+node --check public/town/scenery.mjs
 node --check public/adventures.mjs
 node --check public/app.mjs
 node --check public/aquarium/aquarium.mjs

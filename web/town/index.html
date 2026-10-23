@@ -13,7 +13,23 @@ button,select{font:inherit;color:inherit;cursor:pointer}button:focus-visible,sel
 #status{position:absolute;left:18px;top:91px;background:#fffdf0cf;border-radius:12px;padding:7px 11px;font-size:11px;max-width:250px}
 @media(min-width:800px){.pad{opacity:.7;transform:scale(.8);transform-origin:bottom left}}
 @media(max-width:700px){.badge{top:12px;left:12px;padding:10px 12px}.badge b{font-size:15px}.badge small{font-size:9px}.routes{top:12px;right:12px}.routes select{width:122px;font-size:11px;padding:10px 6px}.routes button{display:none}.minimap{width:112px;height:78px;right:12px;top:57px}#status{top:81px;left:12px;max-width:190px;font-size:10px}.help{font-size:10px;bottom:8px;padding:5px 10px}.pad{left:10px;bottom:27px;width:114px;height:114px;grid-template:repeat(3,38px)/repeat(3,38px)}#interact{right:12px;bottom:45px;max-width:200px;font-size:12px;padding:11px 13px}}
+
+body{background:#96b983;color:#284e47}
+.badge{border:1px solid #fff8e3;border-radius:18px;padding:14px 20px 13px 47px;background:linear-gradient(135deg,#fffdf4f5,#f8eacff2);box-shadow:0 6px 24px #25473720,inset 0 1px #fff}
+.badge:before{content:'✦';position:absolute;left:17px;top:17px;color:#be9250;font-size:24px}.badge b{font:600 21px Georgia;letter-spacing:-.4px}.badge small{font-size:11px;letter-spacing:.25px}
+.routes select,.routes button{border:1px solid #fffcdf;border-radius:12px;background:linear-gradient(#fffdf5f5,#f6ecd8ed);box-shadow:0 4px 12px #2443341a}
+.minimap{border:5px solid #fff6e3;outline:1px solid #b7a67988;box-shadow:0 6px 22px #24443738}
+.help{background:#fff7e4df;border:1px solid #fff9e9;color:#517266;font-size:11px}
+#status{background:#fbf4dfde;border:1px solid #fffae7;color:#4f6c5d;box-shadow:0 3px 12px #304c3110}
+#interact{border:1px solid #f8e4ad;background:linear-gradient(#407c6c,#245c52);box-shadow:0 5px 15px #153f3b38,inset 0 1px #ffffff30}
+#interact:disabled{background:#507e69;opacity:.8}
+.pad button{background:linear-gradient(#fff9e9ee,#eddfbde5);border-color:#fff6df;box-shadow:0 3px 8px #34523420;color:#547160}
+#loading{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 35%,#fff7df,#c4d8aa);text-align:center;gap:12px}
+#loading b{font:600 34px Georgia;color:#326959}#loading .shell{font-size:48px;color:#b98a4e}#loading p{margin:0;color:#5a7966}#retry{padding:11px 25px;background:#326959;color:#fff7e3;border:0;border-radius:12px}
+@media(max-width:700px){.badge{padding:10px 12px 10px 30px}.badge:before{left:9px;top:10px;font-size:18px}.badge b{font-size:15px}.badge small{font-size:9px}.help{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
 </style></head><body>
+<div id="loading" role="status"><span class="shell">✦</span><b>Little Harbor</b><p>A little adventure by the sea</p><p id="loading-progress">Opening the harbor…</p><button id="retry" hidden>Try again</button></div>
 <canvas id="world" tabindex="0" aria-label="Walk around Little Harbor. Use arrow keys or W A S D, tap the ground, or choose a destination. Press E near a person or sign."></canvas>
 <div class="badge"><b>Little Harbor</b><small id="district">Town Square</small></div>
 <div class="routes"><select id="destination" aria-label="Choose a place to walk to"><option value="">Where shall we go?</option></select><button id="center" aria-label="Center map on your explorer">Find me</button></div>

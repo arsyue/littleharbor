@@ -58,6 +58,8 @@ jobs:
         env:
           HF_HUB_DISABLE_TELEMETRY: '1'
         run: python -u cloud/voice-audit.py
+      - name: Package independently generated town artwork
+        run: npm install --no-save sharp@0.34.5
       - name: Prepare lightweight aquarium in the cloud
         run: bash cloud/build.sh
       - name: Prepare reliable browser package downloads
@@ -91,7 +93,7 @@ jobs:
           fi
           git config user.name "Little Harbor Cloud"
           git config user.email "little-harbor@users.noreply.github.com"
-          git add review legacy/assets
+          git add review legacy/assets web/assets/town-art
           if ! git diff --cached --quiet; then
             git commit -m "Update cloud browser and voice review [skip ci]"
             git pull --rebase -X theirs origin main
