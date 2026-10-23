@@ -1,5 +1,5 @@
 {
-  "success": false,
+  "success": true,
   "checks": [
     "All 28 model answers validate; old saves remain valid; replays pay only 35 coins",
     "Aquarium starts within five seconds without an engine download",
@@ -18,8 +18,10 @@
     "Tank upgrade enlarges the habitat and increases capacity",
     "All eight species and eight decorations load inside tank bounds",
     "Clicking a fish opens its details",
-    "Mobile layout fits viewport"
+    "Mobile layout fits viewport",
+    "Mobile walking pad works and town UI fits the screen",
+    "No browser or engine console errors"
   ],
-  "error": "TypeError: Cannot read properties of undefined (reading 'waitForFunction')",
-  "errors": []
+  "startupMs": 368,
+  "rendererBytes": 22208
 }
