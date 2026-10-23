@@ -60,7 +60,16 @@ jobs:
         run: python -u cloud/voice-audit.py
       - name: Prepare lightweight aquarium in the cloud
         run: bash cloud/build.sh
+      - name: Prepare reliable browser package downloads
+        run: |
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt >/dev/null
+          fi
+          if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then
+            sudo sed -i 's|http://|https://|g' /etc/apt/sources.list.d/ubuntu.sources
+          fi
       - name: Install cloud browser
+        timeout-minutes: 6
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
