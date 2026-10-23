@@ -4,6 +4,7 @@
     "All 28 model answers validate; old saves remain valid; replays pay only 35 coins",
     "Aquarium starts within five seconds without an engine download",
     "Fish swim continuously",
+    "Browser-rendered fish turn smoothly without abrupt direction snaps",
     "Pause and day/night controls work",
     "Clicking water feeds fish and rewards the quest once",
     "Large continuous town supports keyboard walking and follows the explorer",
@@ -22,6 +23,6 @@
     "Mobile walking pad works and town UI fits the screen",
     "No browser or engine console errors"
   ],
-  "startupMs": 368,
-  "rendererBytes": 22208
+  "startupMs": 603,
+  "rendererBytes": 20948
 }

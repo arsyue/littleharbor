@@ -1,0 +1,45 @@
+{
+  "success": true,
+  "scenarios": [
+    {
+      "name": "arrival",
+      "count": 1,
+      "tier": 0,
+      "eaten": 0,
+      "minimumTurnGap": 14.649999999999999,
+      "minimumDistance": 5.827216979753203
+    },
+    {
+      "name": "crowded",
+      "count": 20,
+      "tier": 2,
+      "eaten": 0,
+      "minimumTurnGap": 12.299999999999999,
+      "minimumDistance": 2.036364033142487
+    },
+    {
+      "name": "continuous feeding",
+      "count": 20,
+      "tier": 2,
+      "eaten": 356,
+      "minimumTurnGap": 1.9999999999999982,
+      "minimumDistance": 2.558246704437226
+    },
+    {
+      "name": "wall",
+      "count": 1,
+      "tier": 0,
+      "eaten": 0,
+      "minimumTurnGap": 14.75,
+      "minimumDistance": 5.849959342005531
+    }
+  ],
+  "checks": [
+    "smooth bounded turns",
+    "persistent food selection",
+    "arrival recovery",
+    "no waypoint hovering",
+    "edge pellet consumption",
+    "vertical heading stability"
+  ]
+}
