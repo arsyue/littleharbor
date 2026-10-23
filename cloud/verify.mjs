@@ -1,12 +1,12 @@
 import {chromium} from 'playwright';
 import {createServer} from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
-import {resolve,extname} from 'node:path';
+import {resolve,extname,sep} from 'node:path';
 import assert from 'node:assert/strict';
 import {adventures,checkAnswer,ensureAdventures,finishAdventure,validAdventures} from '../web/adventures.mjs';
 import {newState,validateState} from '../web/state.mjs';
 const root=resolve('public');
-const server=createServer(async(req,res)=>{try{const path=resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));if(!path.startsWith(root+'/'))throw Error();const file=path.endsWith('/')?path+'index.html':path;const type={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.wasm':'application/wasm','.css':'text/css','.webp':'image/webp','.jpg':'image/jpeg','.mp3':'audio/mpeg','.json':'application/json'}[extname(file)]||'application/octet-stream';res.setHeader('Content-Type',type);res.end(await readFile(file));}catch{res.statusCode=404;res.end('Not found');}});
+const server=createServer(async(req,res)=>{if(req.url==='/favicon.ico'){res.writeHead(204);res.end();return;}try{const path=resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));if(!path.startsWith(root+sep))throw Error();const file=path.endsWith('/')?path+'index.html':path;const type={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.wasm':'application/wasm','.css':'text/css','.webp':'image/webp','.jpg':'image/jpeg','.mp3':'audio/mpeg','.json':'application/json'}[extname(file)]||'application/octet-stream';res.setHeader('Content-Type',type);res.end(await readFile(file));}catch{res.statusCode=404;res.end('Not found');}});
 await new Promise(r=>server.listen(4173,'127.0.0.1',r));
 await mkdir('qa-output',{recursive:true});
 const browser=await chromium.launch({args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-dev-shm-usage']});
@@ -18,7 +18,7 @@ await page.addInitScript(()=>{
  class TestRecognition{start(){this.onstart?.();}abort(){this.onend?.();}stop(){this.onend?.();}}
  window.SpeechRecognition=TestRecognition;
 });
-const errors=[];const checks=[];const requests=[];let startupMs=0;page.on('request',r=>requests.push(r.url()));
+const errors=[];const checks=[];const requests=[];let startupMs=0;page.on('request',r=>requests.push(r.url()));page.on('response',r=>{if(r.status()>=400&&!r.url().endsWith('/favicon.ico'))errors.push('HTTP '+r.status()+' '+r.url());});
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon'))errors.push(m.text());});
 const base='http://127.0.0.1:4173';
@@ -81,10 +81,10 @@ try{
  async function walk(id){await town.locator('#destination').selectOption(id);await arrived(id);}
  async function talk(id){await walk(id);await town.locator('#interact').click();await audioPlaying(id+'-greeting');await page.locator('#visit-task').click();}
  const initialTown=await town.evaluate(()=>window.townDiagnostics);
- assert.deepEqual(initialTown.world,{width:2600,height:1800});
- assert.equal(initialTown.art.version,3);assert.equal(initialTown.art.loaded,13);assert.deepEqual(initialTown.art.failed,[]);
+ assert.deepEqual(initialTown.world,{width:3600,height:2400});
+ assert.equal(initialTown.art.version,4);assert.equal(initialTown.art.loaded,14);assert.deepEqual(initialTown.art.failed,[]);
  assert.ok(initialTown.art.bytes<4500000);assert.equal(await town.locator('#loading').count(),0);
- checks.push('All 13 independent ImageGen town assets load with transparency within the artwork budget');
+ checks.push('All 14 ImageGen town asset packages load with transparency within the artwork budget');
  await page.locator('#town-engine').screenshot({path:'qa-output/town-art-square.jpg',quality:90});
  await town.locator('#world').focus();await page.keyboard.down('ArrowRight');try{await town.waitForFunction(x=>window.townDiagnostics.player.x>x+40,initialTown.player.x,{timeout:10000});}finally{await page.keyboard.up('ArrowRight');}
  assert.ok((await town.evaluate(()=>window.townDiagnostics.player.x))>initialTown.player.x+40);
@@ -116,7 +116,7 @@ try{
    assert.equal(await page.getByRole('button',{name:'Tap to speak',exact:true}).count(),1);
    if(mission.id==='welcome'&&i===0){
     await answer('yes');assert.equal(await page.locator('#dialogue-next').count(),0);
-    assert.match(await page.locator('#speech-feedback').textContent(),/full sentence/);
+    assert.match(await page.locator('#speech-feedback').textContent(),/key details|full sentence/);
    }
    if(mission.id==='welcome'&&i===2)await page.screenshot({animations:'disabled',path:'qa-output/story-dialogue.jpg',quality:85});
    await answer(step.hint);
@@ -135,7 +135,7 @@ try{
  checks.push('Four greetings and all 84 story lines, hints and feedback play real Kokoro MP3s');
  checks.push('Replay works; microphone start and dialog close interrupt narration immediately');
  assert.notEqual(await page.locator('.task-preview strong').textContent(),adventures[0].title);
- checks.push('All four seven-turn stories complete, with default voice input and full-sentence checks');
+ checks.push('All four seven-turn stories complete, with default voice input and configurable speaking support');
  checks.push('Five clue gates require walking to notices; story progress survives reload');
  checks.push('Story rewards total 550 coins, paid once per first completion');
  await page.locator('.town-journal').click();assert.equal(await page.locator('[data-story]').count(),4);
@@ -156,6 +156,7 @@ try{
  checks.push('Purchased decoration appears in the aquarium and uses earned coins');
  await page.locator('[data-action="decorate"]').click();
  frame=await engine(2);
+ await frame.waitForFunction(()=>window.harborDiagnostics.editing);
  const d=await frame.evaluate(()=>window.harborDiagnostics.decor[0]);
  const rect=await page.locator('#aquarium-engine').boundingBox();
  await page.mouse.move(rect.x+d.sx,rect.y+d.sy);
@@ -196,6 +197,7 @@ try{
  checks.push('Mobile layout fits viewport');
  await page.locator('[data-nav="town"]').first().click();town=await townFrame();
  const mobileBefore=await town.evaluate(()=>window.townDiagnostics.player.x);
+ await town.locator('[data-key="ArrowRight"]').scrollIntoViewIfNeeded();
  const right=await town.locator('[data-key="ArrowRight"]').boundingBox(),iframeBox=await page.locator('#town-engine').boundingBox();
  await page.mouse.move(right.x+right.width/2,right.y+right.height/2);
  await page.mouse.down();try{await town.waitForFunction(x=>window.townDiagnostics.player.x>x+30,mobileBefore,{timeout:10000});}finally{await page.mouse.up();}

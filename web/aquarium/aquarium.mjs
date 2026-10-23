@@ -55,7 +55,7 @@ function fin(c,points,color,opacity=.65,rays=7){
 }
 function fishScreen(f){return{x:area.x+f.x*area.w,y:area.top+f.y*area.swimH+(f.z-.5)*h*.035};}
 function drawFish(f){
- const s=species[f.id]||species.goldfish, p=fishScreen(f), beat=Math.sin(time*(5+f.speed*60)+f.phase), size=clamp(w*.074,43,90)*[1,.93,.85][tank]*mix(.64,1.15,f.z)*(f.id==='guppy'?.78:1)*(f.id==='seahorse'?.8:1);
+ const s=species[f.id]||species.goldfish, p=fishScreen(f), beat=Math.sin(time*(5+f.speed*60)+f.phase), size=(fish.length>24?.76:fish.length>12?.88:1)*clamp(w*.074,43,90)*[1,.93,.85][tank]*mix(.64,1.15,f.z)*(f.id==='guppy'?.78:1)*(f.id==='seahorse'?.8:1);
  f.sx=p.x;f.sy=p.y;f.radius=size*.62;
  ctx.save();ctx.translate(p.x,p.y);ctx.rotate(clamp(f.vy*2.2,-.19,.19)*Math.cos(f.heading));
  ctx.scale(size/144*(Math.cos(f.heading)>=0?1:-1)*(.23+.77*Math.abs(Math.cos(f.heading))),size/144);
@@ -100,8 +100,8 @@ function plant(c,x,y,size,rnd,clock=0,tint=0){
  }
 }
 function layout(){
- const top=clamp(h*.14,55,90),bottom=w<700?h-185:h-clamp(h*.17,73,115),inset=w*[.07,.04,.02][tank];
- floorFront=w<700?h-143:h-37;
+ const top=w<700?150:clamp(h*.14,55,90),bottom=w<700?h-80:h-clamp(h*.17,73,115),inset=w*[.07,.04,.02][tank];
+ floorFront=w<700?h-30:h-37;
  area={x:inset+15,w:w-inset*2-30,top,swimH:bottom-top-35,bottom,inset};
 }
 function rebuildBackground(){
@@ -196,7 +196,7 @@ function draw(){
  glass();
  if(night){ctx.fillStyle='#07183277';ctx.fillRect(0,0,w,h);const moon=ctx.createRadialGradient(w*.65,20,0,w*.65,20,w*.7);moon.addColorStop(0,'#609bb11a');moon.addColorStop(1,'#609bb100');ctx.fillStyle=moon;ctx.fillRect(0,0,w,h);}
  if(!firstFrameMs&&fish.length){firstFrameMs=performance.now()-started;}
- window.harborDiagnostics={renderer:'canvas2d',fish:fish.map(f=>({uid:f.uid,id:f.id,x:f.x,y:f.y,z:f.z,sx:f.sx,sy:f.sy,heading:f.heading,vx:f.vx,vy:f.vy})),decor:decor.map(d=>({uid:d.uid,id:d.id,sx:d.sx,sy:d.sy,x:d.x,y:d.y})),tier:tank,width:1,height:1,depth:1,feeding:time<feedingUntil,food:food.length,paused,night,fps:Math.round(fps),elapsed:time,firstFrameMs};
+ window.harborDiagnostics={renderer:'canvas2d',editing,fish:fish.map(f=>({uid:f.uid,id:f.id,x:f.x,y:f.y,z:f.z,sx:f.sx,sy:f.sy,heading:f.heading,vx:f.vx,vy:f.vy})),decor:decor.map(d=>({uid:d.uid,id:d.id,sx:d.sx,sy:d.sy,x:d.x,y:d.y})),tier:tank,width:1,height:1,depth:1,feeding:time<feedingUntil,food:food.length,paused,night,fps:Math.round(fps),elapsed:time,firstFrameMs};
 }
 function loop(now){const dt=previous?Math.min((now-previous)/1000,.05):.016;previous=now;if(dt>0)fps=mix(fps,1/dt,.03);if(!paused&&!document.hidden){time+=dt;update(dt);}if(!document.hidden&&!paused)draw();requestAnimationFrame(loop);}
 function coords(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}

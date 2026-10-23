@@ -1,0 +1,75 @@
+{
+  "generator": "built-in image_gen",
+  "atlas": {
+    "file": "harbor-garden-sprite-atlas.png",
+    "width": 1536,
+    "height": 1024,
+    "transparent": true,
+    "note": "Generator uses uneven column widths and row heights. Use explicit source rects; all listed boundaries checked alpha=0 at threshold 10.",
+    "sprites": [
+      {
+        "id": "cherry",
+        "x": 0,
+        "y": 0,
+        "w": 500,
+        "h": 600
+      },
+      {
+        "id": "cypress",
+        "x": 500,
+        "y": 0,
+        "w": 255,
+        "h": 600
+      },
+      {
+        "id": "palm",
+        "x": 755,
+        "y": 0,
+        "w": 420,
+        "h": 600
+      },
+      {
+        "id": "lavender",
+        "x": 1175,
+        "y": 0,
+        "w": 361,
+        "h": 600
+      },
+      {
+        "id": "sunflowers",
+        "x": 0,
+        "y": 600,
+        "w": 415,
+        "h": 424
+      },
+      {
+        "id": "hydrangea",
+        "x": 415,
+        "y": 600,
+        "w": 340,
+        "h": 424
+      },
+      {
+        "id": "bench",
+        "x": 755,
+        "y": 600,
+        "w": 400,
+        "h": 424
+      },
+      {
+        "id": "roseWall",
+        "x": 1155,
+        "y": 600,
+        "w": 381,
+        "h": 424
+      }
+    ],
+    "prompt": "Use case: stylized-concept. Asset type: production game environment sprite atlas for Little Harbor, a cozy seaside learning village. Create a LANDSCAPE transparent PNG, ideally 1536x1024, arranged as EXACTLY FOUR EQUAL COLUMNS AND TWO EQUAL ROWS, eight separate isolated sprites with no grid lines. Each sprite fully contained inside its own equal rectangular cell, generous transparent padding on all sides, no overlaps between cells. Top row left to right: (1) flowering pink cherry tree with visible trunk and small grass mound, (2) tall slender Mediterranean cypress with small grass mound, (3) seaside palm with curved brown trunk and elegant fronds, (4) rustic terracotta planter of purple lavender. Bottom row left to right: (5) dense cheerful sunflower bed with a neat low earth base, (6) round lush blue and lilac hydrangea shrub, (7) honey-colored wooden garden bench with two small flower pots at its feet, (8) low cream stone garden wall entwined with pink climbing roses. Style: richly detailed high quality storybook handpainted 3D isometric fantasy game assets, warm soft sunlight from upper left, believable foliage and natural textured materials. Match a cozy European harbor village with creamy stone cottages, teal slate roofs, amber-lit wooden doors, and realistic richly layered foliage. Consistent elevated three-quarter view, feet at bottom of each cell. Actual alpha transparency everywhere except objects; no white background, no opaque floor, no checkerboard painted into image, no cast shadows beyond each object's footprint. No characters, no text, no numbers, no logos, no frame."
+  },
+  "interior": {
+    "file": "harbor-learning-cottage-interior.png",
+    "width": 1536,
+    "height": 1024,
+    "prompt": "Use case: stylized-concept. Asset type: cozy learning cottage interior game background, landscape 3:2 1536x1024. Richly detailed high-quality warm handpainted storybook 3D fantasy scene inside a small seaside village library cottage, matching creamy stone European cottages with teal slate roofs, arched wooden doors and amber lanterns. Camera elevated three-quarter view looking into a dollhouse-like cutaway single room, showing full wooden plank floor across foreground, back wall and left and right walls. The central 60 percent of the floor must be spacious, clear, and completely walkable for a player avatar; do not put rugs, tables, chairs, obstacles or decor across the center. Place tall warm wooden bookshelves filled with colorful books only along the back and left wall, two graceful arched windows with turquoise curtains looking out to sea, cozy golden afternoon light, a writing and learning worktable only at the far right edge, several lush potted plants around outer room corners, stacked books and small ceramic ornaments along edges, warm plaster and timber walls, subtle lovely little details. Clear navigable interior composition with large empty oak-plank center floor; inviting and polished game-ready setting. No people, no characters, no visible text, no letters, no logos, no watermark, no UI elements. Fill the entire wide image with the interior scene, opaque background."
+  }
+}

@@ -66,5 +66,9 @@ for(const a of spec.assets){
  result.assets[a.id]=entry;console.log(a.id,width+'x'+height,buffer.length+' bytes',entry.transparent+'% transparent');
 }
 assert.equal(Object.keys(result.assets).length,13);assert.ok(total<4_500_000,'Town artwork download budget exceeded');
+const refresh=JSON.parse(await readFile(out+'/refresh-manifest.json','utf8'));
+assert.equal((await readFile(out+'/garden-atlas-v4.webp')).length,refresh.bytes);
+result.assets['garden-atlas-v4']=refresh;total+=refresh.bytes;result.version=4;
+assert.ok(total<4_500_000,'Expanded town artwork download budget exceeded');
 result.totalBytes=total;await writeFile(out+'/manifest.json',JSON.stringify(result,null,2));
 console.log('Town art package:',total,'bytes');

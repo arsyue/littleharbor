@@ -19,4 +19,6 @@ node --check public/app.mjs
 node --check public/aquarium/aquarium.mjs
 node --check public/aquarium/motion.mjs
 node cloud/motion.test.mjs
-node -e "const fs=require('fs');const files=['index.html','app.mjs','style.css','aquarium.css','content.mjs','state.mjs','voice.mjs','adventures.mjs','story-town.css','aquarium/index.html','aquarium/aquarium.mjs','aquarium/motion.mjs'];let total=0;for(const p of files)total+=fs.statSync('public/'+p).size;console.log('Initial game source:',total,'bytes');if(total>180000)throw Error('Initial download budget exceeded');"
+node cloud/improvements.test.mjs
+node --check public/indoor-games.mjs
+node -e "const fs=require('fs');const files=['index.html','app.mjs','style.css','aquarium.css','content.mjs','state.mjs','voice.mjs','speech-rules.mjs','readability.css','screen-mode.mjs','screen-mode.css','adventures.mjs','story-town.css','aquarium/index.html','aquarium/aquarium.mjs','aquarium/motion.mjs'];let total=0;for(const p of files)total+=fs.statSync('public/'+p).size;console.log('Initial game source:',total,'bytes');if(total>180000)throw Error('Initial download budget exceeded');"

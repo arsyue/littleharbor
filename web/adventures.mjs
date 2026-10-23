@@ -1,3 +1,4 @@
+import {assessAnswer} from './speech-rules.mjs';
 export const adventures=[
   {
     "id": "welcome",
@@ -771,10 +772,12 @@ export const discoveries=[
   }
 ];
 
+for(const d of discoveries){d.x=Math.round(d.x*18/13);d.y=Math.round(d.y*4/3);}
 const ids=new Set(adventures.map(a=>a.id)),spotIds=new Set(discoveries.map(s=>s.id));
 export function ensureAdventures(state){
  if(!state.adventures)state.adventures={progress:{},completed:[],discovered:[]};
  if(!state.town)state.town={x:1030,y:980};
+ if(state.townMapVersion!==2){state.town={x:Math.round(state.town.x*18/13),y:Math.round(state.town.y*4/3)};state.townMapVersion=2;}
  return state.adventures;
 }
 export function validAdventures(a){
@@ -783,12 +786,8 @@ export function validAdventures(a){
  Object.entries(a.progress).every(([id,n])=>ids.has(id)&&Number.isInteger(n)&&n>=0&&n<=adventures.find(x=>x.id===id).steps.length)&&
  a.completed.every(id=>ids.has(id))&&new Set(a.completed).size===a.completed.length&&a.discovered.every(id=>spotIds.has(id))&&new Set(a.discovered).size===a.discovered.length;
 }
-export function checkAnswer(text,step){
- const normalized=String(text).toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9\s]/g,' ');
- const words=normalized.trim().split(/\s+/).filter(Boolean);
- if(words.length<step.min)return {ok:false,message:'Try a full sentence with a little more detail. You can open the sentence starter for help.'};
- if(!step.groups.some(group=>group.every(word=>words.includes(word))))return {ok:false,message:'Good effort. Check the question and include the important details. Listen again or open the sentence starter.'};
- return {ok:true};
+export function checkAnswer(text,step,mode='standard'){
+ return assessAnswer(text,step,mode);
 }
 export function finishAdventure(state,id){
  const a=ensureAdventures(state),mission=adventures.find(m=>m.id===id);

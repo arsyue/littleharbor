@@ -8,7 +8,7 @@ function make(i,x=.18+(i*.032)%.64,y=.22+(i%4)*.12){
  return {uid:'fish-'+i,id,x,y,z:.2+(i%5)*.14,vx:i%2?-.025:.025,vy:0,heading:i%2?Math.PI:0,phase:i*.83,speed:speed[id],target:{x,y,z:.6},retarget:8};
 }
 const results=[];
-for(const [name,count,feeding,tier] of [['arrival',1,false,0],['crowded',20,false,2],['continuous feeding',20,true,2],['wall',1,false,0]]){
+for(const [name,count,feeding,tier] of [['arrival',1,false,0],['crowded',36,false,2],['continuous feeding',36,true,2],['wall',1,false,0]]){
  const random=seed(1258),fish=Array.from({length:count},(_,i)=>make(i)),seconds=120;
  if(name==='wall')Object.assign(fish[0],{x:.952,vx:.057,target:{x:.98,y:fish[0].y,z:.6}});
  let food=[],eaten=0,time=0;

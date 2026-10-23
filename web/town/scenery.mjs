@@ -1,5 +1,6 @@
+import {WORLD} from '../places.mjs';
 // Independently generated artwork is packaged on the cloud runner.
-export const artState={version:3,loaded:0,total:13,failed:[],generator:'ImageGen'};
+export const artState={version:4,loaded:0,total:14,failed:[],generator:'ImageGen'};
 const art={},objects=[];
 const TAU=Math.PI*2;
 const ellipse=(c,x,y,rx,ry,color)=>{c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);c.fill();};
@@ -9,9 +10,10 @@ let seed=1729;function random(){seed=(Math.imul(seed,1664525)+1013904223)>>>0;re
 export async function loadArt(){
  const response=await fetch('../assets/town-art/manifest.json');if(!response.ok)throw Error('The town artwork could not be loaded.');
  const manifest=await response.json();
+ artState.version=manifest.version;artState.total=Object.keys(manifest.assets).length;
  await Promise.all(Object.entries(manifest.assets).map(async([id,meta])=>{
   const img=new Image();img.src=meta.url;
-  try{await img.decode();art[id]={...meta,img};artState.loaded++;document.querySelector('#loading-progress').textContent='Preparing your town · '+artState.loaded+' / '+artState.total;}
+  try{await img.decode();art[id]={...meta,img};if(meta.sprites)for(const [key,bounds]of Object.entries(meta.sprites))art[key]={img,bounds};artState.loaded++;document.querySelector('#loading-progress').textContent='Preparing your town · '+artState.loaded+' / '+artState.total;}
   catch(e){artState.failed.push(id);throw e;}
  }));
  artState.bytes=manifest.totalBytes;
@@ -27,6 +29,7 @@ function character(c,id,index,x,y,height,bob=0){
 }
 const roads=[[[120,540],[2430,540]],[[120,1120],[2430,1120]],[[1070,95],[1070,1450]],[[140,745],[2030,745]],[[770,400],[770,1230]],[[1480,430],[1480,1390]],[[2070,500],[2070,1400]],[[260,1050],[260,1170]],[[1770,1120],[1770,1560]],[[2200,1400],[2430,1400]],[[720,1260],[2100,1260]]];
 export function paintGround(c,W,H){
+ c.save();c.scale(WORLD.sx,WORLD.sy);W=2600;H=1800;
  seed=1729;
  const grass=c.createLinearGradient(0,0,W,H);grass.addColorStop(0,'#a3c384');grass.addColorStop(.48,'#b6cc90');grass.addColorStop(1,'#7fae80');c.fillStyle=grass;c.fillRect(0,0,W,H);
  for(let i=0;i<180;i++){const x=random()*W,y=random()*H,rad=60+random()*180;const light=c.createRadialGradient(x,y,0,x,y,rad);light.addColorStop(0,i%3?'#e8edb52b':'#3c7e4820');light.addColorStop(1,'#ffffff00');c.fillStyle=light;c.fillRect(x-rad,y-rad,rad*2,rad*2);}
@@ -56,6 +59,7 @@ export function paintGround(c,W,H){
  for(let i=0;i<440;i++){const x=random()*W,y=random()*1430;const nearRoad=roads.some(([a,b])=>Math.abs(a[0]-b[0])<1?Math.abs(x-a[0])<65&&y>Math.min(a[1],b[1])-60&&y<Math.max(a[1],b[1])+60:Math.abs(y-a[1])<65&&x>a[0]-60&&x<b[0]+60);if(nearRoad)continue;
   ellipse(c,x,y+2,2.5,1.5,'#58804b66');ellipse(c,x,y,1.8,1.8,i%4?'#fff3ceaa':'#e4a995aa');
  }
+ c.restore();
 }
 function add(id,x,y,width,kind='plant',extra={}){objects.push({id,x,y,width,kind,...extra});}
 export function setupScenery(buildings,discoveries){
@@ -63,9 +67,12 @@ export function setupScenery(buildings,discoveries){
  const mapping={library:'library',market:'fish-market',workshop:'workshop',harbor:'harbor-office',home:'aquarium-home',cafe:'cafe',garden:'greenhouse',lighthouse:'lighthouse'};
  for(const b of buildings)add(mapping[b.detail],b.x+b.w/2,b.y+b.h+9,b.w+(b.detail==='home'?54:50),'building',{title:b.title?b.title.toLowerCase().replace(/\b\w/g,s=>s.toUpperCase()):'',baseline:b.y+b.h});
  const positions=[[70,380,155],[125,700,160],[660,365,145],[850,420,140],[1280,395,155],[1400,355,140],[1990,370,155],[2500,350,170],[2500,690,155],[2490,960,170],[2220,960,155],[2130,1070,135],[1280,1185,140],[1360,1135,150],[70,1020,160],[100,1300,175],[390,1315,150],[550,1380,150],[850,1335,160],[1570,1010,155],[1340,935,165],[1550,825,145],[2230,790,125],[2460,1380,160],[80,1440,125],[660,1405,120],[2500,1210,140],[1180,560,125],[1300,590,115],[390,680,140],[560,675,130],[1790,940,130],[1900,930,145],[1160,1100,130]];
- for(const [x,y,width]of positions)add('garden-tree',x,y,width,'tree',{flip:!!((x+y)%3)});
- for(const [x,y,width] of [[360,625,180],[570,640,155],[1180,920,175],[920,930,160],[1335,665,155],[1620,625,120],[1900,650,130],[420,1060,150],[680,1180,150],[1675,1330,140],[2210,690,165],[2400,755,150],[2210,850,165],[2390,875,145],[800,1445,130],[1510,1450,180],[1180,425,150]])add('flower-bed',x,y,width);
- add('fountain',1000,792,190,'fountain');
+ for(const [i,[x,y,width]]of positions.entries())add(['garden-tree','cherry','cypress','palm'][i%4],x*WORLD.sx,y*WORLD.sy,i%4===2?75:width+20,'tree',{flip:!!((x+y)%3)});
+ for(const [x,y,width] of [[360,625,180],[570,640,155],[1180,920,175],[920,930,160],[1335,665,155],[1620,625,120],[1900,650,130],[420,1060,150],[680,1180,150],[1675,1330,140],[2210,690,165],[2400,755,150],[2210,850,165],[2390,875,145],[800,1445,130],[1510,1450,180],[1180,425,150]])add(['flower-bed','lavender','sunflowers','hydrangea'][Math.floor(x)%4],x*WORLD.sx,y*WORLD.sy,width);
+ add('fountain',1000*WORLD.sx,792*WORLD.sy,210,'fountain');
+ for(const [x,y]of [[870,605],[1150,630],[660,1015],[1980,1190],[2180,1340],[310,480]])add('bench',x*WORLD.sx,y*WORLD.sy,125);
+ for(const [x,y]of [[480,460],[1200,370],[2120,415],[1950,1370],[880,1200]])add('roseWall',x*WORLD.sx,y*WORLD.sy,150);
+ for(let i=0;i<35;i++){const x=150+(i*137)%2300,y= i%2?485:1180;if(buildings.some(b=>Math.abs(b.x+b.w/2-x*WORLD.sx)<b.w/2+100&&Math.abs(b.y+b.h-y*WORLD.sy)<120))continue;add(['lavender','sunflowers','hydrangea'][i%3],x*WORLD.sx,y*WORLD.sy,75+(i%3)*12);}
  for(const s of discoveries)objects.push({id:'notice',x:s.x,y:s.y,width:50,kind:'notice'});
  objects.sort((a,b)=>a.y-b.y);
 }
@@ -80,7 +87,7 @@ function object(c,o,position,map=false){
  if(o.kind==='tree')ellipse(c,o.x+13,o.y-2,o.width*.36,12,'#2c5c3c27');
  sprite(c,o.id,o.x,o.y,o.width,behind?.48:1,o.flip);
  if(o.title&&!map){
-  c.font='600 11px system-ui';const tw=c.measureText(o.title).width+25;round(c,o.x-tw/2,o.y+6,tw,24,8,'#fff6dfef');c.fillStyle='#45675b';c.textAlign='center';c.fillText(o.title,o.x,o.y+22);
+  c.font='600 17px system-ui';const tw=c.measureText(o.title).width+25;round(c,o.x-tw/2,o.y+6,tw,32,8,'#fff6dfef');c.fillStyle='#45675b';c.textAlign='center';c.fillText(o.title,o.x,o.y+28);
  }
 }
 export function paintScenery(c,{position=null,npcs=[],walking=false,direction=0,foot=0,time=0,map=false,view=null}={}){
@@ -96,3 +103,5 @@ export function paintScenery(c,{position=null,npcs=[],walking=false,direction=0,
  }
  list.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());
 }
+
+export function paintExplorer(c,position,direction=0,walking=false,foot=0){const phase=walking?[1,0,2,0][Math.floor(foot*8)%4]:0;character(c,'explorer',direction*3+phase,position.x,position.y,100,walking?Math.sin(foot*16):0);}

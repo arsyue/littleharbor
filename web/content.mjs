@@ -19,9 +19,9 @@ export const decor=[
 {id:'rainbow',name:'Rainbow Arch',price:125,size:180,blurb:'Swim right into a rainbow.'}
 ];
 export const tanks=[
-{name:'Cozy Lagoon',fish:6,decor:5,price:0,width:74},
-{name:'Wonder Bay',fish:12,decor:10,price:240,width:85},
-{name:'Ocean Palace',fish:20,decor:18,price:600,width:95}
+{name:'Cozy Lagoon',fish:12,decor:8,price:0,width:74},
+{name:'Wonder Bay',fish:24,decor:16,price:240,width:85},
+{name:'Ocean Palace',fish:36,decor:24,price:600,width:95}
 ];
 export const people={
 mia:{name:'Mia',role:'Your friendly fish keeper',place:'Fish Market',color:'#d9efe6'},
