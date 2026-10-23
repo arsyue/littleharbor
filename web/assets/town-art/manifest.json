@@ -1,0 +1,276 @@
+{
+  "version": 3,
+  "generator": "ImageGen",
+  "assets": {
+    "fish-market": {
+      "url": "../assets/town-art/fish-market.webp",
+      "width": 900,
+      "height": 857,
+      "bytes": 246824,
+      "bounds": {
+        "x": 21,
+        "y": 3,
+        "w": 871,
+        "h": 819
+      },
+      "transparent": 36
+    },
+    "workshop": {
+      "url": "../assets/town-art/workshop.webp",
+      "width": 859,
+      "height": 900,
+      "bytes": 307946,
+      "bounds": {
+        "x": 18,
+        "y": 9,
+        "w": 834,
+        "h": 839
+      },
+      "transparent": 32
+    },
+    "library": {
+      "url": "../assets/town-art/library.webp",
+      "width": 900,
+      "height": 822,
+      "bytes": 293094,
+      "bounds": {
+        "x": 12,
+        "y": 13,
+        "w": 880,
+        "h": 771
+      },
+      "transparent": 30
+    },
+    "aquarium-home": {
+      "url": "../assets/town-art/aquarium-home.webp",
+      "width": 856,
+      "height": 900,
+      "bytes": 247012,
+      "bounds": {
+        "x": 41,
+        "y": 38,
+        "w": 804,
+        "h": 802
+      },
+      "transparent": 39
+    },
+    "harbor-office": {
+      "url": "../assets/town-art/harbor-office.webp",
+      "width": 900,
+      "height": 822,
+      "bytes": 224994,
+      "bounds": {
+        "x": 13,
+        "y": 3,
+        "w": 882,
+        "h": 797
+      },
+      "transparent": 35
+    },
+    "cafe": {
+      "url": "../assets/town-art/cafe.webp",
+      "width": 900,
+      "height": 822,
+      "bytes": 258980,
+      "bounds": {
+        "x": 38,
+        "y": 7,
+        "w": 845,
+        "h": 804
+      },
+      "transparent": 30
+    },
+    "greenhouse": {
+      "url": "../assets/town-art/greenhouse.webp",
+      "width": 900,
+      "height": 822,
+      "bytes": 302540,
+      "bounds": {
+        "x": 33,
+        "y": 11,
+        "w": 848,
+        "h": 766
+      },
+      "transparent": 37
+    },
+    "lighthouse": {
+      "url": "../assets/town-art/lighthouse.webp",
+      "width": 900,
+      "height": 900,
+      "bytes": 158222,
+      "bounds": {
+        "x": 163,
+        "y": 10,
+        "w": 584,
+        "h": 865
+      },
+      "transparent": 66
+    },
+    "garden-tree": {
+      "url": "../assets/town-art/garden-tree.webp",
+      "width": 619,
+      "height": 640,
+      "bytes": 224202,
+      "bounds": {
+        "x": 0,
+        "y": 2,
+        "w": 619,
+        "h": 637
+      },
+      "transparent": 41
+    },
+    "flower-bed": {
+      "url": "../assets/town-art/flower-bed.webp",
+      "width": 1024,
+      "height": 341,
+      "bytes": 168496,
+      "bounds": {
+        "x": 22,
+        "y": 18,
+        "w": 987,
+        "h": 304
+      },
+      "transparent": 45
+    },
+    "fountain": {
+      "url": "../assets/town-art/fountain.webp",
+      "width": 900,
+      "height": 824,
+      "bytes": 279232,
+      "bounds": {
+        "x": 4,
+        "y": 6,
+        "w": 890,
+        "h": 800
+      },
+      "transparent": 44
+    },
+    "explorer": {
+      "url": "../assets/town-art/explorer.webp",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 264124,
+      "bounds": {
+        "x": 261,
+        "y": 5,
+        "w": 762,
+        "h": 1239
+      },
+      "transparent": 82,
+      "frames": [
+        {
+          "x": 269,
+          "y": 5,
+          "w": 118,
+          "h": 305
+        },
+        {
+          "x": 563,
+          "y": 10,
+          "w": 120,
+          "h": 301
+        },
+        {
+          "x": 865,
+          "y": 12,
+          "w": 120,
+          "h": 300
+        },
+        {
+          "x": 261,
+          "y": 321,
+          "w": 123,
+          "h": 298
+        },
+        {
+          "x": 545,
+          "y": 324,
+          "w": 166,
+          "h": 297
+        },
+        {
+          "x": 842,
+          "y": 324,
+          "w": 181,
+          "h": 297
+        },
+        {
+          "x": 267,
+          "y": 628,
+          "w": 117,
+          "h": 303
+        },
+        {
+          "x": 561,
+          "y": 629,
+          "w": 128,
+          "h": 303
+        },
+        {
+          "x": 858,
+          "y": 631,
+          "w": 128,
+          "h": 302
+        },
+        {
+          "x": 271,
+          "y": 942,
+          "w": 125,
+          "h": 299
+        },
+        {
+          "x": 530,
+          "y": 947,
+          "w": 306,
+          "h": 297
+        },
+        {
+          "x": 836,
+          "y": 947,
+          "w": 172,
+          "h": 297
+        }
+      ]
+    },
+    "town-friends": {
+      "url": "../assets/town-art/town-friends.webp",
+      "width": 1600,
+      "height": 800,
+      "bytes": 287870,
+      "bounds": {
+        "x": 51,
+        "y": 10,
+        "w": 1537,
+        "h": 771
+      },
+      "transparent": 55,
+      "frames": [
+        {
+          "x": 51,
+          "y": 29,
+          "w": 292,
+          "h": 748
+        },
+        {
+          "x": 488,
+          "y": 13,
+          "w": 308,
+          "h": 764
+        },
+        {
+          "x": 822,
+          "y": 10,
+          "w": 308,
+          "h": 770
+        },
+        {
+          "x": 1222,
+          "y": 10,
+          "w": 366,
+          "h": 771
+        }
+      ]
+    }
+  },
+  "totalBytes": 3263536
+}

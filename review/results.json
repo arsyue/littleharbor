@@ -1,13 +1,17 @@
 {
   "success": true,
   "checks": [
+    "All 88 Kokoro recordings match the live dialogue and exist in the published build",
     "All 28 model answers validate; old saves remain valid; replays pay only 35 coins",
     "Aquarium starts within five seconds without an engine download",
     "Fish swim continuously",
     "Browser-rendered fish turn smoothly without abrupt direction snaps",
     "Pause and day/night controls work",
     "Clicking water feeds fish and rewards the quest once",
-    "Large continuous town supports keyboard walking and follows the explorer",
+    "All 13 independent ImageGen town assets load with transparency within the artwork budget",
+    "Large continuous town supports keyboard walking, directional character sprites and follows the explorer",
+    "Four greetings and all 84 story lines, hints and feedback play real Kokoro MP3s",
+    "Replay works; microphone start and dialog close interrupt narration immediately",
     "All four seven-turn stories complete, with default voice input and full-sentence checks",
     "Five clue gates require walking to notices; story progress survives reload",
     "Story rewards total 550 coins, paid once per first completion",
@@ -23,6 +27,6 @@
     "Mobile walking pad works and town UI fits the screen",
     "No browser or engine console errors"
   ],
-  "startupMs": 603,
+  "startupMs": 561,
   "rendererBytes": 20948
 }
