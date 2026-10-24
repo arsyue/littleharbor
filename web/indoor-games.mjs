@@ -16,7 +16,7 @@ export const quizzes={
 export const sentences=['The blue fish swims beside the shell','I would like two apples and one cake','The lighthouse helps boats find the harbor'];
 export const spellings=[['A sea animal with fins.','fish'],['A colorful plant with petals.','flower'],['A sheltered place where boats rest.','harbor']];
 export function showHouseGame(id,api,spotId='host'){
- const house=houses.find(h=>h.id===id);if(!house)return;const activity=activityFor(id,spotId);if(spotId!=='host'&&!activity)return;const reward=activity?.reward??[20,35,50][house.level];
+ const house=houses.find(h=>h.id===id);if(!house)return;if(spotId==='work'){const kind=({bakery:'bakery',bistro:'restaurant',pottery:'pottery',museum:'museum'})[id.slice(6)];if(kind)void import('./work-game.mjs').then(({showWork})=>showWork(kind,api));return;}const activity=activityFor(id,spotId);if(spotId!=='host'&&!activity)return;const reward=activity?.reward??[20,35,50][house.level];
  const {modal,closeModal,state,save,learn,burst,speak}=api;
  modal('<div class="modal-eyebrow">'+esc(houseLevels[house.level])+'</div><h2 id="modal-title">'+esc(activity?.name||house.name)+'</h2><p class="game-meta">'+['Pictures & words · Take your time','Listening & memory · Think it through','Reading & sentence building · A bigger challenge'][house.level]+'</p><div id="house-game-body"></div>','house-game');
  const body=document.querySelector('#house-game-body');let round=0,paid=false;
