@@ -6,32 +6,8 @@
     "Aquarium starts within five seconds without an engine download",
     "Fish swim continuously",
     "Browser-rendered fish turn smoothly without abrupt direction snaps",
-    "Pause and day/night controls work",
-    "Clicking water feeds fish and rewards the quest once",
-    "All 14 ImageGen town asset packages load with transparency within the artwork budget",
-    "Both ground textures load: natural limestone paving and short meadow grass",
-    "Large continuous town supports keyboard walking, directional character sprites and follows the explorer",
-    "Four greetings and all 84 story lines, hints and feedback play real Kokoro MP3s",
-    "Replay works; microphone start and dialog close interrupt narration immediately",
-    "All four seven-turn stories complete, with default voice input and configurable speaking support",
-    "Five clue gates require walking to notices; story progress survives reload",
-    "Story rewards total 550 coins, paid once per first completion",
-    "Adventure journal shows all stories and saved field notes",
-    "Every story location, garden, beach and lighthouse is reachable on foot",
-    "Purchased decoration appears in the aquarium and uses earned coins",
-    "Dragging a decoration saves placement and awards its quest",
-    "Purchased fish joins the aquarium",
-    "Tank upgrade enlarges the habitat and increases capacity",
-    "All sixteen species and sixteen decorations load inside tank bounds",
-    "Clicking a fish opens its details",
-    "Mobile layout fits viewport",
-    "Mobile walking pad works and town UI fits the screen",
-    "Native full screen fills town and aquarium, keeps dialogs and feeding usable, and restores normal layout on exit",
-    "Mobile fallback fills the viewport, switches scenes and exits with Escape even when the game frame has focus"
+    "Pause and day/night controls work"
   ],
-  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   '$(...).forEach is not a function',\n+   '$(...).forEach is not a function'\n+ ]\n- []\n",
-  "errors": [
-    "$(...).forEach is not a function",
-    "$(...).forEach is not a function"
-  ]
+  "error": "TimeoutError: frame.waitForFunction: Timeout 30000ms exceeded.",
+  "errors": []
 }
