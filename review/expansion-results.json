@@ -1,20 +1,249 @@
 {
-  "success": true,
+  "success": false,
   "checks": [
     "Walked from the original town to the new east-coast bistro",
-    "All 16 balconies are walkable and return to their own room; four different environments",
-    "Inn stairs, upstairs balcony and correct return floor work",
-    "bakery resumes after closing",
-    "bakery completes, pays once and offers the next shift",
-    "restaurant resumes after closing",
-    "restaurant completes, pays once and offers the next shift",
-    "pottery resumes after closing",
-    "pottery completes, pays once and offers the next shift",
-    "museum resumes after closing",
-    "museum completes, pays once and offers the next shift",
-    "Mobile voice/text switch, ingredients and saved shifts verified"
+    "All 16 balconies are walkable and return to their own room; four different environments"
   ],
-  "balconies": 16,
-  "workplaces": 4,
-  "errors": []
+  "error": "TimeoutError: frame.waitForFunction: Timeout 30000ms exceeded.",
+  "errors": [],
+  "diagnostics": {
+    "player": {
+      "x": 4665.056561706868,
+      "y": 586.1291657052941
+    },
+    "world": {
+      "width": 5400,
+      "height": 2400
+    },
+    "art": {
+      "version": 4,
+      "loaded": 14,
+      "total": 14,
+      "failed": [],
+      "generator": "ImageGen",
+      "ground": {
+        "version": 6,
+        "loaded": 2,
+        "total": 2,
+        "bytes": 525094
+      },
+      "expansion": {
+        "version": 7,
+        "loaded": 4,
+        "total": 4
+      },
+      "bytes": 3926152
+    },
+    "inside": "house-inn",
+    "roomPlayer": {
+      "x": 290,
+      "y": 470
+    },
+    "roomView": {
+      "scale": 1.0325,
+      "cx": 606.7796610169491,
+      "cy": 400
+    },
+    "roomBounds": {
+      "width": 1280,
+      "height": 800,
+      "top": 285,
+      "bottom": 758,
+      "exit": {
+        "id": "exit",
+        "kind": "exit",
+        "name": "DOWNSTAIRS",
+        "x": 900,
+        "y": 620
+      }
+    },
+    "roomFloor": 1,
+    "roomObjects": [
+      {
+        "id": "furniture-0",
+        "asset": "reading-table",
+        "x": 780,
+        "y": 510,
+        "width": 280,
+        "box": {
+          "x": 662.4,
+          "y": 445,
+          "w": 235.2,
+          "h": 80
+        }
+      }
+    ],
+    "propsReady": true,
+    "roomImage": {
+      "url": "../assets/expansion-v7/room-inn-upstairs.webp",
+      "ready": true,
+      "error": false
+    },
+    "roomSpots": [
+      {
+        "id": "host",
+        "name": "Lily",
+        "kind": "person",
+        "person": "lily",
+        "detail": "Help a friend",
+        "x": 400,
+        "y": 410,
+        "reward": 50
+      },
+      {
+        "id": "job-0",
+        "name": "Visitor desk",
+        "detail": "Help a visitor understand the directions.",
+        "kind": "object",
+        "x": 780,
+        "y": 575,
+        "furniture": "furniture-0",
+        "reward": 35
+      },
+      {
+        "id": "job-1",
+        "name": "Packing station",
+        "detail": "Prepare a careful delivery.",
+        "kind": "object",
+        "x": 450,
+        "y": 560,
+        "furniture": null,
+        "reward": 35
+      },
+      {
+        "id": "exit",
+        "kind": "exit",
+        "name": "DOWNSTAIRS",
+        "x": 900,
+        "y": 620
+      },
+      {
+        "id": "balcony",
+        "kind": "balcony",
+        "name": "BALCONY",
+        "detail": "Walk outside and explore",
+        "x": 290,
+        "y": 390
+      }
+    ],
+    "roomNear": null,
+    "roomTarget": null,
+    "houses": [
+      {
+        "id": "house-library",
+        "name": "Harbor Library · Navigator",
+        "x": 512,
+        "y": 589,
+        "house": true
+      },
+      {
+        "id": "house-market",
+        "name": "Fish Market · Explorer",
+        "x": 2348,
+        "y": 649,
+        "house": true
+      },
+      {
+        "id": "house-workshop",
+        "name": "Design Workshop · Adventurer",
+        "x": 635,
+        "y": 1330,
+        "house": true
+      },
+      {
+        "id": "house-harbor",
+        "name": "Harbor Office · Navigator",
+        "x": 2450,
+        "y": 1692,
+        "house": true
+      },
+      {
+        "id": "house-aquarium",
+        "name": "My Aquarium · Explorer",
+        "x": 299.5,
+        "y": 1375,
+        "house": true
+      },
+      {
+        "id": "house-cafe",
+        "name": "Sunbeam Café · Adventurer",
+        "x": 1451.5,
+        "y": 497,
+        "house": true
+      },
+      {
+        "id": "house-garden",
+        "name": "Glass Garden · Explorer",
+        "x": 3133,
+        "y": 642,
+        "house": true
+      },
+      {
+        "id": "house-lighthouse",
+        "name": "Lighthouse · Navigator",
+        "x": 3178,
+        "y": 1692,
+        "house": true
+      },
+      {
+        "id": "house-bakery",
+        "name": "Rose Bakery · Explorer",
+        "x": 176,
+        "y": 372,
+        "house": true
+      },
+      {
+        "id": "house-studio",
+        "name": "Shell Art Studio · Adventurer",
+        "x": 1017,
+        "y": 432,
+        "house": true
+      },
+      {
+        "id": "house-post",
+        "name": "Seabreeze Post · Navigator",
+        "x": 2018,
+        "y": 355,
+        "house": true
+      },
+      {
+        "id": "house-music",
+        "name": "Melody Cottage · Adventurer",
+        "x": 2939.5,
+        "y": 324,
+        "house": true
+      },
+      {
+        "id": "house-bistro",
+        "name": "Harbor Bistro · Adventurer",
+        "x": 4075,
+        "y": 1422,
+        "house": true
+      },
+      {
+        "id": "house-inn",
+        "name": "Seabreeze Inn · Navigator",
+        "x": 4676.5,
+        "y": 550,
+        "house": true
+      },
+      {
+        "id": "house-pottery",
+        "name": "Tideclay Pottery · Adventurer",
+        "x": 4991,
+        "y": 1389,
+        "house": true
+      },
+      {
+        "id": "house-museum",
+        "name": "Shell & Sail Museum · Navigator",
+        "x": 3984.5,
+        "y": 535,
+        "house": true
+      }
+    ],
+    "paused": false,
+    "walking": false,
+    "blocked": false
+  }
 }

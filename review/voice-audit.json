@@ -1,16 +1,16 @@
 {
   "success": true,
   "engine": "kokoro",
-  "clips": 156,
-  "durationSeconds": 1110.6,
-  "totalBytes": 11244144,
+  "clips": 216,
+  "durationSeconds": 1711.5,
+  "totalBytes": 17306784,
   "allClipsDecoded": true,
-  "manifestSha256": "d8e4c204f05ef5b3b571cb9248d5d9e5891de06886e1a4833cef5c7bc9703601",
+  "manifestSha256": "3c769073d290473305328721c9675ae8481118374139555f571962db408c502c",
   "readbacks": [
     {
       "id": "lily-greeting",
       "expected": "Hello again! I am planning a welcome day for new visitors. Could you help me make a thoughtful plan?",
-      "heard": "Hello again. I am planning a welcome day for new visitors. Could you help me make a thoughtful plan?",
+      "heard": "Hello again, I am planning a welcome day for new visitors. Could you help me make a thoughtful plan?",
       "wordErrorRate": 0.0
     },
     {
@@ -46,7 +46,7 @@
     {
       "id": "design-0-say",
       "expected": "A visitor wants an aquarium that feels peaceful. Describe the kind of aquarium you would design. Include at least one detail about its colors or decorations.",
-      "heard": "A visitor wants an aquarium that feels peaceful. Describe the kind of aquarium you would design, include at least one detail about its colors or decorations.",
+      "heard": "A visitor wants an aquarium that feels peaceful. Describe the kind of aquarium you would design. Include at least one detail about its colors or decorations.",
       "wordErrorRate": 0.0
     },
     {
@@ -96,6 +96,30 @@
       "expected": "Welcome, junior curator. We are preparing an exhibition about the sea and its history. Tell our visitors that you are ready to help them explore.",
       "heard": "Welcome, Junior Curator. We are preparing an exhibition about the sea and its history. Tell our visitors that you are ready to help them explore.",
       "wordErrorRate": 0.0
+    },
+    {
+      "id": "work-place-library-story",
+      "expected": "Milo found a map before he packed his bag. He packed before he sailed. Only after sailing did he discover the island. Put these events in order.",
+      "heard": "Milo found a map before he packed his bag. He packed before he sailed. Only after sailing did he discover the island. Put these events in order.",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "work-place-harbor-route",
+      "expected": "The boat starts at the bottom-left dock. Rocks block the middle channel. Go north twice, then east three times to reach the lighthouse dock. Follow each direction carefully.",
+      "heard": "The boat starts at the bottom left dock, rocks block the middle channel, go north twice, then east three times to reach the lighthouse dock, follow each direction carefully.",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "work-place-music-memory",
+      "expected": "Now try a longer phrase: so, mi, re, do. Listen carefully for the melody moving down. Copy all four notes in order.",
+      "heard": "Now try a longer phrase, so me, Ray do. Listen carefully for the melody moving down. Copy all four notes in order.",
+      "wordErrorRate": 0.091
+    },
+    {
+      "id": "work-place-inn-rooms",
+      "expected": "Room one has two beds on the ground floor. Room two is upstairs beside the music room. Room three is a quiet upstairs room facing the garden. Match the family and the writer to suitable rooms.",
+      "heard": "Room 1 has two beds on the ground floor. Room 2 is upstairs beside the music room. Room 3 is a quiet upstairs room facing the garden. Match the family and the writer to suitable rooms.",
+      "wordErrorRate": 0.083
     }
   ]
 }

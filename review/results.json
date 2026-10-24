@@ -1,5 +1,5 @@
 {
-  "success": true,
+  "success": false,
   "checks": [
     "All 88 Kokoro recordings match the live dialogue and exist in the published build",
     "All 28 model answers validate; old saves remain valid; replays pay only 35 coins",
@@ -27,9 +27,11 @@
     "Mobile layout fits viewport",
     "Mobile walking pad works and town UI fits the screen",
     "Native full screen fills town and aquarium, keeps dialogs and feeding usable, and restores normal layout on exit",
-    "Mobile fallback fills the viewport, switches scenes and exits with Escape even when the game frame has focus",
-    "No browser or engine console errors"
+    "Mobile fallback fills the viewport, switches scenes and exits with Escape even when the game frame has focus"
   ],
-  "startupMs": 603,
-  "rendererBytes": 23479
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   '$(...).forEach is not a function',\n+   '$(...).forEach is not a function'\n+ ]\n- []\n",
+  "errors": [
+    "$(...).forEach is not a function",
+    "$(...).forEach is not a function"
+  ]
 }
