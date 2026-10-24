@@ -1,14 +1,17 @@
 {
   "success": false,
   "checks": [
-    "Walked from the original town to the new east-coast bistro"
+    "Walked from the original town to the new east-coast bistro",
+    "All 16 balconies are walkable and return to their own room; four different environments",
+    "Inn stairs, upstairs balcony and correct return floor work",
+    "bakery resumes after closing"
   ],
-  "error": "TimeoutError: frame.waitForFunction: Timeout 30000ms exceeded.",
+  "error": "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded.",
   "errors": [],
   "diagnostics": {
     "player": {
-      "x": 299.5,
-      "y": 1425
+      "x": 176,
+      "y": 422
     },
     "world": {
       "width": 5400,
@@ -33,10 +36,10 @@
       },
       "bytes": 3926152
     },
-    "inside": "house-aquarium",
+    "inside": "house-bakery",
     "roomPlayer": {
-      "x": 1060,
-      "y": 550
+      "x": 675,
+      "y": 598
     },
     "roomView": {
       "scale": 1.0325,
@@ -60,27 +63,14 @@
     "roomObjects": [
       {
         "id": "furniture-0",
-        "asset": "display-tank",
-        "x": 615,
-        "y": 525,
-        "width": 350,
+        "asset": "bread-table",
+        "x": 675,
+        "y": 540,
+        "width": 325,
         "box": {
-          "x": 468,
-          "y": 460,
-          "w": 294,
-          "h": 80
-        }
-      },
-      {
-        "id": "furniture-1",
-        "asset": "planter",
-        "x": 1000,
-        "y": 550,
-        "width": 185,
-        "box": {
-          "x": 922.3,
-          "y": 485,
-          "w": 155.4,
+          "x": 538.5,
+          "y": 475,
+          "w": 273,
           "h": 80
         }
       },
@@ -101,39 +91,40 @@
     ],
     "propsReady": true,
     "roomImage": {
-      "url": "../assets/rooms-v5/aquarium.webp",
+      "url": "../assets/rooms-v5/bakery.webp",
       "ready": true,
       "error": false
     },
     "roomSpots": [
       {
         "id": "host",
-        "name": "Mia",
+        "name": "Lily",
         "detail": "Help a friend",
         "x": 410,
         "y": 385,
         "kind": "person",
-        "person": "mia",
+        "person": "lily",
         "reward": 20
       },
       {
-        "id": "job-0",
-        "name": "Care notebook",
-        "detail": "Make a healthy aquarium plan.",
-        "x": 615,
-        "y": 583,
-        "kind": "object",
+        "id": "work",
+        "name": "Bake bread",
+        "detail": "Listen, make choices and finish a real job",
+        "x": 675,
+        "y": 598,
+        "kind": "work",
         "furniture": "furniture-0",
-        "reward": 25
+        "reward": 90,
+        "work": "bakery"
       },
       {
         "id": "job-1",
-        "name": "Observation point",
-        "detail": "Look closely and compare.",
-        "x": 1000,
-        "y": 608,
+        "name": "Delivery baskets",
+        "detail": "Fill the morning orders.",
+        "x": 950,
+        "y": 385,
         "kind": "object",
-        "furniture": "furniture-1",
+        "furniture": null,
         "reward": 25
       },
       {
@@ -152,11 +143,8 @@
         "y": 470
       }
     ],
-    "roomNear": null,
-    "roomTarget": {
-      "x": 1092,
-      "y": 540
-    },
+    "roomNear": "work",
+    "roomTarget": null,
     "houses": [
       {
         "id": "house-library",
@@ -273,6 +261,6 @@
     ],
     "paused": false,
     "walking": false,
-    "blocked": true
+    "blocked": false
   }
 }

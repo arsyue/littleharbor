@@ -2,10 +2,10 @@
   "success": true,
   "engine": "kokoro",
   "clips": 156,
-  "durationSeconds": 1108.6,
-  "totalBytes": 11224464,
+  "durationSeconds": 1110.6,
+  "totalBytes": 11244144,
   "allClipsDecoded": true,
-  "manifestSha256": "2a6332e82bfc7f51bc98dfb5d0838b034e52d222c203a2d8cf044f648b04b1d5",
+  "manifestSha256": "d8e4c204f05ef5b3b571cb9248d5d9e5891de06886e1a4833cef5c7bc9703601",
   "readbacks": [
     {
       "id": "lily-greeting",
@@ -87,9 +87,9 @@
     },
     {
       "id": "work-clay-0-order",
-      "expected": "We are making a blue cup. It will have a waves pattern. Tell me the object and its color before we begin.",
-      "heard": "We are making a blue cup. It will have a waves pattern. Tell me the object in its color before we begin.",
-      "wordErrorRate": 0.045
+      "expected": "We are making a cup with ocean blue glaze and a waves pattern. Tell me the object and its color before we begin.",
+      "heard": "We are making a cup with ocean blue glaze and a waves pattern tell me the object and its color before we begin",
+      "wordErrorRate": 0.0
     },
     {
       "id": "work-museum-welcome",
