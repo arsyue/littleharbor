@@ -1,5 +1,6 @@
 const fs=require('fs'),path=require('path'),http=require('http'),assert=require('assert/strict');
 const {chromium}=require('playwright');
+fs.mkdirSync('qa-output',{recursive:true});
 const root=path.resolve('public'),server=http.createServer((req,res)=>{const name=decodeURIComponent(req.url.split('?')[0]);if(name==='/favicon.ico'){res.writeHead(204).end();return;}const p=path.join(root,name==='/'?'index.html':name);if(!p.startsWith(root+path.sep)){res.writeHead(403).end();return;}try{res.setHeader('Content-Type',({'.mjs':'text/javascript','.css':'text/css','.webp':'image/webp','.mp3':'audio/mpeg','.json':'application/json'})[path.extname(p)]||'text/html');res.end(fs.readFileSync(p));}catch{res.writeHead(404).end();}});
 (async()=>{
  await new Promise(r=>server.listen(8879,'127.0.0.1',r));const browser=await chromium.launch({headless:true}),page=await browser.newPage({viewport:{width:1440,height:1050}});
@@ -18,6 +19,7 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{const nam
  async function settle(){await f.waitForFunction(()=>!townDiagnostics.roomTarget,{timeout:15000});}
  async function near(id){const spot=await f.evaluate(id=>townDiagnostics.roomSpots.find(s=>s.id===id),id);await point(spot.x,spot.y);await f.waitForFunction(id=>townDiagnostics.roomNear===id&&!townDiagnostics.roomTarget,id,{timeout:15000});}
  async function key(k,ms){await f.locator('#world').focus();await page.keyboard.down(k);await page.waitForTimeout(ms);await page.keyboard.up(k);}
+ async function holdUntil(k,predicate){await f.locator('#world').focus();await page.keyboard.down(k);try{await f.waitForFunction(predicate,{},{timeout:10000});}finally{await page.keyboard.up(k);}}
  async function enter(h,first=false){
   if(!first){const e=await f.evaluate(id=>townDiagnostics.houses.find(h=>h.id===id),h.id);await page.evaluate(e=>document.querySelector('#town-engine').contentWindow.postMessage({littleHarborTown:true,type:'state',position:{x:e.x,y:e.y+50}},location.origin),e);}
   await f.locator('#destination').selectOption(h.id);await f.waitForFunction(id=>townDiagnostics.inside===id,h.id,{timeout:60000});
@@ -46,9 +48,9 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{const nam
    const obj=await f.evaluate(()=>townDiagnostics.roomObjects[0]);await point(obj.x,obj.y+90);await settle();await key('ArrowUp',1000);
    assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.y))>=obj.y+25,'central table blocks walking through it');
   }
-  await point(280,330);await settle();await key('ArrowUp',450);assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.y))<310,'upper floor is reachable');
+  await point(280,330);await settle();await holdUntil('ArrowUp',()=>townDiagnostics.roomPlayer.y<310);assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.y))<310,'upper floor is reachable');
   assert.equal(await f.evaluate(()=>townDiagnostics.blocked),false);
-  if(i===0){await key('ArrowRight',2200);assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.x))>760);await point(140,680);await settle();assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.x))<160);await key('ArrowRight',3800);assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.x))>1050);checks.push('Full floor, both sides, furniture collision and routing verified');}
+  if(i===0){await holdUntil('ArrowRight',()=>townDiagnostics.roomPlayer.x>790);assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.x))>760);await point(140,680);await settle();assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.x))<160);await holdUntil('ArrowRight',()=>townDiagnostics.roomPlayer.x>1090);assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.x))>1050);checks.push('Full floor, both sides, furniture collision and routing verified');}
   await solve(h);await solve(h,'job-0');await solve(h,'job-1');
   await point(420,610);await settle();await page.screenshot({path:'qa-output/interior-'+h.id+'.jpg',quality:78,fullPage:true});
   if(['house-lighthouse','house-post'].includes(h.id)){
@@ -62,7 +64,7 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{const nam
  const saved=await read();await page.reload();assert.equal((await read()).coins,saved.coins);assert.deepEqual((await read()).houseGames,saved.houseGames);checks.push('All indoor rewards persist after reloading');
  await page.setViewportSize({width:390,height:844});await page.locator('[data-nav="town"]').first().click();await page.waitForFunction(()=>document.querySelector('#town-engine')?.contentWindow.townDiagnostics);
  const mobile=page.frames().find(f=>f.url().includes('/town/'));await mobile.locator('#destination').selectOption('house-library');await mobile.waitForFunction(()=>townDiagnostics.inside==='house-library'&&townDiagnostics.roomImage.ready&&townDiagnostics.propsReady,{timeout:60000});
- const start=await mobile.evaluate(()=>townDiagnostics.roomPlayer.x),btn=await mobile.locator('[data-key="ArrowLeft"]').boundingBox();await page.mouse.move(btn.x+btn.width/2,btn.y+btn.height/2);await page.mouse.down();await page.waitForTimeout(900);await page.mouse.up();assert.ok((await mobile.evaluate(()=>townDiagnostics.roomPlayer.x))<start-100);
+ const start=await mobile.evaluate(()=>townDiagnostics.roomPlayer.x),btn=await mobile.locator('[data-key="ArrowLeft"]').boundingBox();await page.mouse.move(btn.x+btn.width/2,btn.y+btn.height/2);await page.mouse.down();try{await mobile.waitForFunction(x=>townDiagnostics.roomPlayer.x<x-110,start,{timeout:10000});}finally{await page.mouse.up();}assert.ok((await mobile.evaluate(()=>townDiagnostics.roomPlayer.x))<start-100);
  await page.screenshot({path:'qa-output/interior-mobile.jpg',fullPage:true,quality:82});assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
  await mobile.locator('#room-exit').click();await mobile.waitForFunction(()=>townDiagnostics.roomNear==='exit'&&!townDiagnostics.roomTarget);await mobile.locator('#room-play').click();await mobile.waitForFunction(()=>townDiagnostics.inside===null);checks.push('Mobile touch movement, camera, interaction and exit verified');
  await page.evaluate(async()=>{const {fish,decor}=await import('./content.mjs');const s=JSON.parse(localStorage.getItem('little-harbor-save-v1'));s.tank=2;s.fish=Array.from({length:60},(_,i)=>({uid:'full-fish-'+i,id:fish[i%fish.length].id,name:'Fish '+i}));s.decor=Array.from({length:48},(_,i)=>({uid:'full-decor-'+i,id:decor[i%decor.length].id,x:8+(i%12)*7.5,y:61+Math.floor(i/12)*9}));localStorage.setItem('little-harbor-save-v1',JSON.stringify(s));});

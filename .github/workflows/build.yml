@@ -91,7 +91,7 @@ jobs:
         if: always()
         run: |
           mkdir -p review
-          if [ -f qa-output/results.json ]; then
+          if [ -d qa-output ]; then
             cp qa-output/*.jpg qa-output/*.json review/
           fi
           git config user.name "Little Harbor Cloud"
