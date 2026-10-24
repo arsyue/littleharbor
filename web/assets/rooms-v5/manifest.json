@@ -1,0 +1,146 @@
+{
+  "backgrounds": {
+    "library": {
+      "bytes": 296976
+    },
+    "market": {
+      "bytes": 367320
+    },
+    "workshop": {
+      "bytes": 304508
+    },
+    "harbor": {
+      "bytes": 307386
+    },
+    "aquarium": {
+      "bytes": 308010
+    },
+    "cafe": {
+      "bytes": 349198
+    },
+    "garden": {
+      "bytes": 338338
+    },
+    "lighthouse": {
+      "bytes": 338062
+    },
+    "bakery": {
+      "bytes": 350760
+    },
+    "studio": {
+      "bytes": 449052
+    },
+    "post": {
+      "bytes": 289178
+    },
+    "music": {
+      "bytes": 266244
+    },
+    "lighthouse-upstairs": {
+      "bytes": 325028
+    },
+    "post-upstairs": {
+      "bytes": 269256
+    }
+  },
+  "props": {
+    "reading-table": {
+      "bytes": 159444
+    },
+    "display-tank": {
+      "bytes": 192304
+    },
+    "workbench": {
+      "bytes": 193262
+    },
+    "cafe-table": {
+      "bytes": 120910
+    },
+    "planter": {
+      "bytes": 156790
+    },
+    "chart-table": {
+      "bytes": 137808
+    },
+    "bread-table": {
+      "bytes": 136804
+    },
+    "art-easel": {
+      "bytes": 166164
+    },
+    "parcel-table": {
+      "bytes": 157190
+    },
+    "piano": {
+      "bytes": 142670
+    }
+  },
+  "fish": [
+    {
+      "id": "neon-tetra",
+      "bytes": 27398
+    },
+    {
+      "id": "yellow-tang",
+      "bytes": 33346
+    },
+    {
+      "id": "discus",
+      "bytes": 48908
+    },
+    {
+      "id": "platy",
+      "bytes": 29680
+    },
+    {
+      "id": "molly",
+      "bytes": 25316
+    },
+    {
+      "id": "swordtail",
+      "bytes": 24300
+    },
+    {
+      "id": "zebra-danio",
+      "bytes": 25104
+    },
+    {
+      "id": "rainbowfish",
+      "bytes": 29258
+    }
+  ],
+  "decor": [
+    {
+      "id": "driftwood",
+      "bytes": 65232
+    },
+    {
+      "id": "java-fern",
+      "bytes": 77126
+    },
+    {
+      "id": "red-ludwigia",
+      "bytes": 85480
+    },
+    {
+      "id": "stone-cave",
+      "bytes": 53952
+    },
+    {
+      "id": "air-bubbler",
+      "bytes": 36334
+    },
+    {
+      "id": "shipwreck",
+      "bytes": 67142
+    },
+    {
+      "id": "clay-pot",
+      "bytes": 55980
+    },
+    {
+      "id": "water-lily",
+      "bytes": 65170
+    }
+  ]
+}

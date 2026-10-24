@@ -21,7 +21,7 @@
     "Dragging a decoration saves placement and awards its quest",
     "Purchased fish joins the aquarium",
     "Tank upgrade enlarges the habitat and increases capacity",
-    "All eight species and eight decorations load inside tank bounds",
+    "All sixteen species and sixteen decorations load inside tank bounds",
     "Clicking a fish opens its details",
     "Mobile layout fits viewport",
     "Mobile walking pad works and town UI fits the screen",
@@ -29,6 +29,6 @@
     "Mobile fallback fills the viewport, switches scenes and exits with Escape even when the game frame has focus",
     "No browser or engine console errors"
   ],
-  "startupMs": 615,
-  "rendererBytes": 21006
+  "startupMs": 384,
+  "rendererBytes": 23479
 }
