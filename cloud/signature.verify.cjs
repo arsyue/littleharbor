@@ -35,6 +35,7 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{try{const
  }
  try{
   await page.goto('http://127.0.0.1:8891/');await page.evaluate(()=>localStorage.clear());await page.reload();await page.locator('[data-nav="town"]').first().click();await page.waitForFunction(()=>document.querySelector('#town-engine')?.contentWindow.townDiagnostics?.art.expansion?.loaded===4);f=page.frames().find(x=>x.url().includes('/town/'));
+  await page.locator('[data-action="quests"]').click();assert.equal(await page.locator('[data-place-game]').count(),16);await page.locator('.modal-close').click();
   assert.equal(Object.keys(gameCatalog).length,16);assert.equal(new Set(Object.values(gameCatalog).map(g=>g.name)).size,16);assert.deepEqual([...new Set(Object.values(gameCatalog).map(g=>g.level))].sort(),[1,2,3]);
   for(const kind of signatureKinds){
    activeKind=kind;console.log('SIGNATURE',kind);await enter(kind);const initial=(await read()).coins,plan=workPlan(kind,0);
