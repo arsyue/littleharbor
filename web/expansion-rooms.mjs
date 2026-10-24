@@ -44,10 +44,10 @@ function piece([asset,x,y,width],i){return{id:'furniture-'+i,asset,x,y,width,box
 export function extraBase(house,floor=0){
  const id=house.id.slice(6),spec=extraRooms[id],upper=id==='inn'&&floor===1;
  const objects=(upper?[['reading-table',780,510,280]]:spec.pieces).map(piece);
- const exit={id:'exit',kind:'exit',name:upper?'DOWNSTAIRS':'EXIT · Town',x:640,y:727};
- const spots=[{id:'host',name:({lily:'Lily',mia:'Mia',ben:'Ben',finn:'Captain Finn'})[house.person],kind:'person',person:house.person,detail:'Help a friend',x:upper?400:spec.host[0],y:upper?410:spec.host[1],reward:35},...jobs.map((j,i)=>({id:'job-'+i,name:j[0],detail:j[1],kind:'object',x:i?990:objects[0].x,y:i?645:objects[0].y+65,furniture:i?null:objects[0].id,reward:35})),exit];
+ const exit={id:'exit',kind:'exit',name:upper?'DOWNSTAIRS':'EXIT · Town',x:upper?900:640,y:upper?620:727};
+ const spots=[{id:'host',name:({lily:'Lily',mia:'Mia',ben:'Ben',finn:'Captain Finn'})[house.person],kind:'person',person:house.person,detail:'Help a friend',x:upper?400:spec.host[0],y:upper?410:spec.host[1],reward:35},...jobs.map((j,i)=>({id:'job-'+i,name:j[0],detail:j[1],kind:'object',x:i?(upper?450:990):objects[0].x,y:i?(upper?560:645):objects[0].y+65,furniture:i?null:objects[0].id,reward:35})),exit];
  if(id==='inn'&&!upper)spots.push({id:'stairs',kind:'stairs',name:'UPSTAIRS',detail:'Explore the Guest Lounge',x:440,y:370});
- return{id:house.id,theme:id,floor:upper?1:0,name:house.name+(upper?' · Guest Lounge':''),color:spec.color,image:'../assets/expansion-v7/room-'+id+(upper?'-upstairs':'')+'.webp',objects,holes:[],spawn:{x:430,y:650},exit,spots,activityJobs:jobs};
+ return{id:house.id,theme:id,floor:upper?1:0,name:house.name+(upper?' · Guest Lounge':''),color:spec.color,image:'../assets/expansion-v7/room-'+id+(upper?'-upstairs':'')+'.webp',objects,holes:upper?[{x:965,y:500,w:315,h:300}]:[],spawn:{x:430,y:650},exit,spots,activityJobs:jobs};
 }
 export function expandRoom(base,house,floor){
  const id=house.id.slice(6);
@@ -58,7 +58,7 @@ export function expandRoom(base,house,floor){
   return{id:house.id,theme:id,floor:2,balcony:true,name:house.name+' · '+(theme==='sea'?'Sea Terrace':theme==='garden'?'Garden Balcony':theme==='lighthouse'?'Viewing Balcony':'Rooftop Terrace'),color:'#8daeb0',image:'../assets/expansion-v7/balcony-'+theme+'.webp',objects,holes:[],spawn:{x:640,y:645},exit,polygon:[[180,400],[1100,400],[1190,755],[90,755]],activityJobs:balconyJobs,spots:[{id:'host',kind:'person',person:house.person,name:'Balcony guide',detail:'Share the view',x:480,y:460,reward:30},{id:'job-0',kind:'object',name:'View finder',detail:'Describe the view',x:875,y:590,furniture:'furniture-0',reward:35},{id:'job-1',kind:'object',name:'Garden care',detail:'Care for the balcony',x:310,y:565,furniture:'furniture-1',reward:30},exit]};
  }
  base.polygon=base.floor?null:plans[id];
- const embedded=extraRooms[id]&&!base.floor,door=embedded?extraRooms[id].door:['library','studio'].includes(id)?[290,470]:[1060,470];
+ const embedded=extraRooms[id]&&(!base.floor||id==='inn'),door=embedded?(base.floor?[290,390]:extraRooms[id].door):['library','studio'].includes(id)?[290,470]:[1060,470];
  const [x,y]=door;
  if(!embedded)base.objects.push({id:'balcony-door',asset:'balcony-door',url:'../assets/expansion-v7/balcony-door.webp',x,y:y-50,width:115,box:{x:x-40,y:y-65,w:80,h:16}});
  base.spots.push({id:'balcony',kind:'balcony',name:'BALCONY',detail:'Walk outside and explore',x,y});

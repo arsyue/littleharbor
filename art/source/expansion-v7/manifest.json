@@ -1,0 +1,89 @@
+{
+  "version": 7,
+  "generator": "ImageGen built-in",
+  "style": "Premium cozy storybook 2.5D Mediterranean harbor. Cream limestone, teal wood, terracotta, flowers and warm daylight. Independent building cutouts, distinct interiors, walkable balconies, baking and restaurant sprites, six character portraits.",
+  "assets": [
+    {
+      "id": "building-bistro",
+      "kind": "building"
+    },
+    {
+      "id": "building-museum",
+      "kind": "building"
+    },
+    {
+      "id": "building-inn",
+      "kind": "building"
+    },
+    {
+      "id": "building-pottery",
+      "kind": "building"
+    },
+    {
+      "id": "room-bistro",
+      "kind": "room"
+    },
+    {
+      "id": "room-inn",
+      "kind": "room"
+    },
+    {
+      "id": "room-pottery",
+      "kind": "room"
+    },
+    {
+      "id": "balcony-garden",
+      "kind": "room"
+    },
+    {
+      "id": "balcony-sea",
+      "kind": "room"
+    },
+    {
+      "id": "room-museum",
+      "kind": "room"
+    },
+    {
+      "id": "balcony-workshop",
+      "kind": "room"
+    },
+    {
+      "id": "balcony-lighthouse",
+      "kind": "room"
+    },
+    {
+      "id": "baking-stages",
+      "kind": "atlas",
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "id": "meal-tray",
+      "kind": "atlas",
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "id": "town-customers",
+      "kind": "atlas",
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "id": "balcony-door",
+      "kind": "prop",
+      "prompt": "ONE ISOLATED 3D GAME PROP, not a photograph: a small closed teal wooden double balcony door with cream stone arch frame and warm brass handles. Both door panels are CLOSED and solid opaque teal wood, small arched glass panes. Simple polished stylized adventure-game asset. Exact front-facing orthographic view, full door frame and threshold entirely visible. No flowers, no plants, no railings, no walls beyond the thin frame, no floor plane. Crisp hard silhouette on genuinely TRANSPARENT ALPHA background. No blurred backdrop, NO colored glow, NO vignette, NO shadow, NO environment, NO light rays. The entire exterior outside the door frame must be transparent. Square canvas."
+    },
+    {
+      "id": "room-inn-upstairs",
+      "kind": "room",
+      "prompt": "Premium polished cozy storybook 2.5D seaside adventure game background, landscape 16:10. Seabreeze Inn SECOND FLOOR guest lounge, distinct from a reception lobby: beautiful sunlit blue-and-ivory reading lounge with sea-facing open French balcony doors at back LEFT, arched windows along back wall, bookshelves at far right, two cozy armchairs only along far sides, honey oak floor and narrow blue patterned rug. A wooden staircase descending at the bottom RIGHT edge, only its top opening visible within x=1000..1250,y=650..800 of a 1280x800 scene. Clear spacious walking floor across center and lower left foreground from y=320 to bottom. Elevated frontal camera, realistic detailed warm limestone, teal wood, brass lamps, hydrangeas, sunny blue ocean beyond windows. No people, no text, no UI. Do not duplicate the downstairs reception desk. Beautiful finished detailed 3D storybook game art."
+    }
+  ]
+}
