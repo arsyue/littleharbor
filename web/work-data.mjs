@@ -35,7 +35,7 @@ export function workPlan(kind,variant=0){
  if(kind==='pottery'){
   const r=[{name:'Blue cup',shape:'Cup',clay:3,color:'Ocean blue',pattern:'Waves'},{name:'Garden bowl',shape:'Bowl',clay:5,color:'Leaf green',pattern:'Leaves'},{name:'Sunset vase',shape:'Vase',clay:4,color:'Warm coral',pattern:'Dots'}][variant%3];
   return[
-   step('clay-'+variant%3+'-order','speak','We are making a '+r.name.toLowerCase()+'. It will have a '+r.pattern.toLowerCase()+' pattern. Tell me the object and its color before we begin.',{title:r.name,hint:'I will make a '+r.name.toLowerCase()+'.',groups:[[(r.shape==='Braid'?'braids':r.shape.toLowerCase())],[r.name.split(' ')[0].toLowerCase()]]}),
+   step('clay-'+variant%3+'-order','speak','We are making a '+r.shape.toLowerCase()+' with '+r.color.toLowerCase()+' glaze and a '+r.pattern.toLowerCase()+' pattern. Tell me the object and its color before we begin.',{title:r.name,hint:'I will make a '+r.shape.toLowerCase()+' with '+r.color.toLowerCase()+' glaze.',groups:[[r.shape.toLowerCase()],[r.color.split(' ').at(-1).toLowerCase()]]}),
    step('clay-'+r.clay,'number','Take '+r.clay+' pieces of soft clay. Count the pieces so your object will have the right size.',{answer:r.clay,title:'Prepare your clay'}),
    step('clay-shape-'+r.shape,'choose','Shape the clay into a '+(r.shape==='Braid'?'braids':r.shape.toLowerCase())+'. Use the picture in your plan to guide you.',{answer:r.shape,choices:['Cup','Bowl','Vase'],title:'Shape the clay'}),
    step('clay-glaze-'+variant%3,'choose','Brush on '+r.color.toLowerCase()+' glaze. This coating will make the pottery colorful after firing.',{answer:r.color,choices:['Ocean blue','Leaf green','Warm coral'],title:'Choose a glaze'}),

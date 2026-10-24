@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {houses} from '../web/places.mjs';
-import {ROOM,roomFor,roomWalkable,roomRoute,activityFor,nearestSpot,floorPoint} from '../web/room-data.mjs';
+import {ROOM,roomFor,roomWalkable,roomRoute,activityFor,nearestSpot,floorPoint,roomArrival} from '../web/room-data.mjs';
 import {fish,decor,tanks} from '../web/content.mjs';
 import {newState,buy,validateState} from '../web/state.mjs';
 let routes=0,activities=0;const backgrounds=new Set();
@@ -19,6 +19,11 @@ for(const house of houses)for(const floor of [0,2,...(['house-lighthouse','house
   assert.equal(nearestSpot(room,spot).id,spot.id);activities++;
  }
  assert.equal(nearestSpot(room,room.exit).id,'exit');
+ for(const portal of room.spots.filter(s=>['balcony','stairs'].includes(s.kind))){
+  const arrival=roomArrival(room,portal.id);assert.ok(roomWalkable(room,arrival.x,arrival.y),house.id+' safe return from '+portal.id);
+  const path=roomRoute(room,arrival,room.exit);assert.ok(path.length);let prev=arrival;
+  for(const p of path){for(let i=0;i<=10;i++)assert.ok(roomWalkable(room,prev.x+(p.x-prev.x)*i/10,prev.y+(p.y-prev.y)*i/10),house.id+' exit route after return');prev=p;}
+ }
 }
 assert.equal(backgrounds.size,23);assert.equal(activities,66);assert.equal(activityFor('house-library','up-job-0'),null);assert.equal(activityFor('missing','job-0'),null);
 assert.equal(fish.length,16);assert.equal(decor.length,16);assert.deepEqual(tanks.map(t=>[t.fish,t.decor]),[[20,16],[40,32],[60,48]]);

@@ -1,4 +1,4 @@
-import {ROOM,roomFor,floorPoint,onFloor,nearestSpot,roomWalkable,roomRoute} from '../room-data.mjs';
+import {ROOM,roomFor,floorPoint,onFloor,nearestSpot,roomWalkable,roomRoute,roomArrival} from '../room-data.mjs';
 import {WORLD,houses,entrances,houseLevels} from '../places.mjs';
 import {discoveries} from '../adventures.mjs';
 import {artState,loadArt,paintGround,setupScenery,paintScenery,paintExplorer,paintResident} from './scenery.mjs';
@@ -100,7 +100,7 @@ function useRoomExit(){if(roomSpec.balcony){enterRoom(inside.id,balconyReturnFlo
 function enterRoom(id,floor=0,arrival=null){
  inside=houses.find(b=>b.id===id);if(!inside)return;roomSpec=roomFor(inside,floor);
  path=[];goal=null;held.clear();roomTarget=null;roomPath=[];roomNear=null;walking=false;roomPlayer={...roomSpec.spawn};direction=2;
- if(arrival){const s=roomSpec.spots.find(s=>s.id===arrival);if(s)roomPlayer=floorPoint(s.x,s.y+80,roomSpec);}
+ if(arrival)roomPlayer=roomArrival(roomSpec,arrival);
  for(const obj of roomSpec.objects)if(!roomProps.has(obj.asset)){const img=new Image(),rec={img,ready:false,error:false};roomProps.set(obj.asset,rec);img.onload=()=>rec.ready=true;img.onerror=()=>rec.error=true;img.src=obj.url||'../assets/room-props/'+obj.asset+'.webp';}
  const imageKey=id+':'+roomSpec.floor;
  if(!roomImages.has(imageKey)){const img=new Image();const record={img,ready:false,error:false};roomImages.set(imageKey,record);img.onload=()=>record.ready=true;img.onerror=()=>record.error=true;img.src=roomSpec.image;}
