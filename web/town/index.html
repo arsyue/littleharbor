@@ -31,6 +31,29 @@ body{background:#96b983;color:#284e47}
 
 html,body{font-size:18px}.badge b{font-size:25px}.badge small,#status,.help{font-size:16px}.minimap{width:216px;height:150px;top:83px}.routes select{max-width:270px}.badge{max-width:45%}#status{top:112px;max-width:330px}#interact{font-size:18px;max-width:340px}.room-ui{position:absolute;inset:20px 22px auto;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.room-ui[hidden]{display:none}.room-ui>div{background:#fff8e9ed;padding:16px;border:1px solid #fff;border-radius:16px;box-shadow:0 8px 25px #38271725}.room-ui b{font:600 26px Georgia}.room-ui p{margin:8px 0 0;font-size:17px}.room-actions{display:flex;gap:8px}.room-actions button{border:0;border-radius:10px;background:#306957;color:white;padding:14px}.room-actions button:last-child{background:#e6d5b3;color:#314e42}.in-room .badge,.in-room .routes,.in-room .minimap,.in-room #status,.in-room #interact{display:none}.in-room .help{bottom:16px}
 @media(max-width:700px){.badge{max-width:47%;padding:10px 12px}.badge:before{display:none}.badge b{font-size:20px}.badge small{font-size:14px}.routes select{font-size:15px;width:155px;max-width:44vw}.minimap{width:154px;height:107px;top:70px}.help{display:none}#status{font-size:14px;top:120px;max-width:45%;padding:7px}#interact{max-width:51%;bottom:25px;font-size:16px}.room-ui{inset:12px;bottom:auto;display:block}.room-ui b{font-size:22px}.room-ui p{font-size:15px}.room-ui>div{padding:12px}.room-actions{margin-top:8px}.room-actions button{font-size:16px;flex:1;padding:12px 8px}.pad{bottom:18px}}
+
+/* Indoor HUD remains outside the walkable canvas and works with touch controls. */
+.room-ui{inset:18px;display:block;pointer-events:none}
+.room-ui>div{box-shadow:none;border:0;background:none;padding:0}
+.room-ui .room-heading{display:inline-block;background:#fff8e9f2;box-shadow:0 8px 30px #182e3b30;border:1px solid #fff8dc;padding:15px 20px;border-radius:16px;max-width:calc(100% - 220px)}
+.room-eyebrow{display:block;font:700 10px system-ui;letter-spacing:2px;color:#6b8c7d;margin-bottom:5px}
+.room-ui b{display:block;font:600 25px Georgia;color:#254d46}
+.room-ui p{font:14px/1.5 system-ui;margin:5px 0 0}
+.room-exit-guide{position:absolute;right:0;top:0;pointer-events:auto;background:#245a50f2;color:#fff4cc;border:1px solid #e9d09c;border-radius:12px;padding:13px 17px;font:600 15px system-ui;min-height:48px}
+.room-ui .room-actions{position:fixed;right:22px;bottom:24px;margin:0;display:block;max-width:345px;background:#fff8e9f5;padding:12px 14px;border:1px solid #fff8dc;border-radius:16px;box-shadow:0 5px 25px #173b3533;pointer-events:auto}
+.room-actions p{margin:0 0 9px;font-size:14px;color:#456258}
+.room-actions #room-play{background:#245e50;color:#fff8de;width:100%;font:600 16px/1.3 system-ui;min-height:49px;border-radius:10px;padding:12px}
+.room-actions #room-play:disabled{opacity:.7;background:#6c8176;cursor:default}
+.in-room .help{display:none}
+@media(max-width:700px){
+ .room-ui{inset:10px}.room-ui .room-heading{padding:10px 12px;max-width:calc(100% - 123px)}
+ .room-ui b{font-size:19px}.room-ui p{font-size:12px}.room-eyebrow{font-size:8px;letter-spacing:1px}
+ .room-exit-guide{width:116px;padding:10px 6px;font-size:13px;min-height:50px}
+ .room-ui .room-actions{right:10px;bottom:18px;max-width:calc(100% - 168px);padding:9px}
+ .room-actions p{font-size:12px}.room-actions #room-play{font-size:13px;padding:9px 5px;min-height:52px}
+ .in-room .pad{transform:scale(.88);transform-origin:left bottom}
+}
+
 </style></head><body>
 <div id="loading" role="status"><span class="shell">✦</span><b>Little Harbor</b><p>A little adventure by the sea</p><p id="loading-progress">Opening the harbor…</p><button id="retry" hidden>Try again</button></div>
 <canvas id="world" tabindex="0" aria-label="Walk around Little Harbor. Use arrow keys or W A S D, tap the ground, or choose a destination. Press E near a person or sign."></canvas>

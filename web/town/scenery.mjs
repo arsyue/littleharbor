@@ -104,4 +104,6 @@ export function paintScenery(c,{position=null,npcs=[],walking=false,direction=0,
  list.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());
 }
 
-export function paintExplorer(c,position,direction=0,walking=false,foot=0){const phase=walking?[1,0,2,0][Math.floor(foot*8)%4]:0;character(c,'explorer',direction*3+phase,position.x,position.y,100,walking?Math.sin(foot*16):0);}
+export function paintExplorer(c,position,direction=0,walking=false,foot=0,height=132){const phase=walking?[1,0,2,0][Math.floor(foot*8)%4]:0;character(c,'explorer',direction*3+phase,position.x,position.y,height,walking?Math.sin(foot*16):0);}
+
+export function paintResident(c,person,x,y,time=0){character(c,'town-friends',({lily:0,mia:1,ben:2,finn:3})[person]??0,x,y,132,Math.sin(time*1.5)*.6);}

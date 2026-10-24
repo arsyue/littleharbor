@@ -1,6 +1,7 @@
+import {ROOM,roomFor,floorPoint,onFloor,nearestSpot,roomWalkable,roomRoute} from '../room-data.mjs';
 import {WORLD,houses,entrances,houseLevels} from '../places.mjs';
 import {discoveries} from '../adventures.mjs';
-import {artState,loadArt,paintGround,setupScenery,paintScenery,paintExplorer} from './scenery.mjs';
+import {artState,loadArt,paintGround,setupScenery,paintScenery,paintExplorer,paintResident} from './scenery.mjs';
 const W=WORLD.width,H=WORLD.height,STEP=40,cols=Math.ceil(W/STEP),rows=Math.ceil(H/STEP);
 const canvas=document.querySelector('#world'),ctx=canvas.getContext('2d',{alpha:false}),mini=document.querySelector('#map'),mctx=mini.getContext('2d');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),rnd=(a,b)=>a+Math.random()*(b-a),send=d=>parent.postMessage({littleHarborTown:true,...d},location.origin);
@@ -83,23 +84,116 @@ function update(dt){
  if(time-savedAt>1&&Math.hypot(position.x-lastSaved.x,position.y-lastSaved.y)>12){savedAt=time;lastSaved={...position};send({type:'position',x:position.x,y:position.y});}
 }
 
-let inside=null,roomPlayer={x:480,y:550},roomTarget=null;
-const roomImage=new Image();roomImage.src='../assets/town-art/cottage-interior-v4.webp';
+
+let inside=null,roomPlayer={x:640,y:625},roomTarget=null,roomSpec=null,roomNear=null,roomPath=[];
+const roomProps=new Map();
+const roomImages=new Map();
 const roomUi=document.createElement('section');roomUi.className='room-ui';roomUi.hidden=true;
-roomUi.innerHTML='<div><b id="room-title"></b><p id="room-level"></p></div><div class="room-actions"><button id="room-play">Play activity · 开始游戏</button><button id="room-exit">Outside · 返回小镇</button></div>';
+roomUi.innerHTML='<div class="room-heading"><span class="room-eyebrow">LITTLE HARBOR · INDOORS</span><b id="room-title"></b><p id="room-level"></p></div><button id="room-exit" class="room-exit-guide">Walk to exit ↓</button><div class="room-actions"><p id="room-hint">Walk to a friend or a golden marker.</p><button id="room-play" disabled>Walk closer to interact</button></div>';
 document.body.append(roomUi);
-document.querySelector('#room-play').onclick=playRoom;document.querySelector('#room-exit').onclick=exitRoom;
-function enterRoom(id){inside=houses.find(b=>b.id===id);if(!inside)return;path=[];goal=null;held.clear();roomTarget=null;roomPlayer={x:480,y:550};roomUi.hidden=false;document.body.classList.add('in-room');document.querySelector('#room-title').textContent=inside.name;document.querySelector('#room-level').textContent=houseLevels[inside.level]+' · '+['Choose pictures','Listen & remember','Read & create'][inside.level];canvas.focus();}
-function exitRoom(){inside=null;roomUi.hidden=true;document.body.classList.remove('in-room');held.clear();roomTarget=null;canvas.focus();}
-function playRoom(){if(inside&&!paused)send({type:'house-game',id:inside.id});}
-function updateRoom(dt){let dx=(held.has('ArrowRight')||held.has('d')?1:0)-(held.has('ArrowLeft')||held.has('a')?1:0),dy=(held.has('ArrowDown')||held.has('s')?1:0)-(held.has('ArrowUp')||held.has('w')?1:0);if(dx||dy)roomTarget=null;else if(roomTarget){dx=roomTarget.x-roomPlayer.x;dy=roomTarget.y-roomPlayer.y;if(Math.hypot(dx,dy)<8){roomTarget=null;dx=dy=0;}}const len=Math.hypot(dx,dy);walking=!!len;if(len){direction=Math.abs(dx)>Math.abs(dy)?(dx>0?1:3):(dy>0?0:2);roomPlayer.x=clamp(roomPlayer.x+dx/len*190*dt,240,740);roomPlayer.y=clamp(roomPlayer.y+dy/len*190*dt,370,595);foot+=dt;}}
-function roomView(){const scale=Math.max(w/960,h/640);return {scale,cx:clamp(roomPlayer.x,w/scale/2,960-w/scale/2)};}
-function drawRoom(){ctx.fillStyle='#d5b789';ctx.fillRect(0,0,w,h);ctx.save();const v=roomView();ctx.translate(w/2-v.cx*v.scale,0);ctx.scale(v.scale,v.scale);if(roomImage.complete&&roomImage.naturalWidth)ctx.drawImage(roomImage,0,0,960,640);paintExplorer(ctx,roomPlayer,direction,walking,foot);ctx.restore();window.townDiagnostics={player:{...position},world:{width:W,height:H},art:{...artState},inside:inside.id,roomPlayer:{...roomPlayer},houses:entrances,paused,walking,blocked:false};}
+const roomPlay=document.querySelector('#room-play'),roomExit=document.querySelector('#room-exit'),roomHint=document.querySelector('#room-hint');
+roomPlay.onclick=()=>{playRoom();canvas.focus();};
+roomExit.onclick=()=>{if(!inside||paused)return;if(Math.hypot(roomPlayer.x-roomSpec.exit.x,roomPlayer.y-roomSpec.exit.y)<82)useRoomExit();else walkRoomTo(roomSpec.exit);canvas.focus();};
+function walkRoomTo(p){roomPath=roomRoute(roomSpec,roomPlayer,p);roomTarget=roomPath.shift()||null;}
+function useRoomExit(){if(roomSpec.floor){const id=inside.id;enterRoom(id,0,'stairs');}else exitRoom();}
+function enterRoom(id,floor=0,arrival=null){
+ inside=houses.find(b=>b.id===id);if(!inside)return;roomSpec=roomFor(inside,floor);
+ path=[];goal=null;held.clear();roomTarget=null;roomPath=[];roomNear=null;walking=false;roomPlayer={...roomSpec.spawn};direction=2;
+ if(arrival==='stairs'){const s=roomSpec.spots.find(s=>s.id==='stairs');if(s)roomPlayer=floorPoint(s.x,s.y+90);}
+ for(const obj of roomSpec.objects)if(!roomProps.has(obj.asset)){const img=new Image(),rec={img,ready:false,error:false};roomProps.set(obj.asset,rec);img.onload=()=>rec.ready=true;img.onerror=()=>rec.error=true;img.src='../assets/room-props/'+obj.asset+'.webp';}
+ const imageKey=id+':'+roomSpec.floor;
+ if(!roomImages.has(imageKey)){const img=new Image();const record={img,ready:false,error:false};roomImages.set(imageKey,record);img.onload=()=>record.ready=true;img.onerror=()=>record.error=true;img.src=roomSpec.image;}
+ roomUi.hidden=false;document.body.classList.add('in-room');document.querySelector('#room-title').textContent=roomSpec.name;
+ document.querySelector('#room-level').textContent='3 jobs to earn coins · Walk up, then press E';canvas.focus();updateRoomPrompt();
+}
+function exitRoom(){
+ if(!inside)return;const door=entrances.find(e=>e.id===inside.id);if(door){position={x:door.x,y:door.y+24};camera={...position};}
+ inside=null;roomSpec=null;roomNear=null;roomUi.hidden=true;document.body.classList.remove('in-room');held.clear();roomTarget=null;path=[];goal=null;walking=false;canvas.focus();
+}
+function playRoom(target=null){
+ if(!inside||paused)return;roomNear=target?roomSpec.spots.find(s=>s.id===target.id):nearestSpot(roomSpec,roomPlayer);if(!roomNear||Math.hypot(roomNear.x-roomPlayer.x,roomNear.y-roomPlayer.y)>(roomNear.id==='stairs'?68:roomNear.id==='exit'?82:75))return;
+ roomTarget=null;roomPath=[];held.clear();walking=false;
+ if(roomNear.id==='exit'){useRoomExit();return;}
+ if(roomNear.id==='stairs'){enterRoom(inside.id,1);return;}
+ send({type:'house-game',id:inside.id,spot:roomSpec.floor&&roomNear.id!=='host'?'up-'+roomNear.id:roomNear.id});
+}
+function updateRoomPrompt(){
+ roomNear=nearestSpot(roomSpec,roomPlayer);
+ roomPlay.disabled=!roomNear;roomPlay.textContent=roomNear?(roomNear.id==='exit'?(roomSpec.floor?'E · Go downstairs':'E · Exit to town'):roomNear.id==='stairs'?'E · Go upstairs':'E · '+roomNear.name+' · +'+roomNear.reward+' coins'):'Walk closer to interact';
+ roomHint.textContent=roomNear?(roomNear.id==='exit'?(roomSpec.floor?'Return to the ground floor.':'Your adventure continues outside.'):roomNear.id==='stairs'?roomNear.detail+'.':roomNear.detail+'. Complete the activity to earn coins.'):'Walk to a friend or a golden marker. Tap the floor or use the arrow keys.';
+ roomExit.textContent=Math.hypot(roomPlayer.x-roomSpec.exit.x,roomPlayer.y-roomSpec.exit.y)<82?(roomSpec.floor?'E · Downstairs':'E · Exit to town'):(roomSpec.floor?'Walk downstairs ↓':'Walk to exit ↓');
+}
+function updateRoom(dt){
+ let dx=(held.has('ArrowRight')||held.has('d')?1:0)-(held.has('ArrowLeft')||held.has('a')?1:0),dy=(held.has('ArrowDown')||held.has('s')?1:0)-(held.has('ArrowUp')||held.has('w')?1:0);
+ const manual=!!(dx||dy);if(manual){roomTarget=null;roomPath=[];}
+ else if(roomTarget){dx=roomTarget.x-roomPlayer.x;dy=roomTarget.y-roomPlayer.y;if(Math.hypot(dx,dy)<3){roomPlayer={...roomTarget};roomTarget=roomPath.shift()||null;dx=dy=0;}}
+ const len=Math.hypot(dx,dy);walking=false;
+ if(len){direction=Math.abs(dx)>Math.abs(dy)?(dx>0?1:3):(dy>0?0:2);
+ const step=manual?260*dt:Math.min(260*dt,len),p=floorPoint(roomPlayer.x+dx/len*step,roomPlayer.y+dy/len*step);
+ const before={...roomPlayer};if(roomWalkable(roomSpec,p.x,roomPlayer.y))roomPlayer.x=p.x;if(roomWalkable(roomSpec,roomPlayer.x,p.y))roomPlayer.y=p.y;walking=Math.hypot(roomPlayer.x-before.x,roomPlayer.y-before.y)>.05;if(walking)foot+=dt;
+ }
+ updateRoomPrompt();
+}
+function roomView(){
+ const scale=Math.max(w/ROOM.width,h/ROOM.height,.8);
+ return {scale,cx:clamp(roomPlayer.x,w/scale/2,ROOM.width-w/scale/2),cy:clamp(roomPlayer.y,h/scale/2,ROOM.height-h/scale/2)};
+}
+function roomLabel(s,active){
+ const y=s.kind==='person'?s.y-156:s.y-70;
+ ctx.font='600 18px system-ui';const ww=Math.max(96,ctx.measureText(s.name).width+30);
+ round(ctx,s.x-ww/2,y,ww,33,10,active?'#fff5cb':'#fff9ebf2',active?'#d7aa47':'#ffffff88');
+ ctx.fillStyle='#284c4b';ctx.textAlign='center';ctx.fillText(s.name,s.x,y+23);
+ if(s.reward){ctx.font='600 13px system-ui';ctx.fillStyle='#fff5cf';round(ctx,s.x-39,y-23,78,21,7,'#245d55e8');ctx.fillStyle='#fff5cf';ctx.fillText('+'+s.reward+' coins',s.x,y-8);}
+}
+function drawRoomObject(s){
+ const active=roomNear?.id===s.id;
+ ellipse(ctx,s.x,s.y+2,36,12,active?'#fbe1a877':'#ffe8ad33');ctx.strokeStyle=active?'#ffeda9':'#efd49ba8';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(s.x,s.y+2,36,12,0,0,Math.PI*2);ctx.stroke();
+ if(s.kind==='person'){paintResident(ctx,s.person,s.x,s.y,time);return;}
+ if(s.kind==='stairs'){line(ctx,[[s.x-18,s.y-5],[s.x,s.y-24],[s.x+18,s.y-5]],'#fff1b5',6);return;}
+ if(s.furniture)return;
+ // A small, freestanding activity lectern marks a tangible workstation.
+ round(ctx,s.x-5,s.y-38,10,40,3,'#74533d');ellipse(ctx,s.x,s.y-1,18,5,'#78573f');
+ poly(ctx,[[s.x-26,s.y-43],[s.x+19,s.y-48],[s.x+28,s.y-28],[s.x-24,s.y-22]],'#a67c50','#e3be80');
+ poly(ctx,[[s.x-20,s.y-42],[s.x,s.y-43],[s.x+1,s.y-27],[s.x-19,s.y-25]],'#fff0d0');
+ poly(ctx,[[s.x+1,s.y-43],[s.x+18,s.y-45],[s.x+23,s.y-29],[s.x+2,s.y-27]],'#e8dcbf');
+ ctx.fillStyle='#5c8b80';ctx.fillRect(s.x-14,s.y-37,10,2);ctx.fillRect(s.x+6,s.y-37,10,2);
+}
+function drawRoomExit(){
+ const s=roomSpec.exit,active=roomNear?.id==='exit';
+ const glow=ctx.createRadialGradient(s.x,s.y,8,s.x,s.y,120);glow.addColorStop(0,active?'#f9d77a77':'#f4db7838');glow.addColorStop(1,'#ffdd7700');ctx.fillStyle=glow;ctx.fillRect(s.x-120,s.y-120,240,160);
+ poly(ctx,[[s.x-82,s.y-5],[s.x+82,s.y-5],[s.x+103,s.y+61],[s.x-103,s.y+61]],'#435f598f','#f7e4ad');
+ for(const xx of [-89,89]){round(ctx,s.x+xx-8,s.y-58,16,87,3,'#b18a53','#f2d69e');ellipse(ctx,s.x+xx,s.y-58,10,5,'#f8dfa7');}
+ round(ctx,s.x-87,s.y-67,174,36,8,'#1e574e','#e6c578');
+ ctx.textAlign='center';ctx.font='bold 19px system-ui';ctx.fillStyle='#fff7d6';ctx.fillText(roomSpec.floor?'DOWNSTAIRS':'EXIT · TOWN',s.x,s.y-42);
+ for(let i=0;i<2;i++)line(ctx,[[s.x-12,s.y+i*18],[s.x,s.y+10+i*18],[s.x+12,s.y+i*18]],'#ffeab0',4);
+ ctx.font='600 13px system-ui';ctx.fillText('Walk here · press E',s.x,s.y+53);
+}
+function drawRoom(){
+ ctx.fillStyle='#243b38';ctx.fillRect(0,0,w,h);ctx.save();const v=roomView();ctx.translate(w/2-v.cx*v.scale,h/2-v.cy*v.scale);ctx.scale(v.scale,v.scale);
+ const record=roomImages.get(inside.id+':'+roomSpec.floor);
+ if(record?.ready)ctx.drawImage(record.img,0,0,ROOM.width,ROOM.height);
+ else{const gradient=ctx.createLinearGradient(0,0,0,800);gradient.addColorStop(0,roomSpec.color);gradient.addColorStop(1,'#d6bd94');ctx.fillStyle=gradient;ctx.fillRect(0,0,1280,800);ctx.fillStyle='#fff9df';ctx.textAlign='center';ctx.font='24px system-ui';ctx.fillText(record?.error?'Room artwork unavailable — you can still explore.':'Opening '+inside.name+'…',640,200);}
+ if(roomTarget){ctx.setLineDash([3,13]);line(ctx,[[roomPlayer.x,roomPlayer.y],[roomTarget.x,roomTarget.y]],'#fff4d7aa',3);ctx.setLineDash([]);}
+ drawRoomExit();
+ const things=roomSpec.spots.filter(s=>s.id!=='exit').map(s=>({y:s.y,paint:()=>drawRoomObject(s)}));
+ for(const o of roomSpec.objects)things.push({y:o.y,paint:()=>{const a=roomProps.get(o.asset);if(!a?.ready)return;const hh=o.width*a.img.naturalHeight/a.img.naturalWidth;ctx.save();if(roomPlayer.y<o.y&&roomPlayer.y>o.y-hh&&Math.abs(roomPlayer.x-o.x)<o.width*.42)ctx.globalAlpha=.67;ctx.drawImage(a.img,o.x-o.width/2,o.y-hh,o.width,hh);ctx.restore();}});
+ things.push({y:roomPlayer.y,paint:()=>paintExplorer(ctx,roomPlayer,direction,walking,foot)});
+ things.sort((a,b)=>a.y-b.y).forEach(s=>s.paint());roomSpec.spots.filter(s=>s.id!=='exit').forEach(s=>roomLabel(s,roomNear?.id===s.id));
+ ctx.restore();
+ window.townDiagnostics={player:{...position},world:{width:W,height:H},art:{...artState},inside:inside.id,roomPlayer:{...roomPlayer},roomView:v,roomBounds:{...ROOM,exit:roomSpec.exit},roomFloor:roomSpec.floor,roomObjects:roomSpec.objects,propsReady:roomSpec.objects.every(o=>roomProps.get(o.asset)?.ready),roomImage:{url:roomSpec.image,ready:!!record?.ready,error:!!record?.error},roomSpots:roomSpec.spots,roomNear:roomNear?.id||null,roomTarget:roomTarget?{...roomTarget}:null,houses:entrances,paused,walking,blocked:!roomWalkable(roomSpec,roomPlayer.x,roomPlayer.y)};
+}
+function pointInRoom(e){
+ const v=roomView(),p={x:(e.offsetX-w/2)/v.scale+v.cx,y:(e.offsetY-h/2)/v.scale+v.cy};
+ const object=roomSpec.objects.find(o=>Math.abs(p.x-o.x)<o.width*.45&&p.y>o.y-o.width*.75&&p.y<o.y+8);
+ const s=roomSpec.spots.filter(s=>Math.abs(p.x-s.x)<80&&p.y>s.y-(s.kind==='person'?155:105)&&p.y<s.y+35).sort((a,b)=>Math.hypot(p.x-a.x,p.y-a.y)-Math.hypot(p.x-b.x,p.y-b.y))[0]||roomSpec.spots.find(s=>object&&s.furniture===object.id);
+ if(s&&Math.hypot(s.x-roomPlayer.x,s.y-roomPlayer.y)<(s.id==='exit'?82:s.id==='stairs'?68:75)){roomNear=s;playRoom(s);return;}
+ walkRoomTo(floorPoint(s?.x??p.x,s?.y??p.y));
+}
 
 function frame(now){const dt=last?Math.min((now-last)/1000,.05):.016;last=now;if(!document.hidden){time+=dt;update(dt);draw();}requestAnimationFrame(frame);}
 function resize(){w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,1.6);zoom=Math.max(w<700?.77:1,w/W,h/H);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);mini.width=288;mini.height=200;camera={...position};draw();}
-canvas.addEventListener('pointerdown',e=>{if(paused)return;canvas.focus();if(inside){const v=roomView();roomTarget={x:clamp((e.offsetX-w/2)/v.scale+v.cx,240,740),y:clamp(e.offsetY/v.scale,370,595)};return;}const r=canvas.getBoundingClientRect(),p={x:(e.clientX-r.left-w/2)/zoom+camera.x,y:(e.clientY-r.top-h/2)/zoom+camera.y};const house=houses.find(b=>p.x>b.x&&p.x<b.x+b.w&&p.y>b.y&&p.y<b.y+b.h);const target=house?entrances.find(n=>n.id===house.id):places.find(n=>Math.hypot(n.x-p.x,n.y-38-p.y)<55);if(target){if(Math.hypot(position.x-target.x,position.y-target.y)<115)interact(target);else go(target.id);}else{goal=null;path=route(p.x,p.y);document.querySelector('#status').textContent='Follow the dotted path.';}});
-window.addEventListener('keydown',e=>{if(e.key==='Escape'&&inside&&!paused){exitRoom();return;}const k=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','e'].includes(k)){e.preventDefault();if(k==='e')interact();else held.add(k);}});
+canvas.addEventListener('pointerdown',e=>{if(paused)return;canvas.focus();if(inside){pointInRoom(e);return;}const r=canvas.getBoundingClientRect(),p={x:(e.clientX-r.left-w/2)/zoom+camera.x,y:(e.clientY-r.top-h/2)/zoom+camera.y};const house=houses.find(b=>p.x>b.x&&p.x<b.x+b.w&&p.y>b.y&&p.y<b.y+b.h);const target=house?entrances.find(n=>n.id===house.id):places.find(n=>Math.hypot(n.x-p.x,n.y-38-p.y)<55);if(target){if(Math.hypot(position.x-target.x,position.y-target.y)<115)interact(target);else go(target.id);}else{goal=null;path=route(p.x,p.y);document.querySelector('#status').textContent='Follow the dotted path.';}});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&inside&&!paused){exitRoom();return;}const k=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','e'].includes(k)){e.preventDefault();if(k==='e'){if(!e.repeat)interact();}else if(!paused)held.add(k);}});
 window.addEventListener('keyup',e=>held.delete(e.key.length===1?e.key.toLowerCase():e.key));window.addEventListener('blur',()=>held.clear());
 document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();held.add(b.dataset.key);b.setPointerCapture(e.pointerId);});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>held.delete(b.dataset.key));});
 document.querySelector('#interact').onclick=()=>interact();document.querySelector('#center').onclick=()=>{camera={...position};draw();};

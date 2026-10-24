@@ -1,5 +1,5 @@
 export const WORLD={width:3600,height:2400,sx:18/13,sy:4/3};
-export const houseLevels=['Easy · 简单','Medium · 中等','Hard · 困难'];
+export const houseLevels=['Explorer','Adventurer','Navigator'];
 const raw=[
  ['library','Harbor Library',265,230,290,210,'library',2,'sentence','lily'],
  ['market','Fish Market',1580,245,320,250,'market',0,'colors','mia'],

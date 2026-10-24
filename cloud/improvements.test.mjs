@@ -5,7 +5,7 @@ import {adventures,checkAnswer,ensureAdventures} from '../web/adventures.mjs';
 import {EnglishVoiceInput} from '../web/voice.mjs';
 import {keywordMatch,tokens} from '../web/speech-rules.mjs';
 import {houses,entrances,WORLD} from '../web/places.mjs';
-assert.deepEqual(tanks.map(t=>t.fish),[12,24,36]);
+assert.deepEqual(tanks.map(t=>t.fish),[20,40,60]);
 for(let tier=0;tier<3;tier++){const s=newState();s.tank=tier;s.coins=100000;while(s.fish.length<tanks[tier].fish)assert.equal(buy(s,'fish','goldfish').ok,true);assert.equal(buy(s,'fish','goldfish').ok,false);assert.ok(validateState(s));s.fish.push({...s.fish[0],uid:'overflow'});assert.equal(validateState(s),false);}
 const old=newState();old.town={x:1030,y:980};old.coins=97;old.words=['shell'];ensureAdventures(old);const migrated={...old.town};ensureAdventures(old);assert.deepEqual(old.town,migrated);assert.equal(old.coins,97);assert.deepEqual(old.words,['shell']);assert.ok(validateState(old));
 for(const m of adventures)for(const step of m.steps){assert.equal(checkAnswer(step.hint,step).ok,true,m.id);assert.equal(checkAnswer('yes',step,'assisted').ok,false);}

@@ -19,6 +19,7 @@ const species={
  pufferfish:{top:'#6b7940',mid:'#b1b968',belly:'#f3e5bd',fin:'#aebf9e',body:.48,speed:.035},
  seahorse:{top:'#92713d',mid:'#dab46a',belly:'#fff0b9',fin:'#e2d0a0',body:.34,speed:.024}
 };
+Object.assign(species,{"neon-tetra":{"top":"#244b62","mid":"#57bbd6","belly":"#e3eff2","fin":"#cd5c53","body":0.22,"speed":0.075,"scale":0.78},"yellow-tang":{"top":"#b89f22","mid":"#efd33b","belly":"#fff3a3","fin":"#e8c934","body":0.56,"speed":0.06},"discus":{"top":"#377e83","mid":"#7dc5bd","belly":"#cce7d5","fin":"#ab655a","body":0.72,"speed":0.035},"platy":{"top":"#a15322","mid":"#e49b40","belly":"#ffe3a4","fin":"#df9148","body":0.31,"speed":0.06,"scale":0.85},"molly":{"top":"#152629","mid":"#344d52","belly":"#78918d","fin":"#283f44","body":0.3,"speed":0.05},"swordtail":{"top":"#375a36","mid":"#86a857","belly":"#d9d894","fin":"#d68c47","body":0.23,"speed":0.065},"zebra-danio":{"top":"#395570","mid":"#a5c0c6","belly":"#e9e8d8","fin":"#9cbac5","body":0.2,"speed":0.085,"scale":0.8},"rainbowfish":{"top":"#2b677f","mid":"#63adb6","belly":"#eacb8e","fin":"#dca448","body":0.36,"speed":0.065}});
 function shape(c,points,fill,stroke,width=1){c.beginPath();for(const p of points){if(p[0]==='M')c.moveTo(p[1],p[2]);if(p[0]==='L')c.lineTo(p[1],p[2]);if(p[0]==='C')c.bezierCurveTo(...p.slice(1));if(p[0]==='Q')c.quadraticCurveTo(...p.slice(1));if(p[0]==='Z')c.closePath();}if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=width;c.stroke();}}
 function oval(c,x,y,rx,ry,color,angle=0){c.beginPath();c.ellipse(x,y,rx,ry,angle,0,TAU);c.fillStyle=color;c.fill();}
 function bodyPath(c,id,b){
@@ -53,13 +54,32 @@ function fin(c,points,color,opacity=.65,rays=7){
  for(let i=0;i<end.length;i++){c.beginPath();c.moveTo(points[0][1],points[0][2]);c.lineTo(end[i][1],end[i][2]);c.stroke();}
  c.restore();
 }
+
+const illustratedFish=new Set(["neon-tetra","yellow-tang","discus","platy","molly","swordtail","zebra-danio","rainbowfish"]);
+const illustratedDecor=new Set(["driftwood","java-fern","red-ludwigia","stone-cave","air-bubbler","shipwreck","clay-pot","water-lily"]);
+function requestSprite(kind,id){
+ const key=kind+'/'+id;if(loadedImages.has(key))return;
+ const img=new Image(),record={img,ready:false,error:false};loadedImages.set(key,record);
+ img.onload=()=>{record.ready=true;if(paused)draw();};img.onerror=()=>record.error=true;img.src='../assets/'+kind+'/'+id+'.webp';
+}
+
 function fishScreen(f){return{x:area.x+f.x*area.w,y:area.top+f.y*area.swimH+(f.z-.5)*h*.035};}
 function drawFish(f){
- const s=species[f.id]||species.goldfish, p=fishScreen(f), beat=Math.sin(time*(5+f.speed*60)+f.phase), size=(fish.length>24?.76:fish.length>12?.88:1)*clamp(w*.074,43,90)*[1,.93,.85][tank]*mix(.64,1.15,f.z)*(f.id==='guppy'?.78:1)*(f.id==='seahorse'?.8:1);
+ const s=species[f.id]||species.goldfish, p=fishScreen(f), beat=Math.sin(time*(5+f.speed*60)+f.phase), size=(s.scale||1)*(fish.length>40?.65:fish.length>24?.76:fish.length>12?.88:1)*clamp(w*.074,43,90)*[1,.93,.85][tank]*mix(.64,1.15,f.z)*(f.id==='guppy'?.78:1)*(f.id==='seahorse'?.8:1);
  f.sx=p.x;f.sy=p.y;f.radius=size*.62;
  ctx.save();ctx.translate(p.x,p.y);ctx.rotate(clamp(f.vy*2.2,-.19,.19)*Math.cos(f.heading));
  ctx.scale(size/144*(Math.cos(f.heading)>=0?1:-1)*(.23+.77*Math.abs(Math.cos(f.heading))),size/144);
  ctx.globalAlpha=night?.62+f.z*.3:.75+f.z*.25;
+
+ const photo=loadedImages.get('fish/'+f.id);
+ if(photo?.ready){
+  const im=photo.img,sw=im.naturalWidth,sh=im.naturalHeight;
+  for(let x=0;x<sw;x+=16){const slice=Math.min(16,sw-x),bend=Math.max(0,(sw*.55-x)/(sw*.55))**2*beat*4;
+   ctx.drawImage(im,x,0,slice,sh,x/sw*180-90,-72+bend,slice/sw*180,144);
+  }
+  ctx.restore();return;
+ }
+
  if(f.id!=='seahorse'){
   ctx.save();ctx.translate(-61,0);ctx.rotate(beat*.16);const fan=f.id==='guppy'?42:f.id==='betta'?48:f.id==='goldfish'?38:22;
   const tailColor=f.id==='blue-tang'?'#f1d156':s.fin;
@@ -132,7 +152,9 @@ function drawDecor(d){
  ctx.save();ctx.translate(p.x,p.y);ctx.scale(size/100,size/100);
  oval(ctx,0,5,44,7,'#092a3350');
  const r=seed(d.uid),c=ctx;
- switch(d.id){
+ const photo=loadedImages.get('decor/'+d.id);
+ if(photo?.ready){const im=photo.img;const sway=['java-fern','red-ludwigia','water-lily'].includes(d.id)?Math.sin(time*1.1+d.x)*.018:0;c.save();c.transform(1,0,sway,1,0,0);c.drawImage(im,-52,-104,104,104);c.restore();if(d.id==='air-bubbler'){for(let i=0;i<5;i++){const yy=-25-((time*20+i*21)%85);c.strokeStyle='#d5fbefaa';c.lineWidth=.8;c.beginPath();c.arc(Math.sin(time+i)*5,yy,2+i%3,0,TAU);c.stroke();}}}
+ else switch(d.id){
  case 'seaweed':plant(c,0,0,105,r,time,1);break;
  case 'pebble-arch':
   for(let i=0;i<9;i++){const a=Math.PI+i*Math.PI/8;stone(c,Math.cos(a)*36,Math.sin(a)*57,17,['#778777','#b0b299','#899987'][i%3],r);}break;
@@ -155,6 +177,7 @@ function drawDecor(d){
  ctx.restore();
 }
 function syncState(state){
+ for(const f of state.fish)if(illustratedFish.has(f.id))requestSprite('fish',f.id);for(const d of state.decor)if(illustratedDecor.has(d.id))requestSprite('decor',d.id);
  tank=clamp(state.tank||0,0,2);const existing=new Map(fish.map(f=>[f.uid,f]));
  fish=state.fish.map((item,i)=>existing.get(item.uid)||{...item,x:.18+(i*.16)% .64,y:.25+(i*.13)%.42,z:.35+(i*.17)%.6,vx:(i%2?-1:1)*.025,vy:0,heading:i%2?Math.PI:0,phase:rand(0,TAU),speed:species[item.id]?.speed||.05,target:{x:rand(.1,.9),y:rand(.18,.74),z:rand(.1,.95)},retarget:time+rand(2,8)});
  decor=state.decor.map(d=>({...d}));rebuildBackground();if(paused)draw();

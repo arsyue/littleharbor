@@ -47,7 +47,7 @@ window.addEventListener('message',event=>{
  if(d.type==='ready'){syncTown();if(pendingTownDestination){townSend({type:'go',id:pendingTownDestination});pendingTownDestination=null;}}
  if(d.type==='position'&&Number.isFinite(d.x)&&Number.isFinite(d.y)){state.town={x:Math.max(0,Math.min(3600,d.x)),y:Math.max(0,Math.min(2400,d.y))};save();}
  if(d.type==='person'&&people[d.id])visit(d.id);
- if(d.type==='house-game'){void import('./indoor-games.mjs').then(({showHouseGame})=>{if(scene==='town')showHouseGame(d.id,{modal,closeModal,save,learn,state,toast,burst,speak,visit,navigate});});}
+ if(d.type==='house-game'){void import('./indoor-games.mjs').then(({showHouseGame})=>{if(scene==='town')showHouseGame(d.id,{modal,closeModal,save,learn,state,toast,burst,speak,visit,navigate},d.spot||'host');});}
  if(d.type==='home')navigate('home');
  if(d.type==='discovery'){const spot=discoveries.find(s=>s.id===d.id);if(!spot)return;const a=ensureAdventures(state);if(!a.discovered.includes(spot.id)){a.discovered.push(spot.id);save();}syncTown();
   modal('<div class="modal-eyebrow">'+esc(spot.tag)+'</div><h2 id="modal-title">'+esc(spot.title)+'</h2><p class="notice-text">'+esc(spot.text)+'</p><p class="footnote">This notice is saved in your adventure journal.</p><button class="primary full" id="notice-done">Keep exploring</button>','notice-modal');

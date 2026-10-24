@@ -1,0 +1,150 @@
+{
+  "generator": "ImageGen",
+  "release": "interiors-v5",
+  "assets": [
+    {
+      "id": "library",
+      "name": "Harbor Library",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: a grand warm oak library with bookshelves, reading alcoves, nautical globe, a reading desk and open books"
+    },
+    {
+      "id": "market",
+      "name": "Fish Market",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: a beautiful aquarium fish shop with glass aquarium tanks along the back and sides, realistic tropical fish, aqua tile walls, nets and fish-care supplies"
+    },
+    {
+      "id": "workshop",
+      "name": "Design Workshop",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: an artisan aquarium decoration workshop with turquoise cabinets, workbenches along the walls, wood tools, unfinished miniature castles and shells"
+    },
+    {
+      "id": "harbor",
+      "name": "Harbor Office",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: a nautical harbor office with navigational charts pinned on walls, brass instruments, ship models, crates against walls and ocean-facing windows"
+    },
+    {
+      "id": "aquarium",
+      "name": "My Aquarium",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: a magnificent private aquarium gallery with large illuminated blue planted aquariums against the back and side walls, pale limestone floor and luxurious teal details"
+    },
+    {
+      "id": "cafe",
+      "name": "Sunbeam Café",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: a cheerful seaside cafe with a curved cream and coral counter against the back wall, pastry displays, hanging plants, espresso machine and small cafe tables tucked to the edges"
+    },
+    {
+      "id": "garden",
+      "name": "Glass Garden",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: a lush sunlit glass conservatory greenhouse with arched glass walls, flowering plants on perimeter benches, pots and gardening tools at the edges, terracotta floor"
+    },
+    {
+      "id": "lighthouse",
+      "name": "Lighthouse",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: the interior ground floor of a magical seaside lighthouse, curved ivory stone walls, brass lanterns, maps, staircase tucked behind the rear wall, porthole windows, sea light"
+    },
+    {
+      "id": "bakery",
+      "name": "Rose Bakery",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: a warm rose-pink seaside bakery with a brick oven, rustic bread display, flour sacks, rolling pins and copper pans around the walls, honey-colored flagstone floor"
+    },
+    {
+      "id": "studio",
+      "name": "Shell Art Studio",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: a bright artists studio with paint shelves, a few easels and seashell mosaics positioned around the perimeter, blue splattered wooden floor, colorful stained glass windows"
+    },
+    {
+      "id": "post",
+      "name": "Seabreeze Post",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: a charming seaside post office with a wall of wooden mail cubbies, teal postal counter at the back, red mail boxes, parcels stacked around the sides, blue and cream tile floor"
+    },
+    {
+      "id": "music",
+      "name": "Melody Cottage",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: a beautiful music room with an upright piano, violins, cello, guitars and sheet music along the walls, velvet teal curtains, arched windows, polished dark parquet floor"
+    },
+    {
+      "id": "lighthouse-upstairs",
+      "name": "Lighthouse Observatory",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: the upper lantern observatory of a coastal lighthouse, huge curved windows overlooking the ocean and harbor, enormous beautiful brass lighthouse lantern against the far back wall, a telescope at the far edge, brass railings, navy and ivory stone details, wood floor, a visible staircase opening tucked at the lower center foreground leading downstairs"
+    },
+    {
+      "id": "post-upstairs",
+      "name": "Seabreeze Sorting Loft",
+      "kind": "background",
+      "prompt": "Create ONE premium finished game background, wide landscape 16:10 composition, a richly detailed charming 3D-rendered storybook coastal village interior for ages 8-12. Soft cinematic daylight, material texture, beautiful craftsmanship, coherent scale, sophisticated warm teal/coral palette. Camera fixed high above eye level, looking down into the room from the missing front wall, wide lens, no fisheye. The back wall and furniture occupy the TOP 27% of the image. Keep the entire middle and lower 65% as a continuous visibly empty WALKABLE FLOOR, reaching close to the left and right edges. ALL furniture must hug the back or extreme side walls; no furniture in the central floor. Clear sense of spatial depth but no giant foreground props. The room feels spacious and inviting, with lots of beautiful themed details along the perimeter. No people, no characters, no text, no letters, no UI, no border, no watermark. The front wall is removed, leaving the lower center unobstructed for a game exit marker. Scene: the sunny upper sorting loft of a charming seaside post office, exposed wooden roof beams, round windows overlooking village rooftops, mail pigeon nesting shelves behind closed windows, maps, neatly stacked mail sacks and parcels around the perimeter, pale wood plank floor, a visible staircase opening tucked at the lower center foreground leading downstairs"
+    },
+    {
+      "id": "reading-table",
+      "kind": "prop",
+      "prompt": "ONE isolated game furniture asset with true transparent background. Premium richly detailed 3D storybook game rendering, coherent realistic proportions, beautiful warm wood and teal coastal design, cinematic soft sunlight from top left. Camera elevated 35 degrees looking down, front three-quarter view, full entire object visible with ample transparent padding. No room, no floor tile, no background, no characters, no labels, no UI. Very subtle contact shadow only beneath feet. This is a central walk-around interactive furniture asset for Little Harbor. Object: a round oak library reading table with three open books, a brass reading lamp and a little blue globe, two tucked-in stools"
+    },
+    {
+      "id": "display-tank",
+      "kind": "prop",
+      "prompt": "ONE isolated game furniture asset with true transparent background. Premium richly detailed 3D storybook game rendering, coherent realistic proportions, beautiful warm wood and teal coastal design, cinematic soft sunlight from top left. Camera elevated 35 degrees looking down, front three-quarter view, full entire object visible with ample transparent padding. No room, no floor tile, no background, no characters, no labels, no UI. Very subtle contact shadow only beneath feet. This is a central walk-around interactive furniture asset for Little Harbor. Object: an exquisite freestanding planted aquarium display on a dark teal wooden cabinet, crystal clear rectangular glass fish tank with lush plants, realistic colorful small tropical fish, subtle golden top lighting"
+    },
+    {
+      "id": "workbench",
+      "kind": "prop",
+      "prompt": "ONE isolated game furniture asset with true transparent background. Premium richly detailed 3D storybook game rendering, coherent realistic proportions, beautiful warm wood and teal coastal design, cinematic soft sunlight from top left. Camera elevated 35 degrees looking down, front three-quarter view, full entire object visible with ample transparent padding. No room, no floor tile, no background, no characters, no labels, no UI. Very subtle contact shadow only beneath feet. This is a central walk-around interactive furniture asset for Little Harbor. Object: a sturdy freestanding turquoise artisan workbench with miniature aquarium castles, smooth stones, paint brushes, wooden tools and a tiny vise on top"
+    },
+    {
+      "id": "cafe-table",
+      "kind": "prop",
+      "prompt": "Transparent PNG cutout sprite. a small round oak cafe table with two simple teal stools, two white cups and a little flower vase. Three-quarter elevated view, exquisitely detailed 3D rendering. One fully isolated object on a FULLY TRANSPARENT ALPHA BACKGROUND. Every single pixel outside the silhouette must be transparent, including between the legs. No ground, no room, no wall, no blur, no vignette, no bokeh, no gradient, no light halos, no shadow. Full entire object in frame with generous empty transparent margin. Warm oak, teal details, brass accents. Asset only, not a scene."
+    },
+    {
+      "id": "planter",
+      "kind": "prop",
+      "prompt": "A single isometric 3D GAME PROP, a chunky round teal ceramic tub with a small lemon tree, rounded green leaves, five yellow lemons, and a small watering can beside it. Clean polished stylized game asset, hand-crafted storybook materials, toy-like 3D model, not a photograph. Full object, elevated front three-quarter camera. Transparent background with NO environment and NO colored glow. Hard clean silhouette, entirely empty alpha around the item, 15 percent transparent margin, no contact shadow, no scene, no room, no floor, no vignette, no bokeh. One isolated inventory prop PNG."
+    },
+    {
+      "id": "chart-table",
+      "kind": "prop",
+      "prompt": "ONE isolated game furniture asset with true transparent background. Premium richly detailed 3D storybook game rendering, coherent realistic proportions, beautiful warm wood and teal coastal design, cinematic soft sunlight from top left. Camera elevated 35 degrees looking down, front three-quarter view, full entire object visible with ample transparent padding. No room, no floor tile, no background, no characters, no labels, no UI. Very subtle contact shadow only beneath feet. This is a central walk-around interactive furniture asset for Little Harbor. Object: a freestanding nautical oak navigation desk with an open ocean chart, brass compass, sextant, small model sailboat and warm brass lamp"
+    },
+    {
+      "id": "bread-table",
+      "kind": "prop",
+      "prompt": "A single isometric 3D GAME PROP, a charming small teal wooden wheeled bakery display cart, two shelves of golden bread rolls and baguettes, a small cream awning, simple sturdy brass wheels. Clean polished stylized game asset, hand-crafted storybook materials, toy-like 3D model, not a photograph. Full object, elevated front three-quarter camera. Transparent background with NO environment and NO colored glow. Hard clean silhouette, entirely empty alpha around the item, 15 percent transparent margin, no contact shadow, no scene, no room, no floor, no vignette, no bokeh. One isolated inventory prop PNG."
+    },
+    {
+      "id": "art-easel",
+      "kind": "prop",
+      "prompt": "ONE isolated game furniture asset with true transparent background. Premium richly detailed 3D storybook game rendering, coherent realistic proportions, beautiful warm wood and teal coastal design, cinematic soft sunlight from top left. Camera elevated 35 degrees looking down, front three-quarter view, full entire object visible with ample transparent padding. No room, no floor tile, no background, no characters, no labels, no UI. Very subtle contact shadow only beneath feet. This is a central walk-around interactive furniture asset for Little Harbor. Object: a freestanding artists wooden easel holding a beautiful small seascape painting, adjacent low stool with paints and brushes, seashell mosaic propped beside it"
+    },
+    {
+      "id": "parcel-table",
+      "kind": "prop",
+      "prompt": "ONE isolated game furniture asset with true transparent background. Premium richly detailed 3D storybook game rendering, coherent realistic proportions, beautiful warm wood and teal coastal design, cinematic soft sunlight from top left. Camera elevated 35 degrees looking down, front three-quarter view, full entire object visible with ample transparent padding. No room, no floor tile, no background, no characters, no labels, no UI. Very subtle contact shadow only beneath feet. This is a central walk-around interactive furniture asset for Little Harbor. Object: a freestanding seaside post office sorting table, polished teal wood, neatly stacked brown parcels with string, brass postal scales, envelopes and red sealing stamp"
+    },
+    {
+      "id": "piano",
+      "kind": "prop",
+      "prompt": "ONE isolated game furniture asset with true transparent background. Premium richly detailed 3D storybook game rendering, coherent realistic proportions, beautiful warm wood and teal coastal design, cinematic soft sunlight from top left. Camera elevated 35 degrees looking down, front three-quarter view, full entire object visible with ample transparent padding. No room, no floor tile, no background, no characters, no labels, no UI. Very subtle contact shadow only beneath feet. This is a central walk-around interactive furniture asset for Little Harbor. Object: a beautiful freestanding small ebony baby grand piano with open lid, warm brass hardware, visible black and white keys, a matching padded piano stool and open sheet music"
+    },
+    {
+      "id": "fish-catalog",
+      "kind": "atlas",
+      "prompt": "One professional game inventory sprite atlas with EXACTLY 8 separate realistic fish, arranged in a precise 4 columns by 2 rows grid, same cell dimensions, 10% empty margin inside EVERY cell. Transparent background, no water, no scenery, no shadow, no letters or labels. All fish natural realistic proportions, side view facing right, finely textured scales and translucent fins, colorful but not cartoon, anatomically recognizable. Row 1 left to right: neon tetra with luminous blue stripe and red lower rear body; yellow tang bright yellow disk body with pointed snout; turquoise discus round disk body with red fine markings; sunset platy small orange rounded fish. Row 2 left to right: black molly velvety black fish; green swordtail with elongated lower tail sword; zebra danio silver slender fish with horizontal blue stripes; Boesemans rainbowfish with blue front and orange rear. Fish completely separated by clear transparent gutters, each entirely contained in its own cell. Wide landscape 2:1 sheet."
+    },
+    {
+      "id": "decor-catalog",
+      "kind": "atlas",
+      "prompt": "One professional aquarium game inventory sprite atlas with EXACTLY 8 separate premium realistic miniature aquarium ornaments, arranged in a precise 4 columns by 2 rows grid, same cell dimensions, 12% empty margin inside EVERY cell. True transparent background, no aquarium, no scene, no text, no shadow outside object. Rich realistic material textures, high quality 3D product renders, three-quarter front view. Row 1 left to right: beautiful branching natural driftwood; lush Java fern aquatic plant rooted on a small stone; red Ludwigia aquatic plant cluster; grey stone cave with a visible arch opening. Row 2 left to right: a small stone air bubbler with a few clear bubbles above; tiny weathered shipwreck ornament with broken mast; terracotta pot lying on its side with smooth entrance; green water lily with one pale pink flower on a short stem and smooth pebble base. All objects clearly separated, each fully contained in its cell, never touching. Wide landscape 2:1 sheet."
+    }
+  ]
+}

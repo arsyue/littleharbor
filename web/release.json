@@ -1,1 +1,1 @@
-{"release":"2026-10-23-harbor-refresh","base":"e42047b83b4278302e5683e7dce2841f0a3e8a86","world":[3600,2400],"fishCapacity":[12,24,36],"houses":12,"artVersion":4}
+{"release":"2026-10-24-interiors-v5","world":[3600,2400],"houses":12,"upstairs":["lighthouse","post"],"roomScenes":14,"centralFurniture":10,"roomObjectJobs":28,"fishSpecies":16,"decorations":16,"fishCapacity":[20,40,60],"decorationCapacity":[16,32,48],"artVersion":5}

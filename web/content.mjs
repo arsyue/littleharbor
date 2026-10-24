@@ -6,7 +6,15 @@ export const fish = [
 {id:'angelfish',name:'Angelfish',color:'purple',price:85,blurb:'A graceful friend with beautiful sweeping fins.',word:'fins',size:112},
 {id:'betta',name:'Betta',color:'pink',price:95,blurb:'A pink ribbon of color, dancing through the water.',word:'pink',size:118},
 {id:'pufferfish',name:'Pufferfish',color:'yellow',price:110,blurb:'Round, sunny, and wonderfully full of personality.',word:'round',size:100},
-{id:'seahorse',name:'Seahorse',color:'green',price:140,blurb:'A tiny ocean wonder with a curly little tail.',word:'curly',size:98}
+{id:'seahorse',name:'Seahorse',color:'green',price:140,blurb:'A tiny ocean wonder with a curly little tail.',word:'curly',size:98},
+{"id":"neon-tetra","name":"Neon Tetra","color":"blue","price":55,"blurb":"A silver swimmer with a bright blue stripe.","word":"stripe","size":88},
+{"id":"yellow-tang","name":"Yellow Tang","color":"yellow","price":100,"blurb":"A sunny reef fish with a pointed snout.","word":"yellow","size":108},
+{"id":"discus","name":"Turquoise Discus","color":"blue","price":135,"blurb":"A round jewel with beautiful turquoise markings.","word":"round","size":115},
+{"id":"platy","name":"Sunset Platy","color":"orange","price":55,"blurb":"A warm orange fish with a neat fan-shaped tail.","word":"orange","size":91},
+{"id":"molly","name":"Black Molly","color":"black","price":65,"blurb":"Dark velvet scales and a graceful dorsal fin.","word":"black","size":101},
+{"id":"swordtail","name":"Green Swordtail","color":"green","price":85,"blurb":"A sleek fish with a long sword-shaped tail.","word":"long","size":112},
+{"id":"zebra-danio","name":"Zebra Danio","color":"blue","price":60,"blurb":"A lively silver fish with dark horizontal stripes.","word":"striped","size":91},
+{"id":"rainbowfish","name":"Rainbowfish","color":"rainbow","price":125,"blurb":"Blue at the front, golden orange at the tail.","word":"bright","size":109}
 ];
 export const decor=[
 {id:'seaweed',name:'Dancing Seaweed',price:35,size:152,blurb:'A leafy green hideaway.'},
@@ -16,12 +24,20 @@ export const decor=[
 {id:'sandcastle',name:'Sandcastle',price:90,size:170,blurb:'A castle fit for your finned friends.'},
 {id:'shell',name:'Pearl Shell',price:65,size:136,blurb:'A little pearl of happiness.'},
 {id:'mushroom-house',name:'Tiny Hideaway',price:110,size:176,blurb:'The coziest house under the sea.'},
-{id:'rainbow',name:'Rainbow Arch',price:125,size:180,blurb:'Swim right into a rainbow.'}
+{id:'rainbow',name:'Rainbow Arch',price:125,size:180,blurb:'Swim right into a rainbow.'},
+{"id":"driftwood","name":"Branching Driftwood","price":70,"size":175,"blurb":"Natural wooden branches for a beautiful underwater landscape."},
+{"id":"java-fern","name":"Java Fern","price":45,"size":155,"blurb":"A leafy green plant growing around a smooth stone."},
+{"id":"red-ludwigia","name":"Red Ludwigia","price":55,"size":160,"blurb":"A rich red cluster of underwater leaves."},
+{"id":"stone-cave","name":"Stone Cave","price":95,"size":170,"blurb":"A sheltered stone hideaway with a wide entrance."},
+{"id":"air-bubbler","name":"Bubble Stone","price":75,"size":140,"blurb":"A stream of sparkling bubbles from a small stone."},
+{"id":"shipwreck","name":"Sunken Sailboat","price":160,"size":180,"blurb":"A weathered little ship with a story to tell."},
+{"id":"clay-pot","name":"Terracotta Hideout","price":60,"size":145,"blurb":"A smooth clay pot for curious fish to explore."},
+{"id":"water-lily","name":"Water Lily","price":90,"size":155,"blurb":"Green leaves and a soft pink flower."}
 ];
 export const tanks=[
-{name:'Cozy Lagoon',fish:12,decor:8,price:0,width:74},
-{name:'Wonder Bay',fish:24,decor:16,price:240,width:85},
-{name:'Ocean Palace',fish:36,decor:24,price:600,width:95}
+{name:'Cozy Lagoon',fish:20,decor:16,price:0,width:74},
+{name:'Wonder Bay',fish:40,decor:32,price:240,width:85},
+{name:'Ocean Palace',fish:60,decor:48,price:600,width:95}
 ];
 export const people={
 mia:{name:'Mia',role:'Your friendly fish keeper',place:'Fish Market',color:'#d9efe6'},
