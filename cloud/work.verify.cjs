@@ -15,7 +15,7 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{try{const
  }
  async function near(id){if(await f.evaluate(id=>townDiagnostics.roomNear===id&&!townDiagnostics.roomTarget,id))return;const d=await f.evaluate(id=>({s:townDiagnostics.roomSpots.find(s=>s.id===id),v:townDiagnostics.roomView,w:innerWidth,h:innerHeight}),id);await f.locator('#world').click({position:{x:(d.s.x-d.v.cx)*d.v.scale+d.w/2,y:(d.s.y-d.v.cy)*d.v.scale+d.h/2}});await f.waitForFunction(id=>townDiagnostics.roomNear===id&&!townDiagnostics.roomTarget,id,{timeout:15000});}
  async function press(){await f.waitForFunction(()=>!townDiagnostics.paused);await f.locator('#world').focus();await page.keyboard.press('e');}
- async function leave(){await f.locator('#room-exit').click();await f.waitForFunction(()=>townDiagnostics.roomNear==='exit'&&!townDiagnostics.roomTarget,{timeout:15000});await press();}
+ async function leave(){await f.waitForFunction(()=>!townDiagnostics.paused);await f.locator('#room-exit').click();await f.waitForFunction(()=>townDiagnostics.roomNear==='exit'&&!townDiagnostics.roomTarget,{timeout:15000});await press();}
  async function openWork(id){await enter(id);await near('work');await press();await page.locator('#work-body').waitFor();}
  try{
  await page.goto('http://127.0.0.1:8890/');await page.evaluate(()=>localStorage.clear());await page.reload();await town();
