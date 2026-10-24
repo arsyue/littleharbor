@@ -1,4 +1,5 @@
 import {houses} from './places.mjs';
+import {extraRooms,extraBase,expandRoom} from './expansion-rooms.mjs';
 export const ROOM={width:1280,height:800,top:285,bottom:758,exit:{id:'exit',name:'EXIT · Town',x:640,y:727}};
 const themes={
  "library": {
@@ -859,7 +860,7 @@ export const roomJobs={
 
 export const upstairsJobs={"lighthouse":[["Telescope","Read the explorer’s observation log.",[["The red sail is north of the island. The blue sail is south. Which sail is farther north?","The red sail",["The red sail","The blue sail","Both south"]],["A boat was small in the distance and now looks larger. What is it doing?","Coming closer",["Moving farther away","Coming closer","Disappearing"]],["The log says “Visibility is excellent.” What does that mean?","You can see clearly",["You cannot see far","You can see clearly","It is raining heavily"]]]],["Lantern log","Keep the lighthouse ready for the night.",[["The lantern was checked at four. Sunset is at six. How long before sunset was the check?","Two hours",["One hour","Two hours","Three hours"]],["The glass is dusty. What should happen before lighting the lantern?","Clean the glass",["Cover the windows","Clean the glass","Hide the logbook"]],["A steady light does not flicker. Which description matches?","It shines continuously",["It flashes randomly","It shines continuously","It never shines"]]]]],"post":[["Loft parcels","Sort parcels for tomorrow’s deliveries.",[["Eight parcels go to the east street and seven go west. How many parcels in all?","Fifteen",["Fourteen","Fifteen","Sixteen"]],["The note says “Deliver after breakfast, before lunch.” Choose a time.","Ten in the morning",["Ten in the morning","Six in the evening","Midnight"]],["The parcel is too heavy for one person. What should you do?","Ask for help",["Carry it on your head","Ask for help","Throw it downstairs"]]]],["Delivery map","Plan the post carrier’s route.",[["Visit the bakery first, the cafe second, and the library last. Where do you finish?","The library",["The bakery","The cafe","The library"]],["The workshop is next to the garden. “Next to” means…","Beside",["Far from","Beside","Inside"]],["A street is closed. What should the carrier do?","Find another route",["Ignore the sign","Find another route","Stop delivering forever"]]]]]};
 const furniture={"library":[["reading-table",680,535,325]],"market":[["display-tank",715,540,340]],"workshop":[["workbench",680,540,330]],"harbor":[["chart-table",680,535,320]],"aquarium":[["display-tank",615,525,350],["planter",1000,550,185]],"cafe":[["cafe-table",650,525,250],["cafe-table",975,545,210]],"garden":[["planter",660,540,300],["planter",985,550,190]],"lighthouse":[["chart-table",720,545,300]],"bakery":[["bread-table",675,540,325]],"studio":[["art-easel",710,520,245]],"post":[["parcel-table",665,540,320]],"music":[["piano",710,535,350]]};
-export function roomFor(house,floor=0){
+function baseRoomFor(house,floor=0){
  const id=house.id.replace('house-','');floor=floor&&upstairsJobs[id]?1:0;const jobs=floor?upstairsJobs[id]:roomJobs[id];
  const pieces=(floor?[[id==='post'?'parcel-table':'chart-table',790,430,280]]:furniture[id]).map(([asset,x,y,width],i)=>({id:'furniture-'+i,asset,x,y,width,box:{x:x-width*.42,y:y-65,w:width*.84,h:80}}));
  const center=pieces[0],second=pieces[1];
@@ -874,16 +875,18 @@ export function roomFor(house,floor=0){
  if(!floor&&upstairsJobs[id])spots.push({id:'stairs',name:'UPSTAIRS',detail:id==='post'?'Explore the Sorting Loft':'Explore the Observatory',kind:'stairs',x:id==='post'?1030:430,y:id==='post'?345:305});
  return {id:house.id,theme:id,floor,name:house.name+(floor?(id==='post'?' · Sorting Loft':' · Observatory'):''),color:themes[id].color,image:'../assets/rooms-v5/'+id+(floor?'-upstairs':'')+'.webp',objects:pieces,holes,exit,spawn,spots};
 }
-export function floorPoint(x,y){y=Math.max(ROOM.top,Math.min(ROOM.bottom,y));const edge=245-195*(y-ROOM.top)/(ROOM.bottom-ROOM.top);return {x:Math.max(edge,Math.min(ROOM.width-edge,x)),y};}
-export function onFloor(x,y){const p=floorPoint(x,y);return Math.abs(p.x-x)<.01&&Math.abs(p.y-y)<.01;}
-export function roomWalkable(room,x,y){return onFloor(x,y)&&![...room.objects.map(o=>o.box),...room.holes].some(b=>x>b.x-12&&x<b.x+b.w+12&&y>b.y-12&&y<b.y+b.h+12);}
+const defaultFloor=[[245,285],[1035,285],[1230,758],[50,758]];
+function closestPoint(x,y,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy)));return{x:a[0]+t*dx,y:a[1]+t*dy};}
+export function onFloor(x,y,room=null){const polygon=room?.polygon||defaultFloor;let inside=false;for(let i=0,j=polygon.length-1;i<polygon.length;j=i++){const a=polygon[i],b=polygon[j],p=closestPoint(x,y,a,b);if(Math.hypot(p.x-x,p.y-y)<.02)return true;if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])inside=!inside;}return inside;}
+export function floorPoint(x,y,room=null){if(onFloor(x,y,room))return{x,y};const p=room?.polygon||defaultFloor;let best=null,d=Infinity;for(let i=0;i<p.length;i++){const q=closestPoint(x,y,p[i],p[(i+1)%p.length]),n=Math.hypot(q.x-x,q.y-y);if(n<d){best=q;d=n;}}return best;}
+export function roomWalkable(room,x,y){return onFloor(x,y,room)&&![...room.objects.map(o=>o.box),...room.holes].some(b=>x>b.x-12&&x<b.x+b.w+12&&y>b.y-12&&y<b.y+b.h+12);}
 export function nearestSpot(room,p){return room.spots.map(s=>({...s,distance:Math.hypot(s.x-p.x,s.y-p.y)})).filter(s=>s.distance<(s.id==='exit'?82:s.id==='stairs'?68:75)).sort((a,b)=>a.distance-b.distance)[0]||null;}
 export function activityFor(id,spotId){
  const house=houses.find(h=>h.id===id);if(!house)return null;
- const floor=spotId.startsWith('up-')?1:0,localId=spotId.replace(/^up-/,'');
+ const floor=spotId.startsWith('balcony-')?2:spotId.startsWith('up-')?1:0,localId=spotId.replace(/^(up-|balcony-)/,'');
  const room=roomFor(house,floor),spot=room.spots.find(s=>s.id===localId);
  if(!spot||spot.kind!=='object'||room.floor!==floor)return null;
- const jobs=floor?upstairsJobs[room.theme]:roomJobs[room.theme],job=jobs[Number(localId.slice(4))];
+ const jobs=room.activityJobs||(floor?upstairsJobs[room.theme]:roomJobs[room.theme]),job=jobs[Number(localId.slice(4))];
  return {...spot,questions:job[2].map(([q,a,choices])=>[q,'',choices,a])};
 }
 // Route around the real furniture footprints; diagonal steps cannot cut corners.
@@ -904,3 +907,5 @@ export function roomRoute(room,start,target){
  const end=route.at(-1);if(roomWalkable(room,target.x,target.y)&&Array.from({length:9},(_,i)=>roomWalkable(room,end.x+(target.x-end.x)*i/8,end.y+(target.y-end.y)*i/8)).every(Boolean))route.push({x:target.x,y:target.y});
  return route;
 }
+
+export function roomFor(house,floor=0){return expandRoom(floor===2?null:extraRooms[house.id.slice(6)]?extraBase(house,floor):baseRoomFor(house,floor),house,floor);}

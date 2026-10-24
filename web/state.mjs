@@ -8,7 +8,7 @@ export function validateState(s){
  if(!s||s.version!==1||!Number.isSafeInteger(s.coins)||s.coins<0||!Number.isInteger(s.tank)||s.tank<0||s.tank>=tanks.length)return false;
  if(!Array.isArray(s.fish)||!Array.isArray(s.decor)||s.fish.length>tanks[s.tank].fish||s.decor.length>tanks[s.tank].decor||!Array.isArray(s.completed)||!Array.isArray(s.words))return false;
  if(!validAdventures(s.adventures))return false;
- if(s.town!==undefined&&(!s.town||!Number.isFinite(s.town.x)||!Number.isFinite(s.town.y)||s.town.x<0||s.town.x>3600||s.town.y<0||s.town.y>2400))return false;
+ if(s.town!==undefined&&(!s.town||!Number.isFinite(s.town.x)||!Number.isFinite(s.town.y)||s.town.x<0||s.town.x>5400||s.town.y<0||s.town.y>2400))return false;
  if(s.houseGames!==undefined&&(!s.houseGames||Array.isArray(s.houseGames)||typeof s.houseGames!=='object'||Object.values(s.houseGames).some(n=>!Number.isSafeInteger(n)||n<0)))return false;
  const ids=new Set();
  for(const x of [...s.fish,...s.decor]){if(typeof x.uid!=='string'||ids.has(x.uid))return false;ids.add(x.uid);}

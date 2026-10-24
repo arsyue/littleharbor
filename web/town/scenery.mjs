@@ -2,6 +2,7 @@ import {WORLD} from '../places.mjs';
 // Independently generated artwork is packaged on the cloud runner.
 export const artState={version:4,loaded:0,total:14,failed:[],generator:'ImageGen',ground:{version:6,loaded:0,total:2,bytes:0}};
 const art={},groundArt={},objects=[];
+artState.expansion={version:7,loaded:0,total:4};
 const TAU=Math.PI*2;
 const ellipse=(c,x,y,rx,ry,color)=>{c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);c.fill();};
 const round=(c,x,y,w,h,r,color)=>{c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();};
@@ -11,12 +12,16 @@ export async function loadArt(){
  const response=await fetch('../assets/town-art/manifest.json');if(!response.ok)throw Error('The town artwork could not be loaded.');
  const manifest=await response.json();
  artState.version=manifest.version;artState.total=Object.keys(manifest.assets).length;
- await Promise.all([loadGroundArt(),...Object.entries(manifest.assets).map(async([id,meta])=>{
+ await Promise.all([loadGroundArt(),loadExpansionArt(),...Object.entries(manifest.assets).map(async([id,meta])=>{
   const img=new Image();img.src=meta.url;
   try{await img.decode();art[id]={...meta,img};if(meta.sprites)for(const [key,bounds]of Object.entries(meta.sprites))art[key]={img,bounds};artState.loaded++;document.querySelector('#loading-progress').textContent='Preparing your town · '+artState.loaded+' / '+artState.total;}
   catch(e){artState.failed.push(id);throw e;}
  })]);
  artState.bytes=manifest.totalBytes;
+}
+async function loadExpansionArt(){
+ const r=await fetch('../assets/expansion-v7/manifest.json');if(!r.ok)throw Error('The east-coast artwork could not load.');const manifest=await r.json();
+ await Promise.all(['bistro','inn','pottery','museum'].map(async id=>{const meta=manifest.assets['building-'+id],img=new Image();img.src=meta.url;try{await img.decode();art[id]={...meta,img,bounds:{x:0,y:0,w:meta.width,h:meta.height}};artState.expansion.loaded++;}catch(e){artState.failed.push('expansion:'+id);throw e;}}));
 }
 async function loadGroundArt(){
  const response=await fetch('../assets/ground-v6/manifest.json');if(!response.ok)throw Error('The town landscape could not be loaded.');
@@ -37,7 +42,7 @@ function character(c,id,index,x,y,height,bob=0){
  ellipse(c,x+4,y+2,19,6,'#254e3b32');
  c.drawImage(a.img,b.x,b.y,b.w,b.h,x-ww/2,y-height-bob,ww,height);
 }
-const roads=[[[120,540],[2430,540]],[[120,1120],[2430,1120]],[[1070,95],[1070,1450]],[[140,745],[2030,745]],[[770,400],[770,1230]],[[1480,430],[1480,1390]],[[2070,500],[2070,1400]],[[260,1050],[260,1170]],[[1770,1120],[1770,1560]],[[2200,1400],[2430,1400]],[[720,1260],[2100,1260]]];
+const roads=[[[120,540],[2430,540]],[[120,1120],[2430,1120]],[[1070,95],[1070,1450]],[[140,745],[2030,745]],[[770,400],[770,1230]],[[1480,430],[1480,1390]],[[2070,500],[2070,1400]],[[260,1050],[260,1170]],[[1770,1120],[1770,1560]],[[2200,1400],[2430,1400]],[[720,1260],[2100,1260]],[[2430,540],[3770,540]],[[2430,1120],[3770,1120]],[[2700,540],[2700,1400]],[[3070,100],[3070,1440]],[[3670,530],[3670,1440]],[[2500,1400],[3770,1400]]];
 function groundPattern(c,id,size){
  // A reflected repeat joins the image edges without visible square seams.
  const tile=document.createElement('canvas');tile.width=tile.height=size*2;
@@ -55,7 +60,7 @@ function distanceToRoad(x,y){
  return best;
 }
 export function paintGround(c,W,H){
- c.save();c.scale(WORLD.sx,WORLD.sy);W=2600;H=1800;seed=1729;
+ c.save();c.scale(WORLD.sx,WORLD.sy);W=WORLD.width/WORLD.sx;H=WORLD.height/WORLD.sy;seed=1729;
  const grass=groundPattern(c,'meadow-grass',380),stone=groundPattern(c,'limestone-path',320);
  c.fillStyle=grass;c.fillRect(0,0,W,H);
  // Broad, gentle variations keep the lawn natural while the short blades stay readable.
@@ -98,7 +103,7 @@ export function paintGround(c,W,H){
  // Warm sand, shallow turquoise water and a deeper harbor.
  const sea=c.createLinearGradient(0,1510,0,H);sea.addColorStop(0,'#75c7c1');sea.addColorStop(.22,'#429eac');sea.addColorStop(1,'#236d88');c.fillStyle=sea;c.fillRect(0,1510,W,H-1510);
  c.beginPath();c.moveTo(0,1460);c.bezierCurveTo(620,1490,850,1392,1180,1405);c.bezierCurveTo(1480,1390,1540,1500,1800,1485);c.lineTo(W,1475);c.lineTo(W,1530);c.bezierCurveTo(1450,1575,1480,1475,1170,1480);c.bezierCurveTo(760,1480,640,1560,0,1530);c.closePath();c.fillStyle='#e4cf9e';c.fill();
- stroke(c,[[0,1490],[650,1500],[900,1453],[1270,1440],[1560,1520],[2600,1507]],'#f6e5bb',5);
+ stroke(c,[[0,1490],[650,1500],[900,1453],[1270,1440],[1560,1520],[W,1507]],'#f6e5bb',5);
  for(let i=0;i<1500;i++){const x=random()*W,y=1460+random()*55;if(y<1505)ellipse(c,x,y,.5+random(),.5,i%2?'#fff1cb70':'#8b745233');}
  for(let y=1545;y<H;y+=20)for(let x=0;x<W;x+=75){stroke(c,[[x+Math.sin(y)*20,y],[x+25,y-2],[x+43,y]],'#bce9dd32',1);}
  // Hardwood pier with timber edges, grain and brass moorings.
@@ -114,11 +119,15 @@ export function paintGround(c,W,H){
 function add(id,x,y,width,kind='plant',extra={}){objects.push({id,x,y,width,kind,...extra});}
 export function setupScenery(buildings,discoveries){
  objects.length=0;
- const mapping={library:'library',market:'fish-market',workshop:'workshop',harbor:'harbor-office',home:'aquarium-home',cafe:'cafe',garden:'greenhouse',lighthouse:'lighthouse'};
+ const mapping={library:'library',market:'fish-market',workshop:'workshop',harbor:'harbor-office',home:'aquarium-home',cafe:'cafe',garden:'greenhouse',lighthouse:'lighthouse',bistro:'bistro',inn:'inn',pottery:'pottery',museum:'museum'};
  for(const b of buildings)add(mapping[b.detail],b.x+b.w/2,b.y+b.h+9,b.w+(b.detail==='home'?54:50),'building',{title:b.title?b.title.toLowerCase().replace(/\b\w/g,s=>s.toUpperCase()):'',baseline:b.y+b.h});
  const positions=[[70,380,155],[125,700,160],[660,365,145],[850,420,140],[1280,395,155],[1400,355,140],[1990,370,155],[2500,350,170],[2500,690,155],[2490,960,170],[2220,960,155],[2130,1070,135],[1280,1185,140],[1360,1135,150],[70,1020,160],[100,1300,175],[390,1315,150],[550,1380,150],[850,1335,160],[1570,1010,155],[1340,935,165],[1550,825,145],[2230,790,125],[2460,1380,160],[80,1440,125],[660,1405,120],[2500,1210,140],[1180,560,125],[1300,590,115],[390,680,140],[560,675,130],[1790,940,130],[1900,930,145],[1160,1100,130]];
  for(const [i,[x,y,width]]of positions.entries())add(['garden-tree','cherry','cypress','palm'][i%4],x*WORLD.sx,y*WORLD.sy,i%4===2?75:width+20,'tree',{flip:!!((x+y)%3)});
  for(const [x,y,width] of [[360,625,180],[570,640,155],[1180,920,175],[920,930,160],[1335,665,155],[1620,625,120],[1900,650,130],[420,1060,150],[680,1180,150],[1675,1330,140],[2210,690,165],[2400,755,150],[2210,850,165],[2390,875,145],[800,1445,130],[1510,1450,180],[1180,425,150]])add(['flower-bed','lavender','sunflowers','hydrangea'][Math.floor(x)%4],x*WORLD.sx,y*WORLD.sy,width);
+
+ for(const [i,[x,y]]of [[2650,330],[3040,330],[3460,340],[3800,310],[2630,810],[3160,900],[3840,850],[2780,1260],[3250,1250],[3770,1280],[2850,1380],[3400,1400]].entries())add(['garden-tree','cherry','palm'][i%3],x*WORLD.sx,y*WORLD.sy,135+(i%3)*12,'tree');
+ for(const [x,y]of [[2830,690],[3360,670],[3760,670],[2710,1300],[3210,1380],[3580,1290]])add('flower-bed',x*WORLD.sx,y*WORLD.sy,150);
+ for(const [x,y]of [[2910,600],[3350,1190],[3570,1430]])add('bench',x*WORLD.sx,y*WORLD.sy,125);
  add('fountain',1000*WORLD.sx,792*WORLD.sy,210,'fountain');
  for(const [x,y]of [[870,605],[1150,630],[660,1015],[1980,1190],[2180,1340],[310,480]])add('bench',x*WORLD.sx,y*WORLD.sy,125);
  for(const [x,y]of [[480,460],[1200,370],[2120,415],[1950,1370],[880,1200]])add('roseWall',x*WORLD.sx,y*WORLD.sy,150);
