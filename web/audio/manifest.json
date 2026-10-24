@@ -1506,17 +1506,6 @@
       "fingerprint": "0c876677b7dfe9c8",
       "sha256": "70cc2a50c1abaf0ab5f72569b8aa50deb399f6667afaa42bc399d0bc75d7063b"
     },
-    "work-clay-0-order": {
-      "url": "audio/work-clay-0-order-8b40d6d6b1ad7549.mp3",
-      "text": "We are making a blue cup. It will have a waves pattern. Tell me the object and its color before we begin.",
-      "person": "ben",
-      "voice": "am_michael",
-      "speed": 0.94,
-      "duration": 7.625,
-      "bytes": 77084,
-      "fingerprint": "8b40d6d6b1ad7549",
-      "sha256": "16b346c264e1f059746981379ea0f31019bb1ca47e340cd7e8d462215036f733"
-    },
     "work-clay-3": {
       "url": "audio/work-clay-3-1fc43cb8848dfb6a.mp3",
       "text": "Take 3 pieces of soft clay. Count the pieces so your object will have the right size.",
@@ -1572,17 +1561,6 @@
       "fingerprint": "1f522e37791092a0",
       "sha256": "1c29deff658cc14802d4608972a75822d2c4a62bd03bcef31f3148f5f077ff61"
     },
-    "work-clay-1-order": {
-      "url": "audio/work-clay-1-order-c49a7f897648e1f2.mp3",
-      "text": "We are making a garden bowl. It will have a leaves pattern. Tell me the object and its color before we begin.",
-      "person": "ben",
-      "voice": "am_michael",
-      "speed": 0.94,
-      "duration": 7.85,
-      "bytes": 79484,
-      "fingerprint": "c49a7f897648e1f2",
-      "sha256": "0fc4b35c8a64656852a627776c0e5dee7a05c710d113bb063e585efdc339936a"
-    },
     "work-clay-5": {
       "url": "audio/work-clay-5-9664704afe5ddf96.mp3",
       "text": "Take 5 pieces of soft clay. Count the pieces so your object will have the right size.",
@@ -1626,17 +1604,6 @@
       "bytes": 55724,
       "fingerprint": "278f7c75f27052fd",
       "sha256": "bd69906ea82f8bcb23a7059b9e9be7976e212fd44c8d7ffc6288b2b0565c0f1d"
-    },
-    "work-clay-2-order": {
-      "url": "audio/work-clay-2-order-ed963a98c3e7e82b.mp3",
-      "text": "We are making a sunset vase. It will have a dots pattern. Tell me the object and its color before we begin.",
-      "person": "ben",
-      "voice": "am_michael",
-      "speed": 0.94,
-      "duration": 8.05,
-      "bytes": 81404,
-      "fingerprint": "ed963a98c3e7e82b",
-      "sha256": "986f20d510561e4aa0a8622cfa2a5b72dab23abed72e6c5ce540b7b5f13adc42"
     },
     "work-clay-4": {
       "url": "audio/work-clay-4-1f102db6ecf48d58.mp3",
@@ -1747,6 +1714,39 @@
       "bytes": 77804,
       "fingerprint": "108b6b1855fdf1f0",
       "sha256": "0bfd519cdb605e51b489171bc613ce283358ff0ff190ab021a087fec4f0dd7c4"
+    },
+    "work-clay-0-order": {
+      "url": "audio/work-clay-0-order-72f98f01614bb4ca.mp3",
+      "text": "We are making a cup with ocean blue glaze and a waves pattern. Tell me the object and its color before we begin.",
+      "person": "ben",
+      "voice": "am_michael",
+      "speed": 0.94,
+      "duration": 8.4,
+      "bytes": 84764,
+      "fingerprint": "72f98f01614bb4ca",
+      "sha256": "cfe848989f5bf59c3f10835db34cb251d726b96050950d87db72320cdaa7aac2"
+    },
+    "work-clay-1-order": {
+      "url": "audio/work-clay-1-order-c2ca13b56df47d44.mp3",
+      "text": "We are making a bowl with leaf green glaze and a leaves pattern. Tell me the object and its color before we begin.",
+      "person": "ben",
+      "voice": "am_michael",
+      "speed": 0.94,
+      "duration": 8.5,
+      "bytes": 85964,
+      "fingerprint": "c2ca13b56df47d44",
+      "sha256": "9e78bf97c464de23904fa6ea0655615f567ca216f6b7f15d2f0d67f4ba6d33f5"
+    },
+    "work-clay-2-order": {
+      "url": "audio/work-clay-2-order-461699d5238f60f7.mp3",
+      "text": "We are making a vase with warm coral glaze and a dots pattern. Tell me the object and its color before we begin.",
+      "person": "ben",
+      "voice": "am_michael",
+      "speed": 0.94,
+      "duration": 8.6,
+      "bytes": 86924,
+      "fingerprint": "461699d5238f60f7",
+      "sha256": "992657ec40a380ec9af26cfffadafa31b923e0a3f1dd26da7b7df00c7f392da6"
     }
   }
 }
