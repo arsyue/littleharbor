@@ -80,11 +80,12 @@ function update(dt){
  near=places.filter(p=>Math.hypot(position.x-p.x,position.y-p.y)<115).sort((a,b)=>Math.hypot(position.x-a.x,position.y-a.y)-Math.hypot(position.x-b.x,position.y-b.y))[0]||null;
  const button=document.querySelector('#interact');button.disabled=!near;button.textContent=near?(near.house?'Enter '+houses.find(b=>b.id===near.id).name:near.id==='home'?'Enter my aquarium':npcs.includes(near)?'Talk to '+near.name:'Read '+near.name):'Walk closer to a friend';
  if(goal&&!path.length&&Math.hypot(position.x-goal.x,position.y-goal.y)<115){const arrived=goal;goal=null;if(arrived.house){enterRoom(arrived.id);return;}document.querySelector('#status').textContent='You reached '+arrived.name+'. Press E or tap the green button.';}
- document.querySelector('#district').textContent=position.y>1230*WORLD.sy?'Sunny Harbor & Shell Beach':position.x>2100*WORLD.sx?'Garden & Lighthouse':position.y>900*WORLD.sy?'Workshop Lane':position.x>1500*WORLD.sx?'Market Quarter':position.x<700*WORLD.sx?'Library Gardens':'Town Square';
+ document.querySelector('#district').textContent=position.x>2600*WORLD.sx?(position.y>1200*WORLD.sy?'East Coast Promenade':'Eastbank · Food, Art & Discovery'):position.y>1230*WORLD.sy?'Sunny Harbor & Shell Beach':position.x>2100*WORLD.sx?'Garden & Lighthouse':position.y>900*WORLD.sy?'Workshop Lane':position.x>1500*WORLD.sx?'Market Quarter':position.x<700*WORLD.sx?'Library Gardens':'Town Square';
  if(time-savedAt>1&&Math.hypot(position.x-lastSaved.x,position.y-lastSaved.y)>12){savedAt=time;lastSaved={...position};send({type:'position',x:position.x,y:position.y});}
 }
 
 
+let balconyReturnFloor=0;
 let inside=null,roomPlayer={x:640,y:625},roomTarget=null,roomSpec=null,roomNear=null,roomPath=[];
 const roomProps=new Map();
 const roomImages=new Map();
@@ -95,16 +96,16 @@ const roomPlay=document.querySelector('#room-play'),roomExit=document.querySelec
 roomPlay.onclick=()=>{playRoom();canvas.focus();};
 roomExit.onclick=()=>{if(!inside||paused)return;if(Math.hypot(roomPlayer.x-roomSpec.exit.x,roomPlayer.y-roomSpec.exit.y)<82)useRoomExit();else walkRoomTo(roomSpec.exit);canvas.focus();};
 function walkRoomTo(p){roomPath=roomRoute(roomSpec,roomPlayer,p);roomTarget=roomPath.shift()||null;}
-function useRoomExit(){if(roomSpec.floor){const id=inside.id;enterRoom(id,0,'stairs');}else exitRoom();}
+function useRoomExit(){if(roomSpec.balcony){enterRoom(inside.id,balconyReturnFloor,'balcony');}else if(roomSpec.floor){const id=inside.id;enterRoom(id,0,'stairs');}else exitRoom();}
 function enterRoom(id,floor=0,arrival=null){
  inside=houses.find(b=>b.id===id);if(!inside)return;roomSpec=roomFor(inside,floor);
  path=[];goal=null;held.clear();roomTarget=null;roomPath=[];roomNear=null;walking=false;roomPlayer={...roomSpec.spawn};direction=2;
- if(arrival==='stairs'){const s=roomSpec.spots.find(s=>s.id==='stairs');if(s)roomPlayer=floorPoint(s.x,s.y+90);}
- for(const obj of roomSpec.objects)if(!roomProps.has(obj.asset)){const img=new Image(),rec={img,ready:false,error:false};roomProps.set(obj.asset,rec);img.onload=()=>rec.ready=true;img.onerror=()=>rec.error=true;img.src='../assets/room-props/'+obj.asset+'.webp';}
+ if(arrival){const s=roomSpec.spots.find(s=>s.id===arrival);if(s)roomPlayer=floorPoint(s.x,s.y+80,roomSpec);}
+ for(const obj of roomSpec.objects)if(!roomProps.has(obj.asset)){const img=new Image(),rec={img,ready:false,error:false};roomProps.set(obj.asset,rec);img.onload=()=>rec.ready=true;img.onerror=()=>rec.error=true;img.src=obj.url||'../assets/room-props/'+obj.asset+'.webp';}
  const imageKey=id+':'+roomSpec.floor;
  if(!roomImages.has(imageKey)){const img=new Image();const record={img,ready:false,error:false};roomImages.set(imageKey,record);img.onload=()=>record.ready=true;img.onerror=()=>record.error=true;img.src=roomSpec.image;}
  roomUi.hidden=false;document.body.classList.add('in-room');document.querySelector('#room-title').textContent=roomSpec.name;
- document.querySelector('#room-level').textContent='3 jobs to earn coins · Walk up, then press E';canvas.focus();updateRoomPrompt();
+ document.querySelector('#room-level').textContent=roomSpec.balcony?'Explore the balcony · Press E to return inside':roomSpec.spots.some(s=>s.kind==='work')?'Try a work shift · Earn coins using English':'Activities, balcony & exploration · Walk up, then press E';canvas.focus();updateRoomPrompt();
 }
 function exitRoom(){
  if(!inside)return;const door=entrances.find(e=>e.id===inside.id);if(door){position={x:door.x,y:door.y+24};camera={...position};}
@@ -115,13 +116,14 @@ function playRoom(target=null){
  roomTarget=null;roomPath=[];held.clear();walking=false;
  if(roomNear.id==='exit'){useRoomExit();return;}
  if(roomNear.id==='stairs'){enterRoom(inside.id,1);return;}
- send({type:'house-game',id:inside.id,spot:roomSpec.floor&&roomNear.id!=='host'?'up-'+roomNear.id:roomNear.id});
+ if(roomNear.kind==='balcony'){balconyReturnFloor=roomSpec.floor;enterRoom(inside.id,2);return;}
+ send({type:'house-game',id:inside.id,spot:roomSpec.balcony&&roomNear.id!=='host'?'balcony-'+roomNear.id:roomSpec.floor&&roomNear.id!=='host'?'up-'+roomNear.id:roomNear.id});
 }
 function updateRoomPrompt(){
  roomNear=nearestSpot(roomSpec,roomPlayer);
- roomPlay.disabled=!roomNear;roomPlay.textContent=roomNear?(roomNear.id==='exit'?(roomSpec.floor?'E · Go downstairs':'E · Exit to town'):roomNear.id==='stairs'?'E · Go upstairs':'E · '+roomNear.name+' · +'+roomNear.reward+' coins'):'Walk closer to interact';
- roomHint.textContent=roomNear?(roomNear.id==='exit'?(roomSpec.floor?'Return to the ground floor.':'Your adventure continues outside.'):roomNear.id==='stairs'?roomNear.detail+'.':roomNear.detail+'. Complete the activity to earn coins.'):'Walk to a friend or a golden marker. Tap the floor or use the arrow keys.';
- roomExit.textContent=Math.hypot(roomPlayer.x-roomSpec.exit.x,roomPlayer.y-roomSpec.exit.y)<82?(roomSpec.floor?'E · Downstairs':'E · Exit to town'):(roomSpec.floor?'Walk downstairs ↓':'Walk to exit ↓');
+ roomPlay.disabled=!roomNear;roomPlay.textContent=roomNear?(roomNear.id==='exit'?(roomSpec.balcony?'E · Return inside':roomSpec.floor?'E · Go downstairs':'E · Exit to town'):roomNear.kind==='balcony'?'E · Walk onto balcony':roomNear.id==='stairs'?'E · Go upstairs':'E · '+roomNear.name+' · +'+roomNear.reward+' coins'):'Walk closer to interact';
+ roomHint.textContent=roomNear?(roomNear.id==='exit'?(roomSpec.balcony?'Return through the balcony door.':roomSpec.floor?'Return to the ground floor.':'Your adventure continues outside.'):['stairs','balcony'].includes(roomNear.kind)?roomNear.detail+'.':roomNear.detail+'. Complete the activity to earn coins.'):'Walk to a friend or a golden marker. Tap the floor or use the arrow keys.';
+ roomExit.textContent=Math.hypot(roomPlayer.x-roomSpec.exit.x,roomPlayer.y-roomSpec.exit.y)<82?(roomSpec.balcony?'E · Return inside':roomSpec.floor?'E · Downstairs':'E · Exit to town'):(roomSpec.balcony?'Walk back inside ↓':roomSpec.floor?'Walk downstairs ↓':'Walk to exit ↓');
 }
 function updateRoom(dt){
  let dx=(held.has('ArrowRight')||held.has('d')?1:0)-(held.has('ArrowLeft')||held.has('a')?1:0),dy=(held.has('ArrowDown')||held.has('s')?1:0)-(held.has('ArrowUp')||held.has('w')?1:0);
@@ -129,7 +131,7 @@ function updateRoom(dt){
  else if(roomTarget){dx=roomTarget.x-roomPlayer.x;dy=roomTarget.y-roomPlayer.y;if(Math.hypot(dx,dy)<3){roomPlayer={...roomTarget};roomTarget=roomPath.shift()||null;dx=dy=0;}}
  const len=Math.hypot(dx,dy);walking=false;
  if(len){direction=Math.abs(dx)>Math.abs(dy)?(dx>0?1:3):(dy>0?0:2);
- const step=manual?260*dt:Math.min(260*dt,len),p=floorPoint(roomPlayer.x+dx/len*step,roomPlayer.y+dy/len*step);
+ const step=manual?260*dt:Math.min(260*dt,len),p=floorPoint(roomPlayer.x+dx/len*step,roomPlayer.y+dy/len*step,roomSpec);
  const before={...roomPlayer};if(roomWalkable(roomSpec,p.x,roomPlayer.y))roomPlayer.x=p.x;if(roomWalkable(roomSpec,roomPlayer.x,p.y))roomPlayer.y=p.y;walking=Math.hypot(roomPlayer.x-before.x,roomPlayer.y-before.y)>.05;if(walking)foot+=dt;
  }
  updateRoomPrompt();
@@ -149,6 +151,7 @@ function drawRoomObject(s){
  const active=roomNear?.id===s.id;
  ellipse(ctx,s.x,s.y+2,36,12,active?'#fbe1a877':'#ffe8ad33');ctx.strokeStyle=active?'#ffeda9':'#efd49ba8';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(s.x,s.y+2,36,12,0,0,Math.PI*2);ctx.stroke();
  if(s.kind==='person'){paintResident(ctx,s.person,s.x,s.y,time);return;}
+ if(s.kind==='balcony'){line(ctx,[[s.x-16,s.y],[s.x+16,s.y],[s.x+7,s.y-9]],'#fff1b5',4);return;}
  if(s.kind==='stairs'){line(ctx,[[s.x-18,s.y-5],[s.x,s.y-24],[s.x+18,s.y-5]],'#fff1b5',6);return;}
  if(s.furniture)return;
  // A small, freestanding activity lectern marks a tangible workstation.
@@ -164,7 +167,7 @@ function drawRoomExit(){
  poly(ctx,[[s.x-82,s.y-5],[s.x+82,s.y-5],[s.x+103,s.y+61],[s.x-103,s.y+61]],'#435f598f','#f7e4ad');
  for(const xx of [-89,89]){round(ctx,s.x+xx-8,s.y-58,16,87,3,'#b18a53','#f2d69e');ellipse(ctx,s.x+xx,s.y-58,10,5,'#f8dfa7');}
  round(ctx,s.x-87,s.y-67,174,36,8,'#1e574e','#e6c578');
- ctx.textAlign='center';ctx.font='bold 19px system-ui';ctx.fillStyle='#fff7d6';ctx.fillText(roomSpec.floor?'DOWNSTAIRS':'EXIT · TOWN',s.x,s.y-42);
+ ctx.textAlign='center';ctx.font='bold 19px system-ui';ctx.fillStyle='#fff7d6';ctx.fillText(roomSpec.balcony?'BACK INSIDE':roomSpec.floor?'DOWNSTAIRS':'EXIT · TOWN',s.x,s.y-42);
  for(let i=0;i<2;i++)line(ctx,[[s.x-12,s.y+i*18],[s.x,s.y+10+i*18],[s.x+12,s.y+i*18]],'#ffeab0',4);
  ctx.font='600 13px system-ui';ctx.fillText('Walk here · press E',s.x,s.y+53);
 }
@@ -187,7 +190,7 @@ function pointInRoom(e){
  const object=roomSpec.objects.find(o=>Math.abs(p.x-o.x)<o.width*.45&&p.y>o.y-o.width*.75&&p.y<o.y+8);
  const s=roomSpec.spots.filter(s=>Math.abs(p.x-s.x)<80&&p.y>s.y-(s.kind==='person'?155:105)&&p.y<s.y+35).sort((a,b)=>Math.hypot(p.x-a.x,p.y-a.y)-Math.hypot(p.x-b.x,p.y-b.y))[0]||roomSpec.spots.find(s=>object&&s.furniture===object.id);
  if(s&&Math.hypot(s.x-roomPlayer.x,s.y-roomPlayer.y)<(s.id==='exit'?82:s.id==='stairs'?68:75)){roomNear=s;playRoom(s);return;}
- walkRoomTo(floorPoint(s?.x??p.x,s?.y??p.y));
+ walkRoomTo(floorPoint(s?.x??p.x,s?.y??p.y,roomSpec));
 }
 
 function frame(now){const dt=last?Math.min((now-last)/1000,.05):.016;last=now;if(!document.hidden){time+=dt;update(dt);draw();}requestAnimationFrame(frame);}
