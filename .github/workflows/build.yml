@@ -77,6 +77,7 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Browser verification
         run: |
+          node cloud/signature.verify.cjs
           node cloud/work.verify.cjs
           node cloud/rooms.verify.cjs
           node cloud/verify.mjs

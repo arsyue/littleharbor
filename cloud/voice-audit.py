@@ -29,6 +29,7 @@ def wer(expected, actual):
 model = WhisperModel("base.en", device="cpu", compute_type="int8", cpu_threads=2)
 sample_ids = [p + "-greeting" for p in plan["cast"]] + [m + "-0-say" for m in ["welcome", "market", "design", "delivery"]]
 sample_ids += ["work-bake-rolls-order", "work-bake-loaf-order", "work-bake-braid-order", "work-guest-Alice-order", "work-guest-Rowan-order", "work-clay-0-order", "work-museum-welcome"]
+sample_ids += ["work-place-library-story", "work-place-harbor-route", "work-place-music-memory", "work-place-inn-rooms"]
 readbacks = []
 for key in sample_ids:
     clip = manifest["clips"][key]

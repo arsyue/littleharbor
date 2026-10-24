@@ -30,7 +30,7 @@ async function audioPlaying(key){
 }
 try{
  const manifest=JSON.parse(await readFile('public/audio/manifest.json','utf8'));
- assert.equal(manifest.engine,'kokoro');assert.equal(Object.keys(manifest.clips).length,156);
+ assert.equal(manifest.engine,'kokoro');assert.equal(Object.keys(manifest.clips).length,216);
  for(const m of adventures)for(const [i,s] of m.steps.entries())for(const kind of ['say','hint','feedback']){
   const c=manifest.clips[m.id+'-'+i+'-'+kind];assert.equal(c.text,s[kind]);assert.ok(c.duration>1&&c.duration<45);
   assert.ok((await readFile('public/'+c.url)).length>1000);

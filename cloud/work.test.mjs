@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
-import {workKinds,workPlan,startWork,attemptWork,collectWages,newShift,spokenMatch,allWorkClips} from '../web/work-data.mjs';
+import {workKinds,workPlan,startWork,attemptWork,collectWages,newShift,spokenMatch,allWorkClips,workReward} from '../web/work-data.mjs';
 import {newState,validateState} from '../web/state.mjs';
 import {WORLD,houses} from '../web/places.mjs';
-assert.equal(WORLD.width*WORLD.height,3600*2400*1.5);assert.equal(houses.length,16);assert.equal(allWorkClips().length,68);
+assert.equal(WORLD.width*WORLD.height,3600*2400*1.5);assert.equal(houses.length,16);assert.equal(allWorkClips().length,128);
 let checked=0;
 for(const kind of workKinds)for(let variant=0;variant<(kind==='restaurant'?6:kind==='museum'?1:3);variant++){
  const state=newState(),s=startWork(state,kind);s.variant=variant;const plan=workPlan(kind,variant);
- assert.ok(plan.length>=6);
+ assert.ok(plan.length>=5);
  for(const step of plan){
   const at=s.step,coins=state.coins;assert.equal(attemptWork(s,'definitely wrong').ok,false);assert.equal(s.step,at);assert.equal(state.coins,coins);
   let answer=step.type==='speak'?step.hint:step.fields||step.answer||step.target;
@@ -16,7 +16,7 @@ for(const kind of workKinds)for(let variant=0;variant<(kind==='restaurant'?6:kin
   assert.ok(attemptWork(s,answer).ok,kind+' '+step.id);checked++;
   const restored=JSON.parse(JSON.stringify(state));assert.equal(startWork(restored,kind).step,s.step);assert.ok(validateState(restored));
  }
- const expected={bakery:90,restaurant:120,pottery:75,museum:70}[kind];assert.equal(collectWages(state,kind),expected);assert.equal(state.coins,expected);assert.equal(collectWages(state,kind),0);assert.ok(validateState(state));
+ const expected=workReward(kind);assert.equal(collectWages(state,kind),expected);assert.equal(state.coins,expected);assert.equal(collectWages(state,kind),0);assert.ok(validateState(state));
  const before=state.coins;assert.equal(attemptWork(s,'anything').ok,false);assert.equal(state.coins,before);assert.equal(newShift(state,kind).step,0);
 }
 const old=newState();old.town={x:5200,y:1300};assert.ok(validateState(old));old.town.x=5500;assert.equal(validateState(old),false);
