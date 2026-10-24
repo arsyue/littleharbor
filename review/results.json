@@ -29,6 +29,6 @@
     "Mobile fallback fills the viewport, switches scenes and exits with Escape even when the game frame has focus",
     "No browser or engine console errors"
   ],
-  "startupMs": 384,
+  "startupMs": 611,
   "rendererBytes": 23479
 }
