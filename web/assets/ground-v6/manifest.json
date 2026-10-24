@@ -1,0 +1,19 @@
+{
+  "version": 6,
+  "generator": "ImageGen",
+  "assets": {
+    "limestone-path": {
+      "url": "../assets/ground-v6/limestone-path.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 200920
+    },
+    "meadow-grass": {
+      "url": "../assets/ground-v6/meadow-grass.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 324174
+    }
+  },
+  "totalBytes": 525094
+}

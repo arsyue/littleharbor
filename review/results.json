@@ -9,6 +9,7 @@
     "Pause and day/night controls work",
     "Clicking water feeds fish and rewards the quest once",
     "All 14 ImageGen town asset packages load with transparency within the artwork budget",
+    "Both ground textures load: natural limestone paving and short meadow grass",
     "Large continuous town supports keyboard walking, directional character sprites and follows the explorer",
     "Four greetings and all 84 story lines, hints and feedback play real Kokoro MP3s",
     "Replay works; microphone start and dialog close interrupt narration immediately",
@@ -29,6 +30,6 @@
     "Mobile fallback fills the viewport, switches scenes and exits with Escape even when the game frame has focus",
     "No browser or engine console errors"
   ],
-  "startupMs": 611,
+  "startupMs": 426,
   "rendererBytes": 23479
 }
