@@ -29,14 +29,14 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{try{const
   }else if(s.type==='pattern'){
    await page.locator('#pattern-listen').click();await page.waitForFunction(()=>!document.querySelector('#pattern-listen')?.disabled,{},{timeout:6000});
    for(const note of s.answer)await page.locator('[data-pad="'+note+'"]').click();await page.locator('#work-check').click();
-  }else if(s.type==='number'){await page.locator('#work-number').fill(String(s.answer));await page.locator('#work-number-form button').click();}
+  }else if(s.type==='number'){await page.locator('#work-number').fill(String(s.answer));assert.equal(await page.locator('#work-number').evaluate(el=>el.checkValidity()),true,'the answer must fit the input range');await page.locator('#work-number-form button').click();}
   else if(s.type==='choose'){await page.locator('[data-work-choice]').evaluateAll((els,v)=>els.find(e=>e.dataset.workChoice===v).click(),s.answer);}
   else if(s.type==='sequence'){for(const v of s.answer)await page.locator('[data-sequence]').evaluateAll((els,a)=>els.find(e=>e.dataset.sequence===a).click(),v);await page.locator('#work-check').click();}
   else throw Error('Unhandled signature mechanic: '+s.type);
  }
  try{
   await page.goto('http://127.0.0.1:8891/');await page.evaluate(()=>localStorage.clear());await page.reload();await page.locator('[data-nav="town"]').first().click();await page.waitForFunction(()=>document.querySelector('#town-engine')?.contentWindow.townDiagnostics?.art.expansion?.loaded===4);f=page.frames().find(x=>x.url().includes('/town/'));
-  await page.locator('[data-action="quests"]').first().click();assert.equal(await page.locator('[data-place-game]').count(),16);await page.locator('.modal-close').click();
+  await page.locator('[data-action="quests"]').first().click();assert.equal(await page.locator('[data-place-game]').count(),16);assert.equal(await page.locator('[data-place-game="library"]').evaluate(el=>typeof el.onclick),'function');await page.locator('.modal-close').click();
   assert.equal(Object.keys(gameCatalog).length,16);assert.equal(new Set(Object.values(gameCatalog).map(g=>g.name)).size,16);assert.deepEqual([...new Set(Object.values(gameCatalog).map(g=>g.level))].sort(),[1,2,3]);
   for(const kind of signatureKinds){
    activeKind=kind;console.log('SIGNATURE',kind);await enter(kind);const initial=(await read()).coins,plan=workPlan(kind,0);

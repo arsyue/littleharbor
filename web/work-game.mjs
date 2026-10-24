@@ -4,7 +4,7 @@ import {EnglishVoiceInput} from './voice.mjs';
 import {workNames,workPlan,startWork,attemptWork,collectWages,newShift,spokenMatch} from './work-data.mjs';
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const art=name=>'assets/expansion-v7/'+name+'.webp';
-const title=s=>s.customer||({bakery:'Baker Oliver',restaurant:'Chef Amira',pottery:'Ben',museum:'Captain Finn'})[s.kind]||({lily:'Lily',mia:'Mia',ben:'Ben',finn:'Captain Finn'})[s.person]||'Your guide';
+const title=s=>s.id?.startsWith('service-')?'Chef Amira':s.customer||({bakery:'Baker Oliver',restaurant:'Chef Amira',pottery:'Ben',museum:'Captain Finn'})[s.kind]||({lily:'Lily',mia:'Mia',ben:'Ben',finn:'Captain Finn'})[s.person]||'Your guide';
 export function showWork(kind,api){
  if(!document.querySelector('#work-style')){const link=document.createElement('link');link.id='work-style';link.rel='stylesheet';link.href='work-game.css';document.head.append(link);}
  const meta=gameByKind[kind],signature=!['bakery','restaurant','pottery','museum'].includes(kind);
@@ -74,7 +74,7 @@ export function showWork(kind,api){
   else if(['stir','knead'].includes(s.type))motion(s);
   else if(s.type==='bake')oven(s);
   else if(s.type==='choose'){body.querySelector('#work-input').innerHTML='<div class="work-choices">'+s.choices.map(c=>'<button data-work-choice="'+esc(c)+'">'+esc(c)+'</button>').join('')+'</div>';body.querySelectorAll('[data-work-choice]').forEach(b=>b.onclick=()=>submit(b.dataset.workChoice));}
-  else if(s.type==='number'){body.querySelector('#work-input').innerHTML='<form id="work-number-form"><label for="work-number">How many?</label><input id="work-number" type="number" min="0" max="20" required><button class="primary">Check the amount</button></form>';body.querySelector('form').onsubmit=e=>{e.preventDefault();submit(body.querySelector('input').value);};}
+  else if(s.type==='number'){body.querySelector('#work-input').innerHTML='<form id="work-number-form"><label for="work-number">How many?</label><input id="work-number" type="number" min="0" max="1000" required><button class="primary">Check the amount</button></form>';body.querySelector('form').onsubmit=e=>{e.preventDefault();submit(body.querySelector('input').value);};}
   else if(s.type==='sequence'){
    const picked=session.draft.picked||=[];body.querySelector('#work-input').innerHTML='<ol id="work-sequence"></ol><div class="work-choices">'+s.choices.map(c=>'<button data-sequence="'+esc(c)+'">'+esc(c)+'</button>').join('')+'</div><button class="secondary" id="sequence-reset">Start the order again</button><button class="primary" id="work-check">Check the timeline</button>';
    const refresh=()=>{body.querySelector('#work-sequence').innerHTML=picked.map(v=>'<li>'+esc(v)+'</li>').join('');body.querySelectorAll('[data-sequence]').forEach(b=>b.disabled=picked.includes(b.dataset.sequence));api.save();};
