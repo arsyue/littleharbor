@@ -1,0 +1,15 @@
+{
+  "version": 6,
+  "generator": "ImageGen",
+  "purpose": "Natural limestone paths and dense short grass for Little Harbor",
+  "assets": [
+    {
+      "id": "limestone-path",
+      "prompt": "Create ONE square seamless tileable ground texture for a premium cozy 2.5D seaside town adventure game. Perfect orthographic straight-down view, covers the entire square edge to edge with SMALL naturally uneven hand-cut warm cream and pale honey limestone pavers. Approximately 14 stones across and 14 rows, varied softly irregular rectangular and polygon shapes laid tightly in organic courses, natural stone pores and gently mottled mineral color, rounded worn edges with fine shallow warm grey sandy joints. Elegant old European harbor footpath, beautifully crafted, soft physically based ambient daylight, subtle small-scale relief, clear refined detailed texture. Material study only, no border, no curb, no grass, no large cracks, no weeds, no props, no scene, no perspective, no text, no harsh directional shadow, no glossy finish, no big contrast. Tile must repeat seamlessly on all four edges with no vignette and uniform brightness. Cozy richly illustrated game realism, warm creamy stones rather than cartoon brick rectangles. Square 1024 by 1024 output."
+    },
+    {
+      "id": "meadow-grass",
+      "prompt": "Create ONE square seamless tileable short-grass ground texture for a premium cozy 2.5D seaside town adventure game, perfectly orthographic straight-down. Entire square covered with fine dense fresh trimmed meadow grass, tiny individual short narrow blades, predominantly lively soft sage and spring green with small darker green interwoven blades, delicate clover leaves very sparsely scattered, naturally varied micro texture and soft subtle color variation. Beautiful realistic illustrated game ground material, looks soft, tidy and lush with very shallow relief. Roughly 120 tiny blades across image, grass should read as short lawn, NOT long grass clumps. Soft even ambient daylight, uniform lighting edge to edge, no vignette. MUST be a seamless repeating texture matching all four edges. No rocks, flowers, trees, paths, buildings, dirt holes, bare areas, large leaves, objects, text, borders, perspective, horizon, large shadows, strong checker pattern or dramatic light. Square 1024 by 1024 output."
+    }
+  ]
+}

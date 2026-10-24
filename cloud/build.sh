@@ -3,6 +3,7 @@ set -euo pipefail
 # All work runs on the GitHub-hosted runner. The browser renderer has no engine dependency.
 node cloud/assets.mjs
 node cloud/town-assets.mjs
+node cloud/ground-assets.mjs
 node cloud/room-assets.mjs
 mkdir -p public
 cp -R legacy/. public/

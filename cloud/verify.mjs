@@ -85,6 +85,8 @@ try{
  assert.equal(initialTown.art.version,4);assert.equal(initialTown.art.loaded,14);assert.deepEqual(initialTown.art.failed,[]);
  assert.ok(initialTown.art.bytes<4500000);assert.equal(await town.locator('#loading').count(),0);
  checks.push('All 14 ImageGen town asset packages load with transparency within the artwork budget');
+ assert.equal(initialTown.art.ground.loaded,2);assert.equal(initialTown.art.ground.version,6);assert.ok(initialTown.art.ground.bytes>10000&&initialTown.art.ground.bytes<650000);
+ checks.push('Both ground textures load: natural limestone paving and short meadow grass');
  await page.locator('#town-engine').screenshot({path:'qa-output/town-art-square.jpg',quality:90});
  await town.locator('#world').focus();await page.keyboard.down('ArrowRight');try{await town.waitForFunction(x=>window.townDiagnostics.player.x>x+40,initialTown.player.x,{timeout:10000});}finally{await page.keyboard.up('ArrowRight');}
  assert.ok((await town.evaluate(()=>window.townDiagnostics.player.x))>initialTown.player.x+40);
