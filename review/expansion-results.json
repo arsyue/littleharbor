@@ -1,0 +1,278 @@
+{
+  "success": false,
+  "checks": [
+    "Walked from the original town to the new east-coast bistro"
+  ],
+  "error": "TimeoutError: frame.waitForFunction: Timeout 30000ms exceeded.",
+  "errors": [],
+  "diagnostics": {
+    "player": {
+      "x": 299.5,
+      "y": 1425
+    },
+    "world": {
+      "width": 5400,
+      "height": 2400
+    },
+    "art": {
+      "version": 4,
+      "loaded": 14,
+      "total": 14,
+      "failed": [],
+      "generator": "ImageGen",
+      "ground": {
+        "version": 6,
+        "loaded": 2,
+        "total": 2,
+        "bytes": 525094
+      },
+      "expansion": {
+        "version": 7,
+        "loaded": 4,
+        "total": 4
+      },
+      "bytes": 3926152
+    },
+    "inside": "house-aquarium",
+    "roomPlayer": {
+      "x": 1060,
+      "y": 550
+    },
+    "roomView": {
+      "scale": 1.0325,
+      "cx": 673.2203389830509,
+      "cy": 400
+    },
+    "roomBounds": {
+      "width": 1280,
+      "height": 800,
+      "top": 285,
+      "bottom": 758,
+      "exit": {
+        "id": "exit",
+        "name": "EXIT · Town",
+        "x": 640,
+        "y": 727,
+        "kind": "exit"
+      }
+    },
+    "roomFloor": 0,
+    "roomObjects": [
+      {
+        "id": "furniture-0",
+        "asset": "display-tank",
+        "x": 615,
+        "y": 525,
+        "width": 350,
+        "box": {
+          "x": 468,
+          "y": 460,
+          "w": 294,
+          "h": 80
+        }
+      },
+      {
+        "id": "furniture-1",
+        "asset": "planter",
+        "x": 1000,
+        "y": 550,
+        "width": 185,
+        "box": {
+          "x": 922.3,
+          "y": 485,
+          "w": 155.4,
+          "h": 80
+        }
+      },
+      {
+        "id": "balcony-door",
+        "asset": "balcony-door",
+        "url": "../assets/expansion-v7/balcony-door.webp",
+        "x": 1060,
+        "y": 420,
+        "width": 115,
+        "box": {
+          "x": 1020,
+          "y": 405,
+          "w": 80,
+          "h": 16
+        }
+      }
+    ],
+    "propsReady": true,
+    "roomImage": {
+      "url": "../assets/rooms-v5/aquarium.webp",
+      "ready": true,
+      "error": false
+    },
+    "roomSpots": [
+      {
+        "id": "host",
+        "name": "Mia",
+        "detail": "Help a friend",
+        "x": 410,
+        "y": 385,
+        "kind": "person",
+        "person": "mia",
+        "reward": 20
+      },
+      {
+        "id": "job-0",
+        "name": "Care notebook",
+        "detail": "Make a healthy aquarium plan.",
+        "x": 615,
+        "y": 583,
+        "kind": "object",
+        "furniture": "furniture-0",
+        "reward": 25
+      },
+      {
+        "id": "job-1",
+        "name": "Observation point",
+        "detail": "Look closely and compare.",
+        "x": 1000,
+        "y": 608,
+        "kind": "object",
+        "furniture": "furniture-1",
+        "reward": 25
+      },
+      {
+        "id": "exit",
+        "name": "EXIT · Town",
+        "x": 640,
+        "y": 727,
+        "kind": "exit"
+      },
+      {
+        "id": "balcony",
+        "kind": "balcony",
+        "name": "BALCONY",
+        "detail": "Walk outside and explore",
+        "x": 1060,
+        "y": 470
+      }
+    ],
+    "roomNear": null,
+    "roomTarget": {
+      "x": 1092,
+      "y": 540
+    },
+    "houses": [
+      {
+        "id": "house-library",
+        "name": "Harbor Library · Navigator",
+        "x": 512,
+        "y": 589,
+        "house": true
+      },
+      {
+        "id": "house-market",
+        "name": "Fish Market · Explorer",
+        "x": 2348,
+        "y": 649,
+        "house": true
+      },
+      {
+        "id": "house-workshop",
+        "name": "Design Workshop · Adventurer",
+        "x": 635,
+        "y": 1330,
+        "house": true
+      },
+      {
+        "id": "house-harbor",
+        "name": "Harbor Office · Navigator",
+        "x": 2450,
+        "y": 1692,
+        "house": true
+      },
+      {
+        "id": "house-aquarium",
+        "name": "My Aquarium · Explorer",
+        "x": 299.5,
+        "y": 1375,
+        "house": true
+      },
+      {
+        "id": "house-cafe",
+        "name": "Sunbeam Café · Adventurer",
+        "x": 1451.5,
+        "y": 497,
+        "house": true
+      },
+      {
+        "id": "house-garden",
+        "name": "Glass Garden · Explorer",
+        "x": 3133,
+        "y": 642,
+        "house": true
+      },
+      {
+        "id": "house-lighthouse",
+        "name": "Lighthouse · Navigator",
+        "x": 3178,
+        "y": 1692,
+        "house": true
+      },
+      {
+        "id": "house-bakery",
+        "name": "Rose Bakery · Explorer",
+        "x": 176,
+        "y": 372,
+        "house": true
+      },
+      {
+        "id": "house-studio",
+        "name": "Shell Art Studio · Adventurer",
+        "x": 1017,
+        "y": 432,
+        "house": true
+      },
+      {
+        "id": "house-post",
+        "name": "Seabreeze Post · Navigator",
+        "x": 2018,
+        "y": 355,
+        "house": true
+      },
+      {
+        "id": "house-music",
+        "name": "Melody Cottage · Adventurer",
+        "x": 2939.5,
+        "y": 324,
+        "house": true
+      },
+      {
+        "id": "house-bistro",
+        "name": "Harbor Bistro · Adventurer",
+        "x": 4075,
+        "y": 1422,
+        "house": true
+      },
+      {
+        "id": "house-inn",
+        "name": "Seabreeze Inn · Navigator",
+        "x": 4676.5,
+        "y": 550,
+        "house": true
+      },
+      {
+        "id": "house-pottery",
+        "name": "Tideclay Pottery · Adventurer",
+        "x": 4991,
+        "y": 1389,
+        "house": true
+      },
+      {
+        "id": "house-museum",
+        "name": "Shell & Sail Museum · Navigator",
+        "x": 3984.5,
+        "y": 535,
+        "house": true
+      }
+    ],
+    "paused": false,
+    "walking": false,
+    "blocked": true
+  }
+}

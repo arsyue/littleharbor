@@ -1,0 +1,199 @@
+{
+  "version": 7,
+  "generator": "ImageGen",
+  "assets": {
+    "building-bistro": {
+      "url": "../assets/expansion-v7/building-bistro.webp",
+      "width": 800,
+      "height": 722,
+      "bytes": 245534
+    },
+    "building-museum": {
+      "url": "../assets/expansion-v7/building-museum.webp",
+      "width": 800,
+      "height": 726,
+      "bytes": 270982
+    },
+    "building-inn": {
+      "url": "../assets/expansion-v7/building-inn.webp",
+      "width": 800,
+      "height": 767,
+      "bytes": 255910
+    },
+    "building-pottery": {
+      "url": "../assets/expansion-v7/building-pottery.webp",
+      "width": 800,
+      "height": 732,
+      "bytes": 263128
+    },
+    "room-bistro": {
+      "url": "../assets/expansion-v7/room-bistro.webp",
+      "width": 1600,
+      "height": 1000,
+      "bytes": 387204
+    },
+    "room-inn": {
+      "url": "../assets/expansion-v7/room-inn.webp",
+      "width": 1600,
+      "height": 1000,
+      "bytes": 364212
+    },
+    "room-pottery": {
+      "url": "../assets/expansion-v7/room-pottery.webp",
+      "width": 1600,
+      "height": 1000,
+      "bytes": 412230
+    },
+    "balcony-garden": {
+      "url": "../assets/expansion-v7/balcony-garden.webp",
+      "width": 1600,
+      "height": 1000,
+      "bytes": 398176
+    },
+    "balcony-sea": {
+      "url": "../assets/expansion-v7/balcony-sea.webp",
+      "width": 1600,
+      "height": 1000,
+      "bytes": 346492
+    },
+    "room-museum": {
+      "url": "../assets/expansion-v7/room-museum.webp",
+      "width": 1600,
+      "height": 1000,
+      "bytes": 333008
+    },
+    "balcony-workshop": {
+      "url": "../assets/expansion-v7/balcony-workshop.webp",
+      "width": 1600,
+      "height": 1000,
+      "bytes": 419072
+    },
+    "balcony-lighthouse": {
+      "url": "../assets/expansion-v7/balcony-lighthouse.webp",
+      "width": 1600,
+      "height": 1000,
+      "bytes": 382954
+    },
+    "baking-stages-0": {
+      "url": "../assets/expansion-v7/baking-stages-0.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 41990
+    },
+    "baking-stages-1": {
+      "url": "../assets/expansion-v7/baking-stages-1.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 39782
+    },
+    "baking-stages-2": {
+      "url": "../assets/expansion-v7/baking-stages-2.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 33220
+    },
+    "baking-stages-3": {
+      "url": "../assets/expansion-v7/baking-stages-3.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 38812
+    },
+    "baking-stages-4": {
+      "url": "../assets/expansion-v7/baking-stages-4.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 45456
+    },
+    "baking-stages-5": {
+      "url": "../assets/expansion-v7/baking-stages-5.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 43508
+    },
+    "meal-tray-0": {
+      "url": "../assets/expansion-v7/meal-tray-0.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 41986
+    },
+    "meal-tray-1": {
+      "url": "../assets/expansion-v7/meal-tray-1.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 53654
+    },
+    "meal-tray-2": {
+      "url": "../assets/expansion-v7/meal-tray-2.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 54016
+    },
+    "meal-tray-3": {
+      "url": "../assets/expansion-v7/meal-tray-3.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 59588
+    },
+    "meal-tray-4": {
+      "url": "../assets/expansion-v7/meal-tray-4.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 62514
+    },
+    "meal-tray-5": {
+      "url": "../assets/expansion-v7/meal-tray-5.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 41094
+    },
+    "town-customers-0": {
+      "url": "../assets/expansion-v7/town-customers-0.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 41780
+    },
+    "town-customers-1": {
+      "url": "../assets/expansion-v7/town-customers-1.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 48638
+    },
+    "town-customers-2": {
+      "url": "../assets/expansion-v7/town-customers-2.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 44928
+    },
+    "town-customers-3": {
+      "url": "../assets/expansion-v7/town-customers-3.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 44412
+    },
+    "town-customers-4": {
+      "url": "../assets/expansion-v7/town-customers-4.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 45474
+    },
+    "town-customers-5": {
+      "url": "../assets/expansion-v7/town-customers-5.webp",
+      "width": 384,
+      "height": 384,
+      "bytes": 40784
+    },
+    "balcony-door": {
+      "url": "../assets/expansion-v7/balcony-door.webp",
+      "width": 545,
+      "height": 800,
+      "bytes": 100436
+    },
+    "room-inn-upstairs": {
+      "url": "../assets/expansion-v7/room-inn-upstairs.webp",
+      "width": 1600,
+      "height": 1000,
+      "bytes": 327536
+    }
+  },
+  "totalBytes": 5328510
+}

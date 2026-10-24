@@ -1,16 +1,16 @@
 {
   "success": true,
   "engine": "kokoro",
-  "clips": 88,
-  "durationSeconds": 584.8,
-  "totalBytes": 5925872,
+  "clips": 156,
+  "durationSeconds": 1108.6,
+  "totalBytes": 11224464,
   "allClipsDecoded": true,
-  "manifestSha256": "2c5ff7f5f2150b203308cc0641306edbe0968ddc8834dd82cf556310b7309ac0",
+  "manifestSha256": "2a6332e82bfc7f51bc98dfb5d0838b034e52d222c203a2d8cf044f648b04b1d5",
   "readbacks": [
     {
       "id": "lily-greeting",
       "expected": "Hello again! I am planning a welcome day for new visitors. Could you help me make a thoughtful plan?",
-      "heard": "Hello again, I am planning a welcome day for new visitors. Could you help me make a thoughtful plan?",
+      "heard": "Hello again. I am planning a welcome day for new visitors. Could you help me make a thoughtful plan?",
       "wordErrorRate": 0.0
     },
     {
@@ -46,7 +46,7 @@
     {
       "id": "design-0-say",
       "expected": "A visitor wants an aquarium that feels peaceful. Describe the kind of aquarium you would design. Include at least one detail about its colors or decorations.",
-      "heard": "A visitor wants an aquarium that feels peaceful. Describe the kind of aquarium you would design. Include at least one detail about its colors or decorations.",
+      "heard": "A visitor wants an aquarium that feels peaceful. Describe the kind of aquarium you would design, include at least one detail about its colors or decorations.",
       "wordErrorRate": 0.0
     },
     {
@@ -54,6 +54,48 @@
       "expected": "Ahoy! We have a delivery to organize before a boat leaves the harbor. Offer to help, and tell me one job you could do.",
       "heard": "Ahoy, we have a delivery to organise before a boat leaves the harbour. Offer to help and tell me one job you could do.",
       "wordErrorRate": 0.083
+    },
+    {
+      "id": "work-bake-rolls-order",
+      "expected": "Good morning, baker! The harbor crew has ordered six soft rolls. We will measure, mix, knead, shape, bake and pack them. Tell me what we are making.",
+      "heard": "Good morning, Baker. The harbor crew has ordered six soft rolls. We will measure mix, knead, shape, bake, and pack them. Tell me what we are making.",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "work-bake-loaf-order",
+      "expected": "Our next order is one garden herb loaf for the cafe. This recipe uses more flour and fresh herbs. Listen carefully, then tell me which bread you will make.",
+      "heard": "Our next order is one garden herb loaf for the cafe. This recipe uses more flour and fresh herbs. Listen carefully, then tell me which bread you will make.",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "work-bake-braid-order",
+      "expected": "A family is coming for a picnic. They would like two sweet braided breads. We use milk instead of water, and a little more sugar. Please confirm the order.",
+      "heard": "A family is coming for a picnic. They would like two sweet braided breads. We use milk instead of water and a little more sugar. Please confirm the order.",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "work-guest-Alice-order",
+      "expected": "I would like tomato soup with bread and water. Please leave out the cheese. Could you repeat my order so we can check it together?",
+      "heard": "I would like tomato soup with bread and water. Please leave out the cheese. Could you repeat my order so we can check it together?",
+      "wordErrorRate": 0.0
+    },
+    {
+      "id": "work-guest-Rowan-order",
+      "expected": "Could I have grilled fish, a fresh salad and tea? Please do not put lemon on the fish. I would like to enjoy its own flavor.",
+      "heard": "Could I have grilled fish, a fresh salad and tea? Please do not put lemon on the fish. I would like to enjoy its own flavour.",
+      "wordErrorRate": 0.038
+    },
+    {
+      "id": "work-clay-0-order",
+      "expected": "We are making a blue cup. It will have a waves pattern. Tell me the object and its color before we begin.",
+      "heard": "We are making a blue cup. It will have a waves pattern. Tell me the object in its color before we begin.",
+      "wordErrorRate": 0.045
+    },
+    {
+      "id": "work-museum-welcome",
+      "expected": "Welcome, junior curator. We are preparing an exhibition about the sea and its history. Tell our visitors that you are ready to help them explore.",
+      "heard": "Welcome, Junior Curator. We are preparing an exhibition about the sea and its history. Tell our visitors that you are ready to help them explore.",
+      "wordErrorRate": 0.0
     }
   ]
 }
