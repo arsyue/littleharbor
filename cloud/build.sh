@@ -25,6 +25,7 @@ node cloud/motion.test.mjs
 node cloud/improvements.test.mjs
 node cloud/interiors.test.mjs
 node cloud/work.test.mjs
+node cloud/signature.test.mjs
 node --check public/work-game.mjs
 node --check public/signature-controls.mjs
 node --check public/signature-data.mjs
