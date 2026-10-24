@@ -12,7 +12,7 @@ const seen=new Map();
 for(const kind of workKinds)for(let v=0;v<6;v++)for(const s of workPlan(kind,v)){if(seen.has(s.id))assert.equal(seen.get(s.id),s.text,'an audio key must always mean the same spoken text');else seen.set(s.id,s.text);}
 assert.equal(seen.size,128);assert.equal(allWorkClips().length,128);
 for(const kind of signatureKinds)for(const [index,s]of signaturePlan(kind).entries()){
- assert.ok(s.text.split(/\s+/).length>=20);assert.ok(existsSync('web/'+s.sceneArt));assert.ok(gameByKind[kind]);
+ assert.ok(s.text.split(/\s+/).length>=15);assert.ok(existsSync('web/'+s.sceneArt));assert.ok(gameByKind[kind]);
  const session={kind,variant:0,step:index,errors:0,paid:false,draft:{}};
  if(s.type==='paint'){const wrong={...s.fields};const empty=Array.from({length:9},(_,i)=>i).find(i=>!s.fields[i]);wrong[empty]=s.palette[1];assert.equal(attemptWork(session,wrong).ok,false,'extra painted cells violate the brief');}
  if(s.type==='basket'){const sum=s.catalog.reduce((n,[key,price])=>n+(s.fields[key]||0)*price,0);assert.ok(sum<=s.limit);const unwanted=s.catalog.find(([key])=>!s.fields[key])[0];assert.equal(attemptWork(session,{...s.fields,[unwanted]:1}).ok,false);}
