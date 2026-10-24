@@ -41,7 +41,7 @@ const themes={
 export const roomJobs={
  "library": [
   [
-   "Return shelf",
+   "Book returns",
    "Sort three returned books.",
    [
     [
@@ -861,13 +861,13 @@ export const upstairsJobs={"lighthouse":[["Telescope","Read the explorer’s obs
 const furniture={"library":[["reading-table",680,535,325]],"market":[["display-tank",715,540,340]],"workshop":[["workbench",680,540,330]],"harbor":[["chart-table",680,535,320]],"aquarium":[["display-tank",615,525,350],["planter",1000,550,185]],"cafe":[["cafe-table",650,525,250],["cafe-table",975,545,210]],"garden":[["planter",660,540,300],["planter",985,550,190]],"lighthouse":[["chart-table",720,545,300]],"bakery":[["bread-table",675,540,325]],"studio":[["art-easel",710,520,245]],"post":[["parcel-table",665,540,320]],"music":[["piano",710,535,350]]};
 export function roomFor(house,floor=0){
  const id=house.id.replace('house-','');floor=floor&&upstairsJobs[id]?1:0;const jobs=floor?upstairsJobs[id]:roomJobs[id];
- const pieces=(floor?[[id==='post'?'parcel-table':'chart-table',790,430,280]]:furniture[id]).map(([asset,x,y,width],i)=>({id:'furniture-'+i,asset,x,y,width,box:{x:x-width*.34,y:y-48,w:width*.68,h:62}}));
+ const pieces=(floor?[[id==='post'?'parcel-table':'chart-table',790,430,280]]:furniture[id]).map(([asset,x,y,width],i)=>({id:'furniture-'+i,asset,x,y,width,box:{x:x-width*.42,y:y-65,w:width*.84,h:80}}));
  const center=pieces[0],second=pieces[1];
  const exit={...ROOM.exit,y:floor?(id==='lighthouse'?520:625):ROOM.exit.y,name:floor?'DOWNSTAIRS':'EXIT · Town',kind:'exit'};
  const holes=floor?[{x:435,y:id==='lighthouse'?552:660,w:410,h:250}]:[];
  const spawn=floor?{x:310,y:560}:{x:430,y:650};
  const spots=[
- {id:'host',name:({lily:'Lily',mia:'Mia',ben:'Ben',finn:'Captain Finn'})[house.person],detail:'Help a friend',x:410,y:385,kind:'person',person:house.person,reward:[20,35,50][house.level]},
+ {id:'host',name:({lily:'Lily',mia:'Mia',ben:'Ben',finn:'Captain Finn'})[house.person],detail:'Help a friend',x:id==='lighthouse'&&!floor?350:410,y:id==='lighthouse'&&!floor?430:385,kind:'person',person:house.person,reward:[20,35,50][house.level]},
  ...jobs.map((j,i)=>({id:'job-'+i,name:j[0],detail:j[1],x:i?(second?.x??950):center.x,y:i?(second?second.y+58:385):center.y+58,kind:'object',furniture:i?(second?.id??null):center.id,reward:[25,35,45][house.level]})),
  exit
  ];

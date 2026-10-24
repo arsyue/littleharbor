@@ -77,8 +77,8 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Browser verification
         run: |
-          node cloud/verify.mjs
           node cloud/rooms.verify.cjs
+          node cloud/verify.mjs
           node cloud/readability.verify.cjs
       - uses: actions/upload-artifact@v4
         if: always()

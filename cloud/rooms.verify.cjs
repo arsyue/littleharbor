@@ -13,6 +13,7 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{const nam
   const v=await f.evaluate(()=>({v:townDiagnostics.roomView,w:innerWidth,h:innerHeight})),px=(x-v.v.cx)*v.v.scale+v.w/2,py=(y-v.v.cy)*v.v.scale+v.h/2;
   assert.ok(px>0&&py>0&&px<v.w&&py<v.h,'point is visible');
   await f.locator('#world').click({position:{x:px,y:py}});
+  await f.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
  }
  async function settle(){await f.waitForFunction(()=>!townDiagnostics.roomTarget,{timeout:15000});}
  async function near(id){const spot=await f.evaluate(id=>townDiagnostics.roomSpots.find(s=>s.id===id),id);await point(spot.x,spot.y);await f.waitForFunction(id=>townDiagnostics.roomNear===id&&!townDiagnostics.roomTarget,id,{timeout:15000});}
