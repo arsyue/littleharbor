@@ -105,7 +105,7 @@ function enterRoom(id,floor=0,arrival=null){
  const imageKey=id+':'+roomSpec.floor;
  if(!roomImages.has(imageKey)){const img=new Image();const record={img,ready:false,error:false};roomImages.set(imageKey,record);img.onload=()=>record.ready=true;img.onerror=()=>record.error=true;img.src=roomSpec.image;}
  roomUi.hidden=false;document.body.classList.add('in-room');document.querySelector('#room-title').textContent=roomSpec.name;
- document.querySelector('#room-level').textContent=roomSpec.balcony?'Explore the balcony · Press E to return inside':roomSpec.spots.some(s=>s.kind==='work')?'Try a work shift · Earn coins using English':'Activities, balcony & exploration · Walk up, then press E';canvas.focus();updateRoomPrompt();
+ document.querySelector('#room-level').textContent=roomSpec.balcony?'Explore the balcony · Press E to return inside':roomSpec.spots.some(s=>s.kind==='work')?'Play a signature game · Earn coins using English':'Activities, balcony & exploration · Walk up, then press E';canvas.focus();updateRoomPrompt();
 }
 function exitRoom(){
  if(!inside)return;const door=entrances.find(e=>e.id===inside.id);if(door){position={x:door.x,y:door.y+24};camera={...position};}

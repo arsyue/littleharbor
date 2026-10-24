@@ -1,3 +1,4 @@
+import {gameCatalog} from './activity-catalog.mjs';
 export const extraRooms={
  bistro:{color:'#789389',pieces:[['cafe-table',640,500,240],['cafe-table',960,570,210]],door:[885,345],host:[410,390],work:'restaurant'},
  inn:{color:'#a98760',pieces:[['parcel-table',840,530,260]],door:[255,370],host:[700,400]},
@@ -62,7 +63,7 @@ export function expandRoom(base,house,floor){
  const [x,y]=door;
  if(!embedded)base.objects.push({id:'balcony-door',asset:'balcony-door',url:'../assets/expansion-v7/balcony-door.webp',x,y:y-50,width:115,box:{x:x-40,y:y-65,w:80,h:16}});
  base.spots.push({id:'balcony',kind:'balcony',name:'BALCONY',detail:'Walk outside and explore',x,y});
- const work=id==='bakery'?'bakery':extraRooms[id]?.work;
- if(!base.floor&&work){const spot=base.spots.find(s=>s.id==='job-0');Object.assign(spot,{id:'work',kind:'work',name:({bakery:'Bake bread',restaurant:'Restaurant shift',pottery:'Pottery studio',museum:'Curator challenge'})[work],detail:'Listen, make choices and finish a real job',work,reward:({bakery:90,restaurant:120,pottery:75,museum:70})[work]});}
+ const meta=gameCatalog[id],work=meta?.kind;
+ if(!base.floor&&work){const spot=base.spots.find(s=>s.id==='job-0');Object.assign(spot,{id:'work',kind:'work',name:meta.name,detail:meta.description,work,reward:meta.reward});}
  return base;
 }

@@ -1,14 +1,17 @@
+import {gameByKind,difficultyNames} from './activity-catalog.mjs';
+import {signatureControls,signatureTypes} from './signature-controls.mjs';
 import {EnglishVoiceInput} from './voice.mjs';
 import {workNames,workPlan,startWork,attemptWork,collectWages,newShift,spokenMatch} from './work-data.mjs';
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const art=name=>'assets/expansion-v7/'+name+'.webp';
-const title=s=>s.customer||({bakery:'Baker Oliver',restaurant:'Chef Amira',pottery:'Ben',museum:'Captain Finn'})[s.kind]||'Your guide';
+const title=s=>s.customer||({bakery:'Baker Oliver',restaurant:'Chef Amira',pottery:'Ben',museum:'Captain Finn'})[s.kind]||({lily:'Lily',mia:'Mia',ben:'Ben',finn:'Captain Finn'})[s.person]||'Your guide';
 export function showWork(kind,api){
  if(!document.querySelector('#work-style')){const link=document.createElement('link');link.id='work-style';link.rel='stylesheet';link.href='work-game.css';document.head.append(link);}
- let session=startWork(api.state,kind),plan=workPlan(kind,session.variant),voice=null,timer=null,disposed=false,mode='voice';
- api.modal('<div class="modal-eyebrow">WORK · LISTEN · CREATE</div><h2 id="modal-title">'+esc(workNames[kind])+'</h2><div id="work-body"></div>','work-modal');
+ const meta=gameByKind[kind],signature=!['bakery','restaurant','pottery','museum'].includes(kind);
+ let session=startWork(api.state,kind),plan=workPlan(kind,session.variant),voice=null,timer=null,controlCleanup=null,disposed=false,mode='voice';
+ api.modal('<div class="modal-eyebrow">'+(signature?'SIGNATURE GAME · ENGLISH ADVENTURE':'WORK · LISTEN · CREATE')+'</div><h2 id="modal-title">'+esc(workNames[kind])+'</h2><p class="signature-meta">'+esc(difficultyNames[meta.level])+' · '+meta.reward+' coins · '+esc(meta.description)+'</p><div id="work-body"></div>','work-modal');
  const body=document.querySelector('#work-body');
- const stop=()=>{voice?.abort();voice=null;clearInterval(timer);timer=null;};
+ const stop=()=>{controlCleanup?.();controlCleanup=null;voice?.abort();voice=null;clearInterval(timer);timer=null;};
  api.setModalCleanup(()=>{disposed=true;stop();});api.save();
  function feedback(text){const el=body.querySelector('#work-feedback');if(el)el.textContent=text;}
  function submit(value){
@@ -18,7 +21,8 @@ export function showWork(kind,api){
  }
  function finish(){
   const coins=collectWages(api.state,kind);api.save();if(coins)api.burst();
-  body.dataset.stage='complete';body.innerHTML='<div class="work-finished"><span class="work-stamp">SHIFT COMPLETE</span><h3>'+({bakery:'Fresh bread, ready to share!',restaurant:'Happy guests, excellent service!',pottery:'Your keepsake is finished!',museum:'Your exhibition is open!'})[kind]+'</h3><p>'+(coins?'You earned <strong>'+coins+' coins</strong>.':'Your wages have already been collected.')+'</p><p>Your progress is saved. Another shift brings a different order or a new chance to practice.</p><div class="work-actions"><button class="primary" id="work-again">Start another shift</button><button class="secondary" id="work-return">Back to the room</button></div></div>';
+  const finishTitle=({bakery:'Fresh bread, ready to share!',restaurant:'Happy guests, excellent service!',pottery:'Your keepsake is finished!',museum:'Your exhibition is open!'})[kind]||'Your '+meta.name+' challenge is complete!';
+  body.dataset.stage='complete';body.innerHTML='<div class="work-finished"><span class="work-stamp">CHALLENGE COMPLETE</span><h3>'+esc(finishTitle)+'</h3><p>'+(coins?'You earned <strong>'+coins+' coins</strong>.':'You have already collected this reward.')+'</p><p>Your progress is saved. Come back for another order or replay this challenge to practice.</p><div class="work-actions"><button class="primary" id="work-again">Play again</button><button class="secondary" id="work-return">Back to the room</button></div></div>';
   body.querySelector('#work-return').onclick=api.closeModal;body.querySelector('#work-again').onclick=()=>{session=newShift(api.state,kind);plan=workPlan(kind,session.variant);api.save();render();};
  }
  function drawSpeech(s){
@@ -60,11 +64,12 @@ export function showWork(kind,api){
  function render(){
   stop();if(disposed||!body.isConnected)return;if(session.step===plan.length){finish();return;}
   const s=plan[session.step];body.dataset.stage=s.type;body.dataset.step=String(session.step);body.dataset.kind=kind;
-  const object=s.art?'<img src="'+art(s.art)+'" alt="'+esc(s.title)+'">':kind==='pottery'?'<img src="assets/decor/clay-pot.webp" alt="A handmade pottery piece">':'<img src="'+art('room-museum')+'" alt="Your museum exhibition">';
+  const object=s.sceneArt?'<img src="'+esc(s.sceneArt)+'" alt="'+esc(meta.name)+'">':s.art?'<img src="'+art(s.art)+'" alt="'+esc(s.title)+'">':kind==='pottery'?'<img src="assets/decor/clay-pot.webp" alt="A handmade pottery piece">':'<img src="'+art('room-museum')+'" alt="Your museum exhibition">';
   const ticket=s.ticket&&session.step%6>=2?'<aside class="work-ticket"><strong>'+esc(s.customer)+' · Table '+s.table+'</strong>'+Object.values(s.ticket).map(v=>'<span>'+esc(v)+'</span>').join('')+'</aside>':'';
   body.innerHTML='<div class="work-progress"><span>Step '+(session.step+1)+' of '+plan.length+'</span><span>Progress saved</span><div><i style="width:'+session.step/plan.length*100+'%"></i></div></div><div class="work-layout"><section class="work-visual '+kind+'"><img class="work-person" src="'+art('town-customers-'+s.portrait)+'" alt="'+esc(title({...s,kind}))+'"><h3>'+esc(title({...s,kind}))+'</h3><div class="work-object">'+object+'</div>'+ticket+'</section><section class="work-task"><h3>'+esc(s.title)+'</h3><div class="work-voice"><button id="work-listen" class="secondary">Listen again</button><details><summary>Read the instructions</summary><p>'+esc(s.text)+'</p></details></div>'+(s.bill?'<p class="work-bill">Bill total: <strong>'+s.bill+' coins</strong></p>':'')+'<div id="work-input"></div><p id="work-feedback" role="status">Listen carefully. Take your time; you can retry any step.</p></section></div>';
   body.querySelector('#work-listen').onclick=()=>{voice?.abort();api.speak(s.text,true,'work-'+s.id);};
   if(s.type==='speak')drawSpeech(s);
+  else if(signatureTypes.includes(s.type))controlCleanup=signatureControls(s,{body,session,save:api.save,submit,feedback,stopNarration:api.stopNarration});
   else if(['measure','settings','tray'].includes(s.type))fields(s);
   else if(['stir','knead'].includes(s.type))motion(s);
   else if(s.type==='bake')oven(s);
