@@ -9,16 +9,16 @@ const step=(id,type,text,extra={})=>({id,type,text,person:'ben',portrait:1,...ex
 export function workPlan(kind,variant=0){
  if(kind==='bakery'){
   const r=recipes[variant%3],ingredients=Object.fromEntries(['flour','water','milk','yeast','sugar','salt','herbs'].filter(k=>r[k]).map(k=>[k,r[k]]));
-  const amounts=Object.entries(ingredients).map(([k,n])=>n+' '+(['water','milk','flour'].includes(k)?'cups of ':'spoonfuls of ')+k).join(', ');
+  const amounts=Object.entries(ingredients).map(([k,n])=>n+' '+(['water','milk','flour'].includes(k)?(n===1?'cup':'cups'):(n===1?'spoonful':'spoonfuls'))+' of '+k).join(', ');
   return[
    step('bake-'+r.id+'-order','speak',r.say,{hint:r.hint,groups:r.groups,title:r.name,art:'baking-stages-0'}),
    step('bake-'+r.id+'-measure','measure','First, measure '+amounts+'. Check each amount before you mix anything.',{fields:ingredients,title:'Measure the ingredients',art:'baking-stages-0'}),
    step('bake-mix','stir','Now stir the ingredients four times. Move the spoon around the bowl until the dry flour disappears.',{target:4,title:'Mix the dough',art:'baking-stages-1'}),
    step('bake-knead','knead','Next, fold and press the dough three times. Kneading makes the dough smooth and stretchy.',{target:3,title:'Knead until smooth',art:'baking-stages-2'}),
-   step('bake-'+r.id+'-shape','choose','Shape the dough into '+r.units+' '+r.shape.toLowerCase()+'. Make the pieces even so they bake together.',{choices:['Rolls','Loaf','Braid'],answer:r.shape,title:'Shape your bread',art:'baking-stages-3'}),
+   step('bake-'+r.id+'-shape','choose','Shape the dough into '+r.units+' '+(r.shape==='Braid'?'braids':r.shape.toLowerCase())+'. Make the pieces even so they bake together.',{choices:['Rolls','Loaf','Braid'],answer:r.shape,title:'Shape your bread',art:'baking-stages-3'}),
    step('bake-'+r.id+'-oven','settings','Set the oven to '+r.temperature+' degrees and the timer to '+r.minutes+' minutes. Check both settings before the tray goes in.',{fields:{temperature:r.temperature,minutes:r.minutes},title:'Set the oven',art:'baking-stages-3'}),
    step('bake-oven','bake','Put the tray in the oven. Our game oven bakes quickly. When the bread turns golden, take it out and let it cool.',{title:'Watch the bread turn golden',art:'baking-stages-4'}),
-   step('bake-'+r.id+'-pack','number','The bread has cooled. Pack exactly '+r.units+' '+r.shape.toLowerCase()+' for the customer. Count carefully before you finish.',{answer:r.units,title:'Pack the order',art:r.shape==='Braid'?'baking-stages-5':'baking-stages-4'})
+   step('bake-'+r.id+'-pack','number','The bread has cooled. Pack exactly '+r.units+' '+(r.shape==='Braid'?'braids':r.shape.toLowerCase())+' for the customer. Count carefully before you finish.',{answer:r.units,title:'Pack the order',art:r.shape==='Braid'?'baking-stages-5':'baking-stages-4'})
   ];
  }
  if(kind==='restaurant')return[customers[variant%6],customers[(variant+1)%6]].flatMap(g=>{
@@ -35,9 +35,9 @@ export function workPlan(kind,variant=0){
  if(kind==='pottery'){
   const r=[{name:'Blue cup',shape:'Cup',clay:3,color:'Ocean blue',pattern:'Waves'},{name:'Garden bowl',shape:'Bowl',clay:5,color:'Leaf green',pattern:'Leaves'},{name:'Sunset vase',shape:'Vase',clay:4,color:'Warm coral',pattern:'Dots'}][variant%3];
   return[
-   step('clay-'+variant%3+'-order','speak','We are making a '+r.name.toLowerCase()+'. It will have a '+r.pattern.toLowerCase()+' pattern. Tell me the object and its color before we begin.',{title:r.name,hint:'I will make a '+r.name.toLowerCase()+'.',groups:[[r.shape.toLowerCase()],[r.name.split(' ')[0].toLowerCase()]]}),
+   step('clay-'+variant%3+'-order','speak','We are making a '+r.name.toLowerCase()+'. It will have a '+r.pattern.toLowerCase()+' pattern. Tell me the object and its color before we begin.',{title:r.name,hint:'I will make a '+r.name.toLowerCase()+'.',groups:[[(r.shape==='Braid'?'braids':r.shape.toLowerCase())],[r.name.split(' ')[0].toLowerCase()]]}),
    step('clay-'+r.clay,'number','Take '+r.clay+' pieces of soft clay. Count the pieces so your object will have the right size.',{answer:r.clay,title:'Prepare your clay'}),
-   step('clay-shape-'+r.shape,'choose','Shape the clay into a '+r.shape.toLowerCase()+'. Use the picture in your plan to guide you.',{answer:r.shape,choices:['Cup','Bowl','Vase'],title:'Shape the clay'}),
+   step('clay-shape-'+r.shape,'choose','Shape the clay into a '+(r.shape==='Braid'?'braids':r.shape.toLowerCase())+'. Use the picture in your plan to guide you.',{answer:r.shape,choices:['Cup','Bowl','Vase'],title:'Shape the clay'}),
    step('clay-glaze-'+variant%3,'choose','Brush on '+r.color.toLowerCase()+' glaze. This coating will make the pottery colorful after firing.',{answer:r.color,choices:['Ocean blue','Leaf green','Warm coral'],title:'Choose a glaze'}),
    step('clay-pattern-'+r.pattern,'choose','Add the '+r.pattern.toLowerCase()+' pattern. Keep the marks even and leave space between them.',{answer:r.pattern,choices:['Waves','Leaves','Dots'],title:'Decorate your pottery'}),
    step('clay-cool','choose','The kiln is hot. Leave the pottery until it is completely cool. Which action is safe?',{answer:'Wait until cool',choices:['Touch it now','Wait until cool','Carry it while hot'],title:'Finish safely'})
@@ -53,10 +53,10 @@ export function workPlan(kind,variant=0){
  ];
 }
 export function allWorkClips(){const unique=new Map();for(const kind of workKinds)for(let v=0;v<(kind==='restaurant'?6:kind==='museum'?1:3);v++)for(const s of workPlan(kind,v))unique.set(s.id,{id:'work-'+s.id,person:s.person,text:s.text});return[...unique.values()];}
-export function ensureWork(state){if(!state.workplace||state.workplace.version!==1||!state.workplace.completed||!state.workplace.active)state.workplace={version:1,completed:{},active:{}};return state.workplace;}
+export function ensureWork(state){if(!state.workplace||state.workplace.version!==1||!state.workplace.completed||typeof state.workplace.completed!=='object'||Array.isArray(state.workplace.completed)||!state.workplace.active||typeof state.workplace.active!=='object'||Array.isArray(state.workplace.active))state.workplace={version:1,completed:{},active:{}};return state.workplace;}
 export function startWork(state,kind){
  if(!workKinds.includes(kind))throw Error('Unknown workplace');const w=ensureWork(state),old=w.active[kind],done=Math.max(0,Number(w.completed[kind])||0);
- if(old&&old.kind===kind&&Number.isInteger(old.variant)&&old.variant>=0&&Number.isInteger(old.step)&&old.step>=0&&old.step<=workPlan(kind,old.variant).length&&typeof old.paid==='boolean')return old;
+ if(old&&old.kind===kind&&Number.isInteger(old.variant)&&old.variant>=0&&Number.isInteger(old.step)&&old.step>=0&&old.step<=workPlan(kind,old.variant).length&&typeof old.paid==='boolean'){if(!old.draft||typeof old.draft!=='object'||Array.isArray(old.draft))old.draft={};return old;}
  return w.active[kind]={kind,variant:kind==='restaurant'?(done*2)%6:done%3,step:0,errors:0,paid:false,draft:{}};
 }
 export function attemptWork(session,input){

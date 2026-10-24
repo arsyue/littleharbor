@@ -30,7 +30,7 @@ async function audioPlaying(key){
 }
 try{
  const manifest=JSON.parse(await readFile('public/audio/manifest.json','utf8'));
- assert.equal(manifest.engine,'kokoro');assert.equal(Object.keys(manifest.clips).length,88);
+ assert.equal(manifest.engine,'kokoro');assert.equal(Object.keys(manifest.clips).length,156);
  for(const m of adventures)for(const [i,s] of m.steps.entries())for(const kind of ['say','hint','feedback']){
   const c=manifest.clips[m.id+'-'+i+'-'+kind];assert.equal(c.text,s[kind]);assert.ok(c.duration>1&&c.duration<45);
   assert.ok((await readFile('public/'+c.url)).length>1000);
@@ -81,7 +81,8 @@ try{
  async function walk(id){await town.locator('#destination').selectOption(id);await arrived(id);}
  async function talk(id){await walk(id);await town.locator('#interact').click();await audioPlaying(id+'-greeting');await page.locator('#visit-task').click();}
  const initialTown=await town.evaluate(()=>window.townDiagnostics);
- assert.deepEqual(initialTown.world,{width:3600,height:2400});
+ assert.deepEqual(initialTown.world,{width:5400,height:2400});
+ assert.equal(initialTown.art.expansion.loaded,4);assert.equal(initialTown.houses.length,16);
  assert.equal(initialTown.art.version,4);assert.equal(initialTown.art.loaded,14);assert.deepEqual(initialTown.art.failed,[]);
  assert.ok(initialTown.art.bytes<4500000);assert.equal(await town.locator('#loading').count(),0);
  checks.push('All 14 ImageGen town asset packages load with transparency within the artwork budget');

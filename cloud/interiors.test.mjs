@@ -1,26 +1,26 @@
 import assert from 'node:assert/strict';
 import {houses} from '../web/places.mjs';
-import {ROOM,roomFor,roomWalkable,roomRoute,activityFor,nearestSpot} from '../web/room-data.mjs';
+import {ROOM,roomFor,roomWalkable,roomRoute,activityFor,nearestSpot,floorPoint} from '../web/room-data.mjs';
 import {fish,decor,tanks} from '../web/content.mjs';
 import {newState,buy,validateState} from '../web/state.mjs';
 let routes=0,activities=0;const backgrounds=new Set();
-for(const house of houses)for(const floor of [0,...(['house-lighthouse','house-post'].includes(house.id)?[1]:[])]){
+for(const house of houses)for(const floor of [0,2,...(['house-lighthouse','house-post','house-inn'].includes(house.id)?[1]:[])]){
  const room=roomFor(house,floor),start=room.spawn;backgrounds.add(room.image);
  assert.ok(roomWalkable(room,start.x,start.y));assert.equal(room.floor,floor);
- for(const target of [...room.spots,{x:430,y:300},{x:850,y:300},{x:140,y:680},{x:1140,y:680}]){
+ for(const target of room.spots){
   assert.ok(roomWalkable(room,target.x,target.y),house.id+' reachable target '+target.id);
   const route=roomRoute(room,start,target);assert.ok(route.length);assert.ok(Math.hypot(route.at(-1).x-target.x,route.at(-1).y-target.y)<1);
   let previous=start;for(const p of route){for(let i=0;i<=10;i++)assert.ok(roomWalkable(room,previous.x+(p.x-previous.x)*i/10,previous.y+(p.y-previous.y)*i/10),house.id+' route crosses a furniture footprint');previous=p;}routes++;
  }
- for(const obj of room.objects)assert.equal(roomWalkable(room,obj.x,obj.y-10),false,'solid central furniture');
+ for(const obj of room.objects)assert.equal(roomWalkable(room,obj.box.x+obj.box.w/2,obj.box.y+obj.box.h/2),false,'solid furniture');
  for(const spot of room.spots.filter(s=>s.kind==='object')){
-  const activity=activityFor(house.id,(floor?'up-':'')+spot.id);assert.equal(activity.questions.length,3);assert.ok(activity.reward>0);
+  const activity=activityFor(house.id,(floor===2?'balcony-':floor?'up-':'')+spot.id);assert.equal(activity.questions.length,3);assert.ok(activity.reward>0);
   for(const [q,,choices,answer]of activity.questions){assert.ok(q.length>15);assert.equal(new Set(choices).size,choices.length);assert.equal(choices.filter(c=>c===answer).length,1);}
   assert.equal(nearestSpot(room,spot).id,spot.id);activities++;
  }
  assert.equal(nearestSpot(room,room.exit).id,'exit');
 }
-assert.equal(backgrounds.size,14);assert.equal(activities,28);assert.equal(activityFor('house-library','up-job-0'),null);assert.equal(activityFor('missing','job-0'),null);
+assert.equal(backgrounds.size,23);assert.equal(activities,66);assert.equal(activityFor('house-library','up-job-0'),null);assert.equal(activityFor('missing','job-0'),null);
 assert.equal(fish.length,16);assert.equal(decor.length,16);assert.deepEqual(tanks.map(t=>[t.fish,t.decor]),[[20,16],[40,32],[60,48]]);
 for(let tier=0;tier<3;tier++){
  const save=newState();save.tank=tier;save.coins=100000;
@@ -30,4 +30,4 @@ for(let tier=0;tier<3;tier++){
  }
 }
 const legacy=newState();legacy.coins=42;legacy.words=['shell'];legacy.houseGames={'house-library':2};assert.ok(validateState(legacy));assert.equal(legacy.coins,42);
-console.log('PASS',routes,'collision-free routes; 14 unique scenes; 28 object jobs; stairs; 16 fish/16 decor; every capacity boundary; old saves.');
+console.log('PASS',routes,'collision-free routes; 23 unique scenes; 66 object jobs; stairs; 16 fish/16 decor; every capacity boundary; old saves.');

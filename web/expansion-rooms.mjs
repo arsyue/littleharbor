@@ -58,7 +58,7 @@ export function expandRoom(base,house,floor){
   return{id:house.id,theme:id,floor:2,balcony:true,name:house.name+' · '+(theme==='sea'?'Sea Terrace':theme==='garden'?'Garden Balcony':theme==='lighthouse'?'Viewing Balcony':'Rooftop Terrace'),color:'#8daeb0',image:'../assets/expansion-v7/balcony-'+theme+'.webp',objects,holes:[],spawn:{x:640,y:645},exit,polygon:[[180,400],[1100,400],[1190,755],[90,755]],activityJobs:balconyJobs,spots:[{id:'host',kind:'person',person:house.person,name:'Balcony guide',detail:'Share the view',x:480,y:460,reward:30},{id:'job-0',kind:'object',name:'View finder',detail:'Describe the view',x:875,y:590,furniture:'furniture-0',reward:35},{id:'job-1',kind:'object',name:'Garden care',detail:'Care for the balcony',x:310,y:565,furniture:'furniture-1',reward:30},exit]};
  }
  base.polygon=base.floor?null:plans[id];
- const embedded=extraRooms[id]&&(!base.floor||id==='inn'),door=embedded?(base.floor?[290,390]:extraRooms[id].door):['library','studio'].includes(id)?[290,470]:[1060,470];
+ const embedded=extraRooms[id]&&(!base.floor||id==='inn'),door=embedded?(base.floor?[290,390]:extraRooms[id].door):['library','studio','cafe'].includes(id)?[290,470]:[1060,470];
  const [x,y]=door;
  if(!embedded)base.objects.push({id:'balcony-door',asset:'balcony-door',url:'../assets/expansion-v7/balcony-door.webp',x,y:y-50,width:115,box:{x:x-40,y:y-65,w:80,h:16}});
  base.spots.push({id:'balcony',kind:'balcony',name:'BALCONY',detail:'Walk outside and explore',x,y});

@@ -17,5 +17,5 @@ input.start();assert.equal(active.continuous,true);assert.equal(active.maxAltern
 input.start();input.finish();assert.equal(active.stopping,true);active.onresult({results:[result(['red fish'],true)]});active.onend();assert.equal(finals.at(-1),'red fish');
 input.start();const stale=active.onresult;input.abort();stale({results:[result(['blue'],true)]});assert.equal(finals.length,2);
 input.start();active.onerror({error:'not-allowed'});assert.match(statuses.at(-1),/permission/);assert.equal(input.session,null);
-assert.equal(houses.length,12);assert.deepEqual([...new Set(houses.map(h=>h.level))].sort(),[0,1,2]);assert.equal(new Set(houses.map(h=>h.game)).size,12);assert.ok(entrances.every(e=>e.x>0&&e.x<WORLD.width&&e.y>0&&e.y<WORLD.height));
-console.log('PASS: capacity boundaries, old-save migration, all 28 story answers, tolerant speech, wrong-answer rejection, interim/final/alternative/stop/error recognition, 12 houses and three difficulty levels');
+assert.equal(houses.length,16);assert.deepEqual([...new Set(houses.map(h=>h.level))].sort(),[0,1,2]);assert.equal(new Set(houses.map(h=>h.game)).size,12);assert.ok(entrances.every(e=>e.x>0&&e.x<WORLD.width&&e.y>0&&e.y<WORLD.height));
+console.log('PASS: capacity boundaries, old-save migration, all 28 story answers, tolerant speech, wrong-answer rejection, interim/final/alternative/stop/error recognition, 16 houses and three difficulty levels');

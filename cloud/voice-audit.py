@@ -7,7 +7,8 @@ ffmpeg = get_ffmpeg_exe()
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 manifest = json.loads((ROOT / "web/audio/manifest.json").read_text())
 plan = json.loads((ROOT / "cloud/voice-plan.json").read_text())
-assert len(manifest["clips"]) == len(plan["clips"]) == 88
+assert len(manifest["clips"]) == len(plan["clips"])
+assert len(plan["clips"]) >= 88
 for expected in plan["clips"]:
     clip = manifest["clips"][expected["id"]]
     path = ROOT / "web" / clip["url"]
@@ -27,6 +28,7 @@ def wer(expected, actual):
     return row[-1] / max(1, len(a))
 model = WhisperModel("base.en", device="cpu", compute_type="int8", cpu_threads=2)
 sample_ids = [p + "-greeting" for p in plan["cast"]] + [m + "-0-say" for m in ["welcome", "market", "design", "delivery"]]
+sample_ids += ["work-bake-rolls-order", "work-bake-loaf-order", "work-bake-braid-order", "work-guest-Alice-order", "work-guest-Rowan-order", "work-clay-0-order", "work-museum-welcome"]
 readbacks = []
 for key in sample_ids:
     clip = manifest["clips"][key]
@@ -42,4 +44,4 @@ report = {"success": all(r["wordErrorRate"] <= .25 for r in readbacks), "engine"
 (ROOT / "review").mkdir(exist_ok=True)
 (ROOT / "review/voice-audit.json").write_text(json.dumps(report, indent=2) + "\n")
 assert report["success"], "A voice sample needs pronunciation review"
-print("All 88 recordings decode; all eight readback samples passed.", flush=True)
+print(f"All {len(manifest['clips'])} recordings decode; {len(readbacks)} readback samples passed.", flush=True)

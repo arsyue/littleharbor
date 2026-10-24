@@ -51,16 +51,16 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{const nam
   await point(280,330);await settle();await holdUntil('ArrowUp',()=>townDiagnostics.roomPlayer.y<310);assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.y))<310,'upper floor is reachable');
   assert.equal(await f.evaluate(()=>townDiagnostics.blocked),false);
   if(i===0){await holdUntil('ArrowRight',()=>townDiagnostics.roomPlayer.x>790);assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.x))>760);await point(140,680);await settle();assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.x))<160);await holdUntil('ArrowRight',()=>townDiagnostics.roomPlayer.x>1090);assert.ok((await f.evaluate(()=>townDiagnostics.roomPlayer.x))>1050);checks.push('Full floor, both sides, furniture collision and routing verified');}
-  await solve(h);await solve(h,'job-0');await solve(h,'job-1');
+  await solve(h);if(await f.evaluate(()=>townDiagnostics.roomSpots.some(s=>s.id==='job-0')))await solve(h,'job-0');await solve(h,'job-1');
   await point(420,610);await settle();await page.screenshot({path:'qa-output/interior-'+h.id+'.jpg',quality:78,fullPage:true});
-  if(['house-lighthouse','house-post'].includes(h.id)){
+  if(['house-lighthouse','house-post','house-inn'].includes(h.id)){
    await near('stairs');await f.locator('#world').focus();await page.keyboard.press('e');await f.waitForFunction(()=>townDiagnostics.roomFloor===1&&townDiagnostics.roomImage.ready&&townDiagnostics.propsReady);scenes.add(await f.evaluate(()=>townDiagnostics.roomImage.url));
    await solve(h,'job-0');await solve(h,'job-1');await page.screenshot({path:'qa-output/interior-'+h.id+'-upstairs.jpg',quality:80,fullPage:true});
    await f.locator('#room-exit').click();await f.waitForFunction(()=>townDiagnostics.roomNear==='exit'&&!townDiagnostics.roomTarget);await f.locator('#world').focus();await page.keyboard.press('e');await f.waitForFunction(()=>townDiagnostics.roomFloor===0);assert.equal(await f.evaluate(()=>townDiagnostics.inside),h.id);checks.push(h.id+' stairs work in both directions');
   }
   await exit();
  }
- assert.equal(scenes.size,14);
+ assert.equal(scenes.size,19);
  const saved=await read();await page.reload();assert.equal((await read()).coins,saved.coins);assert.deepEqual((await read()).houseGames,saved.houseGames);checks.push('All indoor rewards persist after reloading');
  await page.setViewportSize({width:390,height:844});await page.locator('[data-nav="town"]').first().click();await page.waitForFunction(()=>document.querySelector('#town-engine')?.contentWindow.townDiagnostics);
  const mobile=page.frames().find(f=>f.url().includes('/town/'));await mobile.locator('#destination').selectOption('house-library');await mobile.waitForFunction(()=>townDiagnostics.inside==='house-library'&&townDiagnostics.roomImage.ready&&townDiagnostics.propsReady,{timeout:60000});

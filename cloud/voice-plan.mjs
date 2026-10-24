@@ -1,4 +1,5 @@
 import {writeFile} from 'node:fs/promises';
+import {allWorkClips} from '../web/work-data.mjs';
 import {adventures,greetings} from '../web/adventures.mjs';
 const cast={
  lily:{name:'Lily',voice:'af_heart',language:'a',speed:.94},
@@ -14,5 +15,6 @@ for(const [person,voice] of Object.entries(cast)){
   for(const kind of ['say','hint','feedback'])
    clips.push({id:mission.id+'-'+index+'-'+kind,person,text:step[kind],...voice});
 }
+for(const clip of allWorkClips())clips.push({...clip,...cast[clip.person]});
 await writeFile('cloud/voice-plan.json',JSON.stringify({version:1,engine:'kokoro',model:'hexgrad/Kokoro-82M',package:'0.9.4',cast,clips},null,2));
 console.log('Prepared '+clips.length+' character recordings.');
