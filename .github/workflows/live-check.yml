@@ -1,0 +1,46 @@
+name: Verify public Little Harbor
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/live-check.yml']
+  workflow_run:
+    workflows: ['Build and verify Little Harbor']
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  live:
+    if: github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check the public game and its current features
+        run: |
+          python3 - <<'PY'
+          import json, time, urllib.request
+          root = "https://arsyue.github.io/littleharbor/"
+          def get(path):
+              request = urllib.request.Request(root + path + "?verify=" + str(int(time.time())), headers={"Cache-Control": "no-cache", "User-Agent": "LittleHarbor-Cloud-Verification"})
+              with urllib.request.urlopen(request, timeout=20) as response:
+                  assert response.status == 200
+                  return response.read().decode("utf-8")
+          for attempt in range(12):
+              try:
+                  release = json.loads(get("release.json"))
+                  assert release["signatureGames"] == 16
+                  assert release["difficultyLevels"] == 3
+                  assert release["world"] == [5400, 2400]
+                  assert release["balconies"] == 16
+                  assert release["kokoroClips"] == 216
+                  assert "app.mjs" in get("")
+                  assert "gameCatalog" in get("activity-catalog.mjs")
+                  assert "signatureControls" in get("signature-controls.mjs")
+                  audio = json.loads(get("audio/manifest.json"))
+                  assert audio["engine"] == "kokoro" and len(audio["clips"]) == 216
+                  print(json.dumps({"success": True, "url": root, "release": release["release"], "games": 16, "voices": 216, "world": release["world"], "balconies": 16}))
+                  break
+              except Exception:
+                  if attempt == 11:
+                      raise
+                  time.sleep(5)
+          PY
