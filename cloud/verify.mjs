@@ -69,7 +69,10 @@ try{
  checks.push('Pause and day/night controls work');
  await page.screenshot({animations:'disabled',path:'qa-output/initial-aquarium.jpg',quality:80});
  console.log('Initial renderer',await frame.evaluate(()=>window.harborDiagnostics));
- await frame.locator('canvas').click({position:{x:700,y:150}});
+ await frame.locator('#pause').click();await frame.waitForFunction(()=>window.harborDiagnostics.paused);
+ const emptyWater=await frame.evaluate(()=>{const fish=window.harborDiagnostics.fish;return [.2,.4,.6,.8].flatMap(x=>[.25,.4,.55].map(y=>({x:x*innerWidth,y:y*innerHeight}))).map(p=>({...p,clearance:Math.min(...fish.map(f=>Math.hypot(p.x-f.sx,p.y-f.sy)))})).sort((a,b)=>b.clearance-a.clearance)[0];});
+ assert.ok(emptyWater.clearance>150,'select clear water away from fish hit targets');
+ await frame.locator('canvas').click({position:{x:emptyWater.x,y:emptyWater.y}});
  await frame.waitForFunction(()=>window.harborDiagnostics.feeding);
  assert.equal((await readSave()).coins,40);
  await page.locator('[data-action="feed"]').click();assert.equal((await readSave()).coins,40);
