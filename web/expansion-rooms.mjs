@@ -9,25 +9,25 @@ export const extraRooms={
 // Feet coordinates follow the painted thresholds in the 1280 x 800 room art.
 // Rooms without a painted doorway use an unobstructed side edge, never a door prop.
 const balconyEntrances={
- library:{x:80,y:730,direction:'left',arrival:{x:180,y:690}},
- market:{x:1210,y:735,direction:'right',arrival:{x:1100,y:700}},
- workshop:{x:75,y:730,direction:'left',arrival:{x:180,y:690}},
- harbor:{x:1210,y:725,direction:'right',arrival:{x:1100,y:685}},
- aquarium:{x:135,y:650,direction:'left',arrival:{x:240,y:650}},
+ library:{x:150,y:560,direction:'left',arrival:{x:255,y:600}},
+ market:{x:1140,y:560,direction:'right',arrival:{x:1035,y:630}},
+ workshop:{x:135,y:560,direction:'left',arrival:{x:240,y:600}},
+ harbor:{x:1160,y:560,direction:'right',arrival:{x:1055,y:600}},
+ aquarium:{x:150,y:560,direction:'left',arrival:{x:255,y:600}},
  cafe:{x:1110,y:285,direction:'up',arrival:{x:1080,y:390}},
  garden:{x:675,y:285,direction:'up',arrival:{x:675,y:385}},
  lighthouse:{x:1220,y:465,direction:'right',arrival:{x:1120,y:485}},
- bakery:{x:1210,y:730,direction:'right',arrival:{x:1100,y:690}},
- studio:{x:95,y:730,direction:'left',arrival:{x:200,y:690}},
+ bakery:{x:1150,y:560,direction:'right',arrival:{x:1045,y:600}},
+ studio:{x:170,y:560,direction:'left',arrival:{x:275,y:600}},
  post:{x:1000,y:245,direction:'up',arrival:{x:950,y:320}},
- music:{x:1190,y:730,direction:'right',arrival:{x:1080,y:690}},
+ music:{x:1125,y:560,direction:'right',arrival:{x:1020,y:600}},
  bistro:{x:885,y:315,direction:'up',arrival:{x:885,y:415}},
  inn:{x:255,y:340,direction:'up',arrival:{x:310,y:440}},
  pottery:{x:920,y:330,direction:'up',arrival:{x:920,y:430}},
  museum:{x:895,y:320,direction:'up',arrival:{x:895,y:420}}
 };
 const upperEntrances={
- lighthouse:{x:1205,y:720,direction:'right',arrival:{x:1100,y:680}},
+ lighthouse:{x:1135,y:560,direction:'right',arrival:{x:1030,y:600}},
  post:{x:1150,y:600,direction:'right',arrival:{x:1040,y:600}},
  inn:{x:315,y:380,direction:'up',arrival:{x:315,y:485}}
 };
@@ -35,7 +35,7 @@ const terraceEntrances={
  garden:{x:1200,y:505,direction:'right',spawn:{x:1090,y:570},polygon:[[180,400],[1050,400],[1110,470],[1240,460],[1250,540],[1190,755],[90,755]]},
  sea:{x:1240,y:470,direction:'right',spawn:{x:1125,y:550},polygon:[[180,400],[1100,400],[1250,435],[1250,510],[1190,755],[90,755]]},
  workshop:{x:125,y:430,direction:'left',spawn:{x:195,y:600},polygon:[[90,420],[180,400],[1100,400],[1190,755],[90,755]]},
- lighthouse:{x:1150,y:700,direction:'right',spawn:{x:1040,y:690},polygon:[[180,400],[1100,400],[1190,755],[90,755]]}
+ lighthouse:{x:1135,y:565,direction:'right',spawn:{x:1030,y:600},polygon:[[180,400],[1100,400],[1190,755],[90,755]]}
 };
 
 const jobs=[

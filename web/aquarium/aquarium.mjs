@@ -145,7 +145,7 @@ function rebuildBackground(){
  for(let i=0;i<7;i++)stone(c,w*(.15+i*.04),floor+11,12+r()*20,['#7b8e7c','#6a7e74','#a0a18b'][i%3],r);
  plantSprites=[.065,.935].map((x,i)=>{const size=Math.min((area.bottom-area.top)*(i?.58:.48),235);const img=document.createElement('canvas');img.width=180;img.height=Math.ceil(size+30);plant(img.getContext('2d'),90,size+15,size,seed('front-'+x),0,1);return {img,x};});
 }
-function resize(){w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,1.75);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);rebuildBackground();if(paused)draw();}
+function resize(){if(innerWidth<2||innerHeight<2)return;w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,1.75);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);rebuildBackground();if(paused)draw();}
 function decorationPoint(d){return{x:area.x+d.x/100*area.w,y:mix(area.bottom-7,floorFront-10,(d.y-60)/34)};}
 function drawDecor(d){
  const p=decorationPoint(d),size=clamp(w*.09,48,108)*(1+(d.y-60)/150);d.sx=p.x;d.sy=p.y-size*.38;d.radius=size*.55;
