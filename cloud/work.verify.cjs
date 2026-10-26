@@ -23,14 +23,23 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{try{const
  await enter('house-bistro',false);checks.push('Walked from the original town to the new east-coast bistro');await page.screenshot({path:'qa-output/eastbank-bistro.jpg',quality:84,fullPage:true});await leave();await f.waitForFunction(()=>!townDiagnostics.inside);
  const balconyImages=new Set();
  for(const h of houses){
-  await enter(h.id);await near('balcony');await press();await f.waitForFunction(()=>townDiagnostics.roomFloor===2&&townDiagnostics.roomImage.ready&&townDiagnostics.propsReady);
+  await enter(h.id);await near('balcony');
+  if(['house-lighthouse','house-cafe','house-garden','house-library'].includes(h.id))await page.screenshot({path:'qa-output/entrance-'+h.id+'.jpg',quality:84,fullPage:true});
+  await press();await f.waitForFunction(()=>townDiagnostics.roomFloor===2&&townDiagnostics.roomImage.ready&&townDiagnostics.propsReady);
   balconyImages.add(await f.evaluate(()=>townDiagnostics.roomImage.url));assert.equal(await f.evaluate(()=>townDiagnostics.blocked),false);
-  const before=await f.evaluate(()=>townDiagnostics.roomPlayer.x);await page.keyboard.down('ArrowRight');try{await f.waitForFunction(x=>townDiagnostics.roomPlayer.x>x+55,before,{timeout:5000});}finally{await page.keyboard.up('ArrowRight');}
+  const before=await f.evaluate(()=>townDiagnostics.roomPlayer.x),direction=before>640?-1:1,key=direction<0?'ArrowLeft':'ArrowRight';
+  await page.keyboard.down(key);try{await f.waitForFunction(({x,d})=>(townDiagnostics.roomPlayer.x-x)*d>55,{x:before,d:direction},{timeout:5000});}finally{await page.keyboard.up(key);}
   if(['house-library','house-bistro','house-pottery','house-lighthouse'].includes(h.id))await page.screenshot({path:'qa-output/balcony-'+h.id+'.jpg',quality:82,fullPage:true});
   await leave();await f.waitForFunction(()=>townDiagnostics.roomFloor===0);assert.equal(await f.evaluate(()=>townDiagnostics.inside),h.id);await leave();await f.waitForFunction(()=>!townDiagnostics.inside);
  }
  assert.equal(balconyImages.size,4);checks.push('All 16 balconies are walkable and return to their own room; four different environments');
- await enter('house-inn');await near('stairs');await press();await f.waitForFunction(()=>townDiagnostics.roomFloor===1&&townDiagnostics.roomImage.ready);await near('balcony');await press();await f.waitForFunction(()=>townDiagnostics.roomFloor===2&&townDiagnostics.roomImage.ready);await leave();await f.waitForFunction(()=>townDiagnostics.roomFloor===1);await page.screenshot({path:'qa-output/inn-guest-lounge.jpg',quality:84,fullPage:true});await leave();await f.waitForFunction(()=>townDiagnostics.roomFloor===0);await leave();await f.waitForFunction(()=>!townDiagnostics.inside);checks.push('Inn stairs, upstairs balcony and correct return floor work');
+ for(const id of ['house-lighthouse','house-post','house-inn']){
+  await enter(id);await near('stairs');await press();await f.waitForFunction(()=>townDiagnostics.roomFloor===1&&townDiagnostics.roomImage.ready&&townDiagnostics.propsReady);
+  await near('balcony');await page.screenshot({path:'qa-output/entrance-'+id+'-upstairs.jpg',quality:82,fullPage:true});await press();await f.waitForFunction(()=>townDiagnostics.roomFloor===2&&townDiagnostics.roomImage.ready);
+  await leave();await f.waitForFunction(()=>townDiagnostics.roomFloor===1);assert.equal(await f.evaluate(()=>townDiagnostics.blocked),false);
+  await leave();await f.waitForFunction(()=>townDiagnostics.roomFloor===0);await leave();await f.waitForFunction(()=>!townDiagnostics.inside);
+ }
+ checks.push('All three upstairs balcony entrances return to the correct floor and leave a clear route downstairs');
  const workRooms={bakery:'house-bakery',restaurant:'house-bistro',pottery:'house-pottery',museum:'house-museum'};
  for(const [kind,id]of Object.entries(workRooms)){
   await openWork(id);const initial=(await read()).coins,plan=workPlan(kind,0);

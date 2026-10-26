@@ -1,5 +1,5 @@
 {
-  "release": "2026-10-24-every-place-v8",
+  "release": "2026-10-26-balcony-entrances-v9",
   "world": [
     5400,
     2400
@@ -33,5 +33,6 @@
   "restaurantGuests": 6,
   "kokoroClips": 216,
   "signatureGames": 16,
-  "difficultyLevels": 3
+  "difficultyLevels": 3,
+  "balconyEntrances": "art-aligned"
 }

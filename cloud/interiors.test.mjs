@@ -7,6 +7,7 @@ let routes=0,activities=0;const backgrounds=new Set();
 for(const house of houses)for(const floor of [0,2,...(['house-lighthouse','house-post','house-inn'].includes(house.id)?[1]:[])]){
  const room=roomFor(house,floor),start=room.spawn;backgrounds.add(room.image);
  assert.ok(roomWalkable(room,start.x,start.y));assert.equal(room.floor,floor);
+ assert.ok(!room.objects.some(o=>o.asset==='balcony-door'),'entrance uses the painted artwork, not a floating prop');
  for(const target of room.spots){
   assert.ok(roomWalkable(room,target.x,target.y),house.id+' reachable target '+target.id);
   const route=roomRoute(room,start,target);assert.ok(route.length);assert.ok(Math.hypot(route.at(-1).x-target.x,route.at(-1).y-target.y)<1);
@@ -20,10 +21,21 @@ for(const house of houses)for(const floor of [0,2,...(['house-lighthouse','house
  }
  assert.equal(nearestSpot(room,room.exit).id,'exit');
  for(const portal of room.spots.filter(s=>['balcony','stairs'].includes(s.kind))){
-  const arrival=roomArrival(room,portal.id);assert.ok(roomWalkable(room,arrival.x,arrival.y),house.id+' safe return from '+portal.id);
+  const arrival=roomArrival(room,portal.id);
+  if(portal.kind==='balcony'){
+   assert.ok(Math.hypot(arrival.x-portal.x,arrival.y-portal.y)>=82,'return clears the doorway interaction');
+   assert.equal(nearestSpot(room,portal).id,'balcony');
+   assert.equal(roomWalkable(room,portal.x,portal.y),true);
+  }
+  assert.ok(roomWalkable(room,arrival.x,arrival.y),house.id+' safe return from '+portal.id);
   const path=roomRoute(room,arrival,room.exit);assert.ok(path.length);let prev=arrival;
   for(const p of path){for(let i=0;i<=10;i++)assert.ok(roomWalkable(room,prev.x+(p.x-prev.x)*i/10,prev.y+(p.y-prev.y)*i/10),house.id+' exit route after return');prev=p;}
  }
+}
+// These visible thresholds are part of the painted room, not arbitrary floor locations.
+for(const [id,rect] of [['lighthouse',[1190,420,1260,510]],['cafe',[1080,250,1140,315]],['garden',[640,260,715,305]],['post',[960,225,1040,280]]]){
+ const r=roomFor(houses.find(h=>h.id==='house-'+id)),p=r.spots.find(s=>s.kind==='balcony');
+ assert.ok(p.x>=rect[0]&&p.x<=rect[2]&&p.y>=rect[1]&&p.y<=rect[3],id+' matches the painted threshold');
 }
 assert.equal(backgrounds.size,23);assert.equal(activities,54);assert.equal(activityFor('house-library','up-job-0'),null);assert.equal(activityFor('missing','job-0'),null);
 assert.equal(fish.length,16);assert.equal(decor.length,16);assert.deepEqual(tanks.map(t=>[t.fish,t.decor]),[[20,16],[40,32],[60,48]]);

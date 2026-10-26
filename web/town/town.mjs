@@ -123,7 +123,7 @@ function updateRoomPrompt(){
  roomNear=nearestSpot(roomSpec,roomPlayer);
  roomPlay.disabled=!roomNear;roomPlay.textContent=roomNear?(roomNear.id==='exit'?(roomSpec.balcony?'E · Return inside':roomSpec.floor?'E · Go downstairs':'E · Exit to town'):roomNear.kind==='balcony'?'E · Walk onto balcony':roomNear.id==='stairs'?'E · Go upstairs':'E · '+roomNear.name+' · +'+roomNear.reward+' coins'):'Walk closer to interact';
  roomHint.textContent=roomNear?(roomNear.id==='exit'?(roomSpec.balcony?'Return through the balcony door.':roomSpec.floor?'Return to the ground floor.':'Your adventure continues outside.'):['stairs','balcony'].includes(roomNear.kind)?roomNear.detail+'.':roomNear.detail+'. Complete the activity to earn coins.'):'Walk to a friend or a golden marker. Tap the floor or use the arrow keys.';
- roomExit.textContent=Math.hypot(roomPlayer.x-roomSpec.exit.x,roomPlayer.y-roomSpec.exit.y)<82?(roomSpec.balcony?'E · Return inside':roomSpec.floor?'E · Downstairs':'E · Exit to town'):(roomSpec.balcony?'Walk back inside ↓':roomSpec.floor?'Walk downstairs ↓':'Walk to exit ↓');
+ roomExit.textContent=Math.hypot(roomPlayer.x-roomSpec.exit.x,roomPlayer.y-roomSpec.exit.y)<82?(roomSpec.balcony?'E · Return inside':roomSpec.floor?'E · Downstairs':'E · Exit to town'):(roomSpec.balcony?'Walk back inside':roomSpec.floor?'Walk downstairs ↓':'Walk to exit ↓');
 }
 function updateRoom(dt){
  let dx=(held.has('ArrowRight')||held.has('d')?1:0)-(held.has('ArrowLeft')||held.has('a')?1:0),dy=(held.has('ArrowDown')||held.has('s')?1:0)-(held.has('ArrowUp')||held.has('w')?1:0);
@@ -143,15 +143,19 @@ function roomView(){
 function roomLabel(s,active){
  const y=s.kind==='person'?s.y-156:s.y-70;
  ctx.font='600 18px system-ui';const ww=Math.max(96,ctx.measureText(s.name).width+30);
- round(ctx,s.x-ww/2,y,ww,33,10,active?'#fff5cb':'#fff9ebf2',active?'#d7aa47':'#ffffff88');
- ctx.fillStyle='#284c4b';ctx.textAlign='center';ctx.fillText(s.name,s.x,y+23);
+ const labelX=clamp(s.x,ww/2+12,ROOM.width-ww/2-12);
+ round(ctx,labelX-ww/2,y,ww,33,10,active?'#fff5cb':'#fff9ebf2',active?'#d7aa47':'#ffffff88');
+ ctx.fillStyle='#284c4b';ctx.textAlign='center';ctx.fillText(s.name,labelX,y+23);
  if(s.reward){ctx.font='600 13px system-ui';ctx.fillStyle='#fff5cf';round(ctx,s.x-39,y-23,78,21,7,'#245d55e8');ctx.fillStyle='#fff5cf';ctx.fillText('+'+s.reward+' coins',s.x,y-8);}
 }
 function drawRoomObject(s){
  const active=roomNear?.id===s.id;
  ellipse(ctx,s.x,s.y+2,36,12,active?'#fbe1a877':'#ffe8ad33');ctx.strokeStyle=active?'#ffeda9':'#efd49ba8';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(s.x,s.y+2,36,12,0,0,Math.PI*2);ctx.stroke();
  if(s.kind==='person'){paintResident(ctx,s.person,s.x,s.y,time);return;}
- if(s.kind==='balcony'){line(ctx,[[s.x-16,s.y],[s.x+16,s.y],[s.x+7,s.y-9]],'#fff1b5',4);return;}
+ if(s.kind==='balcony'||(s.kind==='exit'&&roomSpec.balcony)){
+  ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.direction==='left'?Math.PI:s.direction==='up'?-Math.PI/2:0);
+  line(ctx,[[-16,0],[16,0],[7,-9]],'#fff1b5',4);line(ctx,[[16,0],[7,9]],'#fff1b5',4);ctx.restore();return;
+ }
  if(s.kind==='stairs'){line(ctx,[[s.x-18,s.y-5],[s.x,s.y-24],[s.x+18,s.y-5]],'#fff1b5',6);return;}
  if(s.furniture)return;
  // A small, freestanding activity lectern marks a tangible workstation.
@@ -163,6 +167,7 @@ function drawRoomObject(s){
 }
 function drawRoomExit(){
  const s=roomSpec.exit,active=roomNear?.id==='exit';
+ if(roomSpec.balcony){drawRoomObject(s);roomLabel(s,active);return;}
  const glow=ctx.createRadialGradient(s.x,s.y,8,s.x,s.y,120);glow.addColorStop(0,active?'#f9d77a77':'#f4db7838');glow.addColorStop(1,'#ffdd7700');ctx.fillStyle=glow;ctx.fillRect(s.x-120,s.y-120,240,160);
  poly(ctx,[[s.x-82,s.y-5],[s.x+82,s.y-5],[s.x+103,s.y+61],[s.x-103,s.y+61]],'#435f598f','#f7e4ad');
  for(const xx of [-89,89]){round(ctx,s.x+xx-8,s.y-58,16,87,3,'#b18a53','#f2d69e');ellipse(ctx,s.x+xx,s.y-58,10,5,'#f8dfa7');}

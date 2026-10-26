@@ -31,6 +31,10 @@ jobs:
                   assert release["difficultyLevels"] == 3
                   assert release["world"] == [5400, 2400]
                   assert release["balconies"] == 16
+                  assert release["balconyEntrances"] == "art-aligned"
+                  rooms = get("expansion-rooms.mjs")
+                  assert "const balconyEntrances=" in rooms
+                  assert "id:'balcony-door'" not in rooms
                   assert release["kokoroClips"] == 216
                   assert "app.mjs" in get("")
                   assert "gameCatalog" in get("activity-catalog.mjs")

@@ -912,7 +912,7 @@ export function roomFor(house,floor=0){return expandRoom(floor===2?null:extraRoo
 
 export function roomArrival(room,spotId){
  const spot=room.spots.find(s=>s.id===spotId);if(!spot)return{...room.spawn};
- const desired=floorPoint(spot.x,spot.y+80,room);
+ const desired=spot.arrival?{...spot.arrival}:floorPoint(spot.x,spot.y+80,room);
  if(roomWalkable(room,desired.x,desired.y))return desired;
  // Follow the clear path away from the doorway when furniture blocks its front.
  const route=roomRoute(room,spot,room.spawn);
