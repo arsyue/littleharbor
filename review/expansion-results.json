@@ -3,12 +3,12 @@
   "checks": [
     "Walked from the original town to the new east-coast bistro"
   ],
-  "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#world')\n    - locator resolved to <canvas id=\"world\" tabindex=\"0\" width=\"1253\" height=\"826\" aria-label=\"Walk around Little Harbor. Use arrow keys or W A S D, tap the ground, or choose a destination. Press E near a person or sign.\"></canvas>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"pad\" aria-label=\"Walking controls\">…</div> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"pad\" aria-label=\"Walking controls\">…</div> intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    55 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"pad\" aria-label=\"Walking controls\">…</div> intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n",
+  "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#world')\n    - locator resolved to <canvas id=\"world\" tabindex=\"0\" width=\"1253\" height=\"826\" aria-label=\"Walk around Little Harbor. Use arrow keys or W A S D, tap the ground, or choose a destination. Press E near a person or sign.\"></canvas>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <main>…</main> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <main>…</main> intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    56 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <main>…</main> intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n",
   "errors": [],
   "diagnostics": {
     "player": {
-      "x": 512,
-      "y": 639
+      "x": 3178,
+      "y": 1742
     },
     "world": {
       "width": 5400,
@@ -33,7 +33,7 @@
       },
       "bytes": 3926152
     },
-    "inside": "house-library",
+    "inside": "house-lighthouse",
     "roomPlayer": {
       "x": 430,
       "y": 650
@@ -60,50 +60,50 @@
     "roomObjects": [
       {
         "id": "furniture-0",
-        "asset": "reading-table",
-        "x": 680,
-        "y": 535,
-        "width": 325,
+        "asset": "chart-table",
+        "x": 720,
+        "y": 545,
+        "width": 300,
         "box": {
-          "x": 543.5,
-          "y": 470,
-          "w": 273,
+          "x": 594,
+          "y": 480,
+          "w": 252,
           "h": 80
         }
       }
     ],
     "propsReady": true,
     "roomImage": {
-      "url": "../assets/rooms-v5/library.webp",
+      "url": "../assets/rooms-v5/lighthouse.webp",
       "ready": true,
       "error": false
     },
     "roomSpots": [
       {
         "id": "host",
-        "name": "Lily",
+        "name": "Captain Finn",
         "detail": "Help a friend",
-        "x": 410,
-        "y": 385,
+        "x": 350,
+        "y": 430,
         "kind": "person",
-        "person": "lily",
+        "person": "finn",
         "reward": 50
       },
       {
         "id": "work",
-        "name": "The Missing Story",
-        "detail": "Sort books, rebuild a story and explain its clues.",
-        "x": 680,
-        "y": 593,
+        "name": "Signal Keeper",
+        "detail": "Decode light signals and guide a boat to safety.",
+        "x": 720,
+        "y": 603,
         "kind": "work",
         "furniture": "furniture-0",
-        "reward": 95,
-        "work": "library"
+        "reward": 100,
+        "work": "lighthouse"
       },
       {
         "id": "job-1",
-        "name": "Reading desk",
-        "detail": "Help a reader follow the clues.",
+        "name": "Weather station",
+        "detail": "Read the weather and make a plan.",
         "x": 950,
         "y": 385,
         "kind": "object",
@@ -118,16 +118,24 @@
         "kind": "exit"
       },
       {
+        "id": "stairs",
+        "name": "UPSTAIRS",
+        "detail": "Explore the Observatory",
+        "kind": "stairs",
+        "x": 430,
+        "y": 305
+      },
+      {
         "id": "balcony",
         "kind": "balcony",
         "name": "BALCONY",
         "detail": "Walk to the edge, then press E to go outside",
-        "x": 80,
-        "y": 730,
-        "direction": "left",
+        "x": 1220,
+        "y": 465,
+        "direction": "right",
         "arrival": {
-          "x": 180,
-          "y": 690
+          "x": 1120,
+          "y": 485
         }
       }
     ],

@@ -1,7 +1,8 @@
 {
-  "success": true,
-  "places": 16,
-  "signatureGames": 16,
+  "success": false,
+  "error": "Error: frame.waitForFunction: Target page, context or browser has been closed",
+  "activeKind": "inn",
+  "activeStep": 4,
   "checks": [
     "library: all five stages, saved progress and a single reward",
     "market: all five stages, saved progress and a single reward",
@@ -17,8 +18,9 @@
     "inn: all five stages, saved progress and a single reward",
     "studio: mobile controls work",
     "market: mobile controls work",
-    "music: mobile controls work",
-    "inn: mobile controls work"
+    "music: mobile controls work"
   ],
-  "errors": []
+  "errors": [],
+  "save": null,
+  "diagnostics": null
 }
