@@ -4,6 +4,9 @@
   "decorations": 20,
   "matchingShopArtwork": true,
   "volumetricFish": true,
+  "naturalFishShapes": true,
+  "clearBlueWater": true,
+  "perspectiveDepth": true,
   "mounts": [
     "floor",
     "hanging",
@@ -15,7 +18,7 @@
   "capacity": {
     "fish": 60,
     "decorations": 48,
-    "fps": 267
+    "fps": 42
   },
   "errors": []
 }
