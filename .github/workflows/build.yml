@@ -59,7 +59,7 @@ jobs:
           HF_HUB_DISABLE_TELEMETRY: '1'
         run: python -u cloud/voice-audit.py
       - name: Package independently generated town artwork
-        run: npm install --no-save sharp@0.34.5
+        run: npm install --no-save sharp@0.34.5 three@0.180.0
       - name: Prepare lightweight aquarium in the cloud
         run: bash cloud/build.sh
       - name: Prepare reliable browser package downloads

@@ -38,7 +38,7 @@ for(const [id,rect] of [['lighthouse',[1190,420,1260,510]],['cafe',[1080,250,114
  assert.ok(p.x>=rect[0]&&p.x<=rect[2]&&p.y>=rect[1]&&p.y<=rect[3],id+' matches the painted threshold');
 }
 assert.equal(backgrounds.size,23);assert.equal(activities,54);assert.equal(activityFor('house-library','up-job-0'),null);assert.equal(activityFor('missing','job-0'),null);
-assert.equal(fish.length,16);assert.equal(decor.length,16);assert.deepEqual(tanks.map(t=>[t.fish,t.decor]),[[20,16],[40,32],[60,48]]);
+assert.equal(fish.length,16);assert.equal(decor.length,20);assert.deepEqual(tanks.map(t=>[t.fish,t.decor]),[[20,16],[40,32],[60,48]]);
 for(let tier=0;tier<3;tier++){
  const save=newState();save.tank=tier;save.coins=100000;
  for(const [kind,items]of [['fish',fish],['decor',decor]]){
@@ -47,4 +47,4 @@ for(let tier=0;tier<3;tier++){
  }
 }
 const legacy=newState();legacy.coins=42;legacy.words=['shell'];legacy.houseGames={'house-library':2};assert.ok(validateState(legacy));assert.equal(legacy.coins,42);
-console.log('PASS',routes,'collision-free routes; 23 unique scenes; 54 object jobs; stairs; 16 fish/16 decor; every capacity boundary; old saves.');
+console.log('PASS',routes,'collision-free routes; 23 unique scenes; 54 object jobs; stairs; 16 fish/20 decor; every capacity boundary; old saves.');

@@ -32,8 +32,16 @@ export const decor=[
 {"id":"air-bubbler","name":"Bubble Stone","price":75,"size":140,"blurb":"A stream of sparkling bubbles from a small stone."},
 {"id":"shipwreck","name":"Sunken Sailboat","price":160,"size":180,"blurb":"A weathered little ship with a story to tell."},
 {"id":"clay-pot","name":"Terracotta Hideout","price":60,"size":145,"blurb":"A smooth clay pot for curious fish to explore."},
-{"id":"water-lily","name":"Water Lily","price":90,"size":155,"blurb":"Green leaves and a soft pink flower."}
+{"id":"water-lily","name":"Water Lily","price":90,"size":155,"blurb":"Green leaves and a soft pink flower."},
+{id:'hanging-shell',name:'Hanging Pearl Shell',price:110,size:165,mount:'hanging',blurb:'A pearl shell on a golden chain. Hang it above your fish.'},
+{id:'hanging-fern',name:'Hanging Fern Basket',price:95,size:170,mount:'hanging',blurb:'A leafy basket that sways gently in the water.'},
+{id:'glass-coral',name:'Glass Coral Garden',price:100,size:150,mount:'wall',blurb:'A coral garden with clear suction cups for the back glass.'},
+{id:'floating-lily',name:'Floating Lily Island',price:115,size:160,mount:'surface',blurb:'A lily island that floats near the surface.'}
 ];
+export const decorLimits=id=>{
+ const mount=decor.find(d=>d.id===id)?.mount||'floor';
+ return mount==='hanging'?{mount,min:24,max:68,start:42}:mount==='wall'?{mount,min:22,max:75,start:42}:mount==='surface'?{mount,min:8,max:20,start:12}:{mount,min:60,max:94,start:82};
+};
 export const tanks=[
 {name:'Cozy Lagoon',fish:20,decor:16,price:0,width:74},
 {name:'Wonder Bay',fish:40,decor:32,price:240,width:85},

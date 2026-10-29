@@ -13,7 +13,16 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{try{const
   if(teleport){const e=await f.evaluate(id=>townDiagnostics.houses.find(x=>x.id===id),id);await page.evaluate(e=>document.querySelector('#town-engine').contentWindow.postMessage({littleHarborTown:true,type:'state',position:{x:e.x,y:e.y+50}},location.origin),e);}
   await f.locator('#destination').selectOption(id);await f.waitForFunction(id=>townDiagnostics.inside===id&&townDiagnostics.roomImage.ready&&townDiagnostics.propsReady,id,{timeout:60000});
  }
- async function near(id){if(await f.evaluate(id=>townDiagnostics.roomNear===id&&!townDiagnostics.roomTarget,id))return;const d=await f.evaluate(id=>({s:townDiagnostics.roomSpots.find(s=>s.id===id),v:townDiagnostics.roomView,w:innerWidth,h:innerHeight}),id);await f.locator('#world').click({position:{x:(d.s.x-d.v.cx)*d.v.scale+d.w/2,y:(d.s.y-d.v.cy)*d.v.scale+d.h/2}});await f.waitForFunction(id=>townDiagnostics.roomNear===id&&!townDiagnostics.roomTarget,id,{timeout:15000});}
+ async function near(id){
+  for(let attempt=0;attempt<4;attempt++){
+   if(await f.evaluate(id=>townDiagnostics.roomNear===id&&!townDiagnostics.roomTarget,id))return;
+   const d=await f.evaluate(id=>({s:townDiagnostics.roomSpots.find(s=>s.id===id),v:townDiagnostics.roomView,w:innerWidth,h:innerHeight}),id);
+   const x=(d.s.x-d.v.cx)*d.v.scale+d.w/2,y=(d.s.y-d.v.cy)*d.v.scale+d.h/2;
+   await f.locator('#world').click({position:{x:Math.max(36,Math.min(d.w-36,x)),y:Math.max(140,Math.min(d.h-155,y))}});
+   await f.waitForFunction(()=>!townDiagnostics.roomTarget,{},{timeout:15000});
+  }
+  await f.waitForFunction(id=>townDiagnostics.roomNear===id,id,{timeout:15000});
+ }
  async function press(){await f.waitForFunction(()=>!townDiagnostics.paused);await f.locator('#world').focus();await page.keyboard.press('e');}
  async function leave(){await f.waitForFunction(()=>!townDiagnostics.paused);const before=await f.evaluate(()=>({id:townDiagnostics.inside,floor:townDiagnostics.roomFloor,distance:Math.hypot(townDiagnostics.roomPlayer.x-townDiagnostics.roomBounds.exit.x,townDiagnostics.roomPlayer.y-townDiagnostics.roomBounds.exit.y)}));if(before.distance>=82){await f.locator('#room-exit').click();await f.waitForFunction(()=>townDiagnostics.roomNear==='exit'&&!townDiagnostics.roomTarget,{},{timeout:15000});}await press();await f.waitForFunction(b=>townDiagnostics.inside!==b.id||townDiagnostics.roomFloor!==b.floor,before);}
  async function openWork(id){await enter(id);await near('work');await press();await page.locator('#work-body').waitFor();}

@@ -6,6 +6,7 @@ node cloud/town-assets.mjs
 node cloud/ground-assets.mjs
 node cloud/room-assets.mjs
 node cloud/expansion-assets.mjs
+node cloud/aquarium-assets.mjs
 mkdir -p public
 cp -R legacy/. public/
 cp -R web/. public/
@@ -22,6 +23,7 @@ node --check public/app.mjs
 node --check public/aquarium/aquarium.mjs
 node --check public/aquarium/motion.mjs
 node cloud/motion.test.mjs
+node cloud/aquarium.test.mjs
 node cloud/improvements.test.mjs
 node cloud/interiors.test.mjs
 node cloud/work.test.mjs

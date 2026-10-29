@@ -1,5 +1,5 @@
 {
-  "release": "2026-10-26-balcony-entrances-v9",
+  "release": "2026-10-29-living-aquarium-v10",
   "world": [
     5400,
     2400
@@ -14,7 +14,7 @@
   "centralFurniture": 10,
   "roomObjectJobs": 54,
   "fishSpecies": 16,
-  "decorations": 16,
+  "decorations": 20,
   "fishCapacity": [
     20,
     40,
@@ -34,5 +34,13 @@
   "kokoroClips": 216,
   "signatureGames": 16,
   "difficultyLevels": 3,
-  "balconyEntrances": "art-aligned"
+  "balconyEntrances": "art-aligned",
+  "volumetricFish": true,
+  "sharedShopArtwork": true,
+  "decorationMounts": [
+    "floor",
+    "hanging",
+    "wall",
+    "surface"
+  ]
 }
