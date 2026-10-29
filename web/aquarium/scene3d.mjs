@@ -23,7 +23,17 @@ export class AquariumScene{
   const profile=kind==='fish'?(profiles[id]||{}):{thickness:.055,bodyX:.5,bodyRX:.48,bodyRY:.47};
   const data=volumeData(ctx.getImageData(0,0,canvas.width,canvas.height).data,canvas.width,canvas.height,profile);
   const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(data.positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(data.uvs,2));geometry.setIndex(data.indices);geometry.computeVertexNormals();
-  const texture=new THREE.Texture(image);texture.colorSpace=THREE.SRGBColorSpace;texture.needsUpdate=true;
+  // Bleed the existing edge colours underneath the mesh seam. The silhouette
+  // still comes from the original cutout, so turning cannot expose alpha cracks.
+  let textureImage=image;
+  if(kind==='fish'){
+   const padded=document.createElement('canvas');padded.width=image.naturalWidth;padded.height=image.naturalHeight;
+   const ink=padded.getContext('2d');ink.drawImage(image,0,0);ink.globalCompositeOperation='destination-over';
+   const bleed=Math.max(2,Math.round(image.naturalWidth/80));
+   for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)if(dx||dy)ink.drawImage(image,dx*bleed,dy*bleed);
+   textureImage=padded;
+  }
+  const texture=new THREE.Texture(textureImage);texture.colorSpace=THREE.SRGBColorSpace;texture.needsUpdate=true;
   const material=new THREE.MeshStandardMaterial({map:texture,alphaTest:.12,roughness:kind==='fish'?.48:.82,metalness:kind==='fish'?.08:0,side:THREE.DoubleSide});
   const template={geometry,material};this.templates.set(key,template);return template;
  }
@@ -43,7 +53,8 @@ export class AquariumScene{
   const mesh=this.item('fish',f.id,f.uid,image);mesh.visible=true;
   mesh.position.set(p.x-this.width/2,this.height/2-p.y,(f.z-.5)*180);
   mesh.scale.set(size,size*(1+Math.sin(time*2+f.phase)*.012),size);
-  mesh.rotation.set(0,-f.heading,-Math.max(-.18,Math.min(.18,f.vy*2.2))*Math.cos(f.heading));
+  const depthYaw=f.target?Math.max(-.24,Math.min(.24,(f.target.z-f.z)*.9))+.04*Math.sin(time*.45+f.phase):0;
+  mesh.rotation.set(0,-f.heading+depthYaw*Math.cos(f.heading),-Math.max(-.18,Math.min(.18,f.vy*2.2))*Math.cos(f.heading));
   mesh.userData.motion.time.value=time*(5+f.speed*55);mesh.userData.motion.phase.value=f.phase;
  }
  decor(d,image,p,size,depth,time){

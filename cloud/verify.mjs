@@ -26,7 +26,10 @@ const readSave=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('little-har
 async function engine(count){await page.locator('#aquarium-engine').waitFor();await page.waitForFunction(()=>document.querySelector('#aquarium-engine')?.contentWindow?.location.href.includes('/aquarium/'));const f=page.frames().find(x=>x.url().includes('/aquarium/'));await f.waitForFunction(n=>window.harborDiagnostics?.fish.length===n,count,{timeout:90000});return f;}
 async function answer(text){if(await page.getByRole('button',{name:'Type instead',exact:true}).count())await page.getByRole('button',{name:'Type instead',exact:true}).click();await page.locator('#answer-input').fill(text);await page.locator('#answer-form button').click();}
 async function audioPlaying(key){
- await page.waitForFunction(key=>window.__recordedAudio.some(a=>a.src.includes('/'+key+'-')&&!a.paused&&a.currentTime>.02),key,{timeout:15000});
+ await page.waitForFunction(key=>{
+  const clip=window.__recordedAudio.find(a=>!a.__verified&&a.src.includes('/'+key+'-')&&a.currentTime>.02);
+  if(!clip)return false;clip.__verified=true;return true;
+ },key,{timeout:15000});
 }
 try{
  const manifest=JSON.parse(await readFile('public/audio/manifest.json','utf8'));
@@ -35,7 +38,7 @@ try{
   const c=manifest.clips[m.id+'-'+i+'-'+kind];assert.equal(c.text,s[kind]);assert.ok(c.duration>1&&c.duration<45);
   assert.ok((await readFile('public/'+c.url)).length>1000);
  }
- checks.push('All 88 Kokoro recordings match the live dialogue and exist in the published build');
+ checks.push('All 216 Kokoro recordings match the live dialogue and exist in the published build');
  for(const mission of adventures){
   for(const step of mission.steps){assert.equal(checkAnswer(step.hint,step).ok,true,mission.id+' example must work');assert.equal(checkAnswer('yes',step).ok,false);}
   const s=newState();ensureAdventures(s);assert.equal(finishAdventure(s,mission.id),null);
@@ -195,7 +198,7 @@ try{
  await page.screenshot({animations:'disabled',path:'qa-output/aquarium-desktop.jpg',quality:80});
  const diag=await frame.evaluate(()=>window.harborDiagnostics);
  assert.ok(diag.fish.every(f=>Math.abs(f.x)<diag.width&&Math.abs(f.z)<diag.depth&&f.y>0&&f.y<diag.height));
- checks.push('All sixteen species and sixteen decorations load inside tank bounds');
+ checks.push('All sixteen species and twenty decorations load inside tank bounds');
  const f0=diag.fish[0];await frame.locator('canvas').click({position:{x:f0.sx,y:f0.sy}});await page.locator('.fish-modal').waitFor();await page.locator('.modal-close').click();checks.push('Clicking a fish opens its details');
  await page.setViewportSize({width:390,height:844});await page.reload();await engine(16);
  await page.waitForTimeout(1500);await page.screenshot({animations:'disabled',path:'qa-output/aquarium-mobile.jpg',fullPage:true,quality:78});
@@ -260,5 +263,5 @@ try{
 }catch(error){
  await page.screenshot({animations:'disabled',path:'qa-output/failure.jpg',fullPage:true,quality:78}).catch(()=>{});
  await writeFile('qa-output/results.json',JSON.stringify({success:false,checks,error:String(error),errors},null,2));
- console.error(error);console.error(errors);process.exitCode=1;
+ console.error(error);console.error(errors);console.error('Audio diagnostics',await page.evaluate(()=>({fallbacks:window.__speechFallbacks,audio:window.__recordedAudio.map(a=>({src:a.src,paused:a.paused,ended:a.ended,time:a.currentTime,ready:a.readyState,error:a.error?.message,verified:a.__verified}))})));process.exitCode=1;
 }finally{await browser.close();await new Promise(r=>server.close(r));}
