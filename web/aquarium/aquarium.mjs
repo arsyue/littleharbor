@@ -160,7 +160,7 @@ function draw(){
 }
 function loop(now){const dt=previous?Math.min((now-previous)/1000,.05):.016;previous=now;if(dt>0)fps=mix(fps,1/dt,.03);if(!paused&&!document.hidden){time+=dt;update(dt);}if(!document.hidden&&!paused)draw();requestAnimationFrame(loop);}
 function coords(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
-canvas.addEventListener('pointerdown',e=>{const p=coords(e);down={...p};if(editing){drag=decor.filter(d=>Math.hypot(p.x-d.sx,p.y-d.sy)<d.radius+15).sort((a,b)=>b.y-a.y)[0]||null;if(drag){drag.offsetX=p.x-drag.sx;drag.offsetY=p.y-drag.sy;canvas.setPointerCapture(e.pointerId);}}});
+canvas.addEventListener('pointerdown',e=>{const p=coords(e);down={...p};if(editing){drag=decor.filter(d=>Math.hypot(p.x-d.sx,p.y-d.sy)<d.radius+15).sort((a,b)=>Math.hypot(p.x-a.sx,p.y-a.sy)-Math.hypot(p.x-b.sx,p.y-b.sy))[0]||null;if(drag){drag.offsetX=p.x-drag.sx;drag.offsetY=p.y-drag.sy;canvas.setPointerCapture(e.pointerId);}}});
 canvas.addEventListener('pointermove',e=>{const p=coords(e);if(drag){dragDecor(drag,p,{x:drag.offsetX,y:drag.offsetY},area,w,floorFront);draw();}else canvas.style.cursor=editing?'grab':fish.some(f=>Math.hypot(p.x-f.sx,p.y-f.sy)<f.radius)?'pointer':'crosshair';});
 canvas.addEventListener('pointerup',e=>{const p=coords(e);if(drag){const item=drag;drag=null;send({type:'move',uid:item.uid,x:item.x,y:item.y});down=null;return;}if(down&&Math.hypot(p.x-down.x,p.y-down.y)<8&&!editing){const hit=fish.filter(f=>Math.hypot(p.x-f.sx,p.y-f.sy)<f.radius).sort((a,b)=>b.z-a.z)[0];if(hit)send({type:'fish',uid:hit.uid});else send({type:'feed-request',point:{x:(p.x-area.x)/area.w,y:(p.y-area.top)/area.swimH}});}down=null;});
 canvas.addEventListener('pointercancel',()=>{drag=null;down=null;});

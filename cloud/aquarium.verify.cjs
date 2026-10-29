@@ -12,6 +12,17 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{try{const
  await frame.waitForFunction(()=>harborDiagnostics.volumes===22);await page.screenshot({path:'qa-output/aquarium-volume-overview.jpg',quality:88,fullPage:true});
  const sources=await frame.evaluate(()=>harborDiagnostics.assets.map(x=>x.url));
  for(const id of fish.map(x=>x.id))assert.ok(sources.some(s=>s.endsWith('/assets/fish/'+id+'.webp')));
+
+ await page.evaluate(async()=>{
+  const {AquariumScene}=await import('./aquarium/scene3d.mjs'),preview=new AquariumScene(),canvas=document.createElement('canvas');
+  canvas.id='turn-review';canvas.width=1400;canvas.height=600;Object.assign(canvas.style,{position:'fixed',inset:'0',width:'100vw',height:'100vh',zIndex:99999,objectFit:'contain',background:'#0d3038'});document.body.append(canvas);
+  const ctx=canvas.getContext('2d');ctx.fillStyle='#123a42';ctx.fillRect(0,0,1400,600);preview.resize(1400,600,1);
+  const image=new Image();image.src='assets/fish/goldfish.webp';await image.decode();preview.begin(false);
+  [0,.8,Math.PI/2].forEach((heading,i)=>preview.fish({id:'goldfish',uid:'turn-'+i,heading,vy:0,z:.5,phase:0,speed:.05},image,{x:250+i*450,y:310},340,0));
+  preview.finish(ctx);ctx.fillStyle='#e6f6e7';ctx.textAlign='center';ctx.font='bold 26px system-ui';['Side view','Turning','Facing you'].forEach((s,i)=>ctx.fillText(s,250+i*450,90));
+  const pixels=ctx.getImageData(1000,160,300,300).data;let visible=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]>90&&pixels[i]>pixels[i+2]*1.2)visible++;if(visible<600)throw Error('Head-on fish lost its body thickness');
+  preview.renderer.dispose();
+ });await page.screenshot({path:'qa-output/aquarium-fish-turns.jpg',quality:90});await page.locator('#turn-review').evaluate(el=>el.remove());
  await page.locator('[data-action="fish-shop"]').click();await page.locator('.item-card').first().waitFor();
  const shop=await page.locator('.item-art img').evaluateAll(es=>es.map(e=>e.src));assert.ok(shop.every(url=>sources.includes(url)),'shop and tank load identical fish artwork');
  await page.locator('[data-shop="decor"]').click();assert.equal(await page.locator('.item-card').count(),20);await page.screenshot({path:'qa-output/aquarium-new-decor-shop.jpg',quality:84,fullPage:true});await page.locator('.modal-close').click();
