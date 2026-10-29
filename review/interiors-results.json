@@ -42,31 +42,10 @@
     "house-pottery floor 0 job-1 earns the correct reward",
     "house-museum floor 0 host earns the correct reward",
     "house-museum floor 0 job-1 earns the correct reward",
-    "All indoor rewards persist after reloading",
-    "Mobile touch movement, camera, interaction and exit verified",
-    "60 fish and 48 decorations render without losing the save"
-  ],
-  "scenes": [
-    "../assets/rooms-v5/library.webp",
-    "../assets/rooms-v5/market.webp",
-    "../assets/rooms-v5/workshop.webp",
-    "../assets/rooms-v5/harbor.webp",
-    "../assets/rooms-v5/aquarium.webp",
-    "../assets/rooms-v5/cafe.webp",
-    "../assets/rooms-v5/garden.webp",
-    "../assets/rooms-v5/lighthouse.webp",
-    "../assets/rooms-v5/lighthouse-upstairs.webp",
-    "../assets/rooms-v5/bakery.webp",
-    "../assets/rooms-v5/studio.webp",
-    "../assets/rooms-v5/post.webp",
-    "../assets/rooms-v5/post-upstairs.webp",
-    "../assets/rooms-v5/music.webp",
-    "../assets/expansion-v7/room-bistro.webp",
-    "../assets/expansion-v7/room-inn.webp",
-    "../assets/expansion-v7/room-inn-upstairs.webp",
-    "../assets/expansion-v7/room-pottery.webp",
-    "../assets/expansion-v7/room-museum.webp"
+    "All indoor rewards persist after reloading"
   ],
   "errors": [],
-  "missing": []
+  "missing": [],
+  "failure": "Error: frame.waitForFunction: Target page, context or browser has been closed",
+  "diagnostics": null
 }
