@@ -42,10 +42,10 @@
     "house-pottery floor 0 job-1 earns the correct reward",
     "house-museum floor 0 host earns the correct reward",
     "house-museum floor 0 job-1 earns the correct reward",
-    "All indoor rewards persist after reloading"
+    "All indoor rewards persist after reloading",
+    "Mobile touch movement, camera, interaction and exit verified"
   ],
   "errors": [],
   "missing": [],
-  "failure": "Error: frame.waitForFunction: Target page, context or browser has been closed",
-  "diagnostics": null
+  "failure": "TimeoutError: page.screenshot: Timeout 30000ms exceeded.\nCall log:\n  - taking page screenshot\n  - waiting for fonts to load...\n  - fonts loaded\n"
 }

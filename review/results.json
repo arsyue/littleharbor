@@ -1,7 +1,7 @@
 {
   "success": false,
   "checks": [
-    "All 88 Kokoro recordings match the live dialogue and exist in the published build",
+    "All 216 Kokoro recordings match the live dialogue and exist in the published build",
     "All 28 model answers validate; old saves remain valid; replays pay only 35 coins",
     "Aquarium starts within five seconds without an engine download",
     "Fish swim continuously",
@@ -12,6 +12,6 @@
     "Both ground textures load: natural limestone paving and short meadow grass",
     "Large continuous town supports keyboard walking, directional character sprites and follows the explorer"
   ],
-  "error": "TimeoutError: page.waitForFunction: Timeout 15000ms exceeded.",
+  "error": "Error: page.waitForFunction: Target page, context or browser has been closed",
   "errors": []
 }
