@@ -12,5 +12,10 @@
   ],
   "dragging": true,
   "saves": true,
+  "capacity": {
+    "fish": 60,
+    "decorations": 48,
+    "fps": 267
+  },
   "errors": []
 }
