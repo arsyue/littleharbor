@@ -38,6 +38,16 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{try{const
  await page.locator('[data-action="feed"]').click();await frame.waitForFunction(()=>harborDiagnostics.food>0);
  await page.setViewportSize({width:390,height:844});await page.waitForTimeout(500);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await page.screenshot({path:'qa-output/aquarium-volume-mobile.jpg',quality:86,fullPage:true});
  await page.locator('[data-nav="town"]').first().click();await page.setViewportSize({width:720,height:900});await page.locator('[data-nav="home"]').first().click();await ready();
- assert.deepEqual(errors,[]);fs.writeFileSync('qa-output/aquarium-volume-results.json',JSON.stringify({success:true,fish:16,decorations:20,matchingShopArtwork:true,volumetricFish:true,mounts:['floor','hanging','wall','surface'],dragging:true,saves:true,errors},null,2));
+ await page.evaluate(async()=>{
+  const {fish,decor,decorLimits}=await import('./content.mjs');const s=JSON.parse(localStorage.getItem('little-harbor-save-v1'));s.tank=2;
+  s.fish=Array.from({length:60},(_,i)=>({uid:'capacity-fish-'+i,id:fish[i%fish.length].id,name:'Fish '+i}));
+  s.decor=Array.from({length:48},(_,i)=>({uid:'capacity-decor-'+i,id:decor[i%decor.length].id,x:10+(i%12)*7.2,y:decorLimits(decor[i%decor.length].id).start}));
+  localStorage.setItem('little-harbor-save-v1',JSON.stringify(s));
+ });
+ await page.setViewportSize({width:1440,height:1050});await page.reload();await ready();await frame.waitForFunction(()=>harborDiagnostics.volumes===108);
+ const elapsed=await frame.evaluate(()=>harborDiagnostics.elapsed);await frame.waitForFunction(t=>harborDiagnostics.elapsed>t+.3,elapsed,{timeout:15000});
+ await page.screenshot({path:'qa-output/aquarium-volume-capacity.jpg',quality:82});
+ const capacityFps=await frame.evaluate(()=>harborDiagnostics.fps);
+ assert.deepEqual(errors,[]);fs.writeFileSync('qa-output/aquarium-volume-results.json',JSON.stringify({success:true,fish:16,decorations:20,matchingShopArtwork:true,volumetricFish:true,mounts:['floor','hanging','wall','surface'],dragging:true,saves:true,capacity:{fish:60,decorations:48,fps:capacityFps},errors},null,2));
  }catch(e){await page.screenshot({path:'qa-output/aquarium-volume-failure.jpg',fullPage:true}).catch(()=>{});fs.writeFileSync('qa-output/aquarium-volume-results.json',JSON.stringify({success:false,error:String(e),errors,diagnostics:await frame?.evaluate(()=>window.harborDiagnostics).catch(()=>null)},null,2));throw e;}finally{await browser.close();server.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

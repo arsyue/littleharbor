@@ -150,7 +150,7 @@ function draw(){
  // A few moving stems layered among the permanent planting.
  for(const p of plantSprites){ctx.save();ctx.translate(w*p.x,area.bottom+7);ctx.transform(1,0,Math.sin(time*.45+p.x)*.025,1,0,0);ctx.drawImage(p.img,-90,-p.img.height+15);ctx.restore();}
  for(const b of bubbles){const x=area.x+b.x*area.w+Math.sin(time*1.5+b.phase)*6,y=area.top+b.y*(area.bottom-area.top);ctx.strokeStyle='#bce7dc55';ctx.lineWidth=.8;ctx.beginPath();ctx.arc(x,y,b.r,0,TAU);ctx.stroke();oval(ctx,x-b.r*.25,y-b.r*.3,.6,.7,'#dbfffaaa');}
- scene3d?.begin(night);
+ scene3d?.begin(night,fish.length);
  const layers=[...fish.map(f=>({z:f.z,draw:()=>drawFish(f)})),...decor.map(d=>({z:.45+(d.y-60)/50,draw:()=>drawDecor(d)}))];layers.sort((a,b)=>a.z-b.z).forEach(l=>l.draw());scene3d?.finish(ctx);
  for(const p of food){const x=area.x+p.x*area.w+Math.sin(time+p.phase)*2,y=area.top+p.y*area.swimH;oval(ctx,x,y,2.1,1.4,'#d9aa63',p.phase);}
  glass();

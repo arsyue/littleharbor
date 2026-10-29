@@ -1,6 +1,6 @@
 // Build a closed, rounded volume from the same cutout used by the shop.
-export function volumeData(pixels,width,height,{thickness=.15,bodyX=.58,bodyY=.5,bodyRX=.4,bodyRY=.34}={}){
- const cols=88,rows=28,positions=[],uvs=[],indices=[],stride=rows+1;
+export function volumeData(pixels,width,height,{thickness=.15,bodyX=.58,bodyY=.5,bodyRX=.4,bodyRY=.34,cols=56,rows=20}={}){
+ const positions=[],uvs=[],indices=[],stride=rows+1;
  const alpha=(x,y)=>pixels[(Math.max(0,Math.min(height-1,y))*width+Math.max(0,Math.min(width-1,x)))*4+3];
  const bounds=[];
  for(let i=0;i<=cols;i++){
