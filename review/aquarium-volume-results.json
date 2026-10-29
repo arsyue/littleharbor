@@ -1,0 +1,405 @@
+{
+  "success": false,
+  "error": "AssertionError [ERR_ASSERTION]: glass-coral can be dragged",
+  "errors": [],
+  "diagnostics": {
+    "renderer": "webgl-volume",
+    "assets": [
+      {
+        "key": "fish/goldfish",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/goldfish.webp"
+      },
+      {
+        "key": "fish/blue-tang",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/blue-tang.webp"
+      },
+      {
+        "key": "fish/clownfish",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/clownfish.webp"
+      },
+      {
+        "key": "fish/guppy",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/guppy.webp"
+      },
+      {
+        "key": "fish/angelfish",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/angelfish.webp"
+      },
+      {
+        "key": "fish/betta",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/betta.webp"
+      },
+      {
+        "key": "fish/pufferfish",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/pufferfish.webp"
+      },
+      {
+        "key": "fish/seahorse",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/seahorse.webp"
+      },
+      {
+        "key": "fish/neon-tetra",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/neon-tetra.webp"
+      },
+      {
+        "key": "fish/yellow-tang",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/yellow-tang.webp"
+      },
+      {
+        "key": "fish/discus",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/discus.webp"
+      },
+      {
+        "key": "fish/platy",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/platy.webp"
+      },
+      {
+        "key": "fish/molly",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/molly.webp"
+      },
+      {
+        "key": "fish/swordtail",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/swordtail.webp"
+      },
+      {
+        "key": "fish/zebra-danio",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/zebra-danio.webp"
+      },
+      {
+        "key": "fish/rainbowfish",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/fish/rainbowfish.webp"
+      },
+      {
+        "key": "decor/treasure-chest",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/decor/treasure-chest.webp"
+      },
+      {
+        "key": "decor/pebble-arch",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/decor/pebble-arch.webp"
+      },
+      {
+        "key": "decor/hanging-shell",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/decor/hanging-shell.webp"
+      },
+      {
+        "key": "decor/hanging-fern",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/decor/hanging-fern.webp"
+      },
+      {
+        "key": "decor/glass-coral",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/decor/glass-coral.webp"
+      },
+      {
+        "key": "decor/floating-lily",
+        "ready": true,
+        "error": false,
+        "url": "http://127.0.0.1:8895/assets/decor/floating-lily.webp"
+      }
+    ],
+    "volumes": 22,
+    "editing": true,
+    "fish": [
+      {
+        "uid": "preview-fish-0",
+        "id": "goldfish",
+        "x": 0.28083627528842936,
+        "y": 0.5494813832518587,
+        "z": 0.4839356167369202,
+        "sx": 369.44725056029307,
+        "sy": 261.3198780431848,
+        "heading": 0,
+        "vx": 0.03702343933539236,
+        "vy": -0.0013369832898219509
+      },
+      {
+        "uid": "preview-fish-1",
+        "id": "blue-tang",
+        "x": 0.6294451196412922,
+        "y": 0.6073792917466132,
+        "z": 0.6420666645632952,
+        "sx": 778.3235919248789,
+        "sy": 283.90037289846777,
+        "heading": 0,
+        "vx": 0.04518722637807391,
+        "vy": 0.0013478162206979347
+      },
+      {
+        "uid": "preview-fish-2",
+        "id": "clownfish",
+        "x": 0.8615092699964391,
+        "y": 0.5990012155832996,
+        "z": 0.7383292397497564,
+        "sx": 1050.5069925934235,
+        "sy": 282.888885374336,
+        "heading": 0,
+        "vx": -0.013918766703530634,
+        "vy": 0.0013114862606210223
+      },
+      {
+        "uid": "preview-fish-3",
+        "id": "guppy",
+        "x": 0.5346572176737544,
+        "y": 0.583956019012829,
+        "z": 0.73072256172689,
+        "sx": 667.1487574651931,
+        "sy": 277.6552133781486,
+        "heading": 3.141592653589793,
+        "vx": -0.05170410779627543,
+        "vy": -0.015508687657030649
+      },
+      {
+        "uid": "preview-fish-4",
+        "id": "angelfish",
+        "x": 0.4371954612750115,
+        "y": 0.3668978632963752,
+        "z": 0.4305934067522524,
+        "sx": 552.8378126202356,
+        "sy": 198.54366433138466,
+        "heading": 0,
+        "vx": 0.025104656796718312,
+        "vy": -0.00276716847728645
+      },
+      {
+        "uid": "preview-fish-5",
+        "id": "betta",
+        "x": 0.2416390319927185,
+        "y": 0.6143107081522867,
+        "z": 0.7040916645776328,
+        "sx": 323.47358784361967,
+        "sy": 287.41964512961454,
+        "heading": 0,
+        "vx": 0.03260394942006188,
+        "vy": 0.006690266729618181
+      },
+      {
+        "uid": "preview-fish-6",
+        "id": "pufferfish",
+        "x": 0.31267186057721985,
+        "y": 0.5874302075892555,
+        "z": 0.5364764210655988,
+        "sx": 406.78657183380966,
+        "sy": 275.15244595824635,
+        "heading": 3.141592653589793,
+        "vx": -0.028032930501714105,
+        "vy": 0.004602139459752092
+      },
+      {
+        "uid": "preview-fish-7",
+        "id": "seahorse",
+        "x": 0.49333099525966756,
+        "y": 0.3160560151535344,
+        "z": 0.47134048960632147,
+        "sx": 618.6780577201589,
+        "sy": 182.11592153698484,
+        "heading": 3.141592653589793,
+        "vx": -0.015052288279897344,
+        "vy": 0.0014651379809546684
+      },
+      {
+        "uid": "preview-fish-8",
+        "id": "neon-tetra",
+        "x": 0.6618612159608591,
+        "y": 0.36522753608666836,
+        "z": 0.7024403521620646,
+        "sx": 816.3437829761724,
+        "sy": 203.12603125094773,
+        "heading": 0,
+        "vx": 0.05272880081038212,
+        "vy": -0.015151984371314141
+      },
+      {
+        "uid": "preview-fish-9",
+        "id": "yellow-tang",
+        "x": 0.6719764738116157,
+        "y": 0.45289565282096444,
+        "z": 0.5348582005232171,
+        "sx": 828.207766604168,
+        "sy": 229.6101104197112,
+        "heading": 0,
+        "vx": 0.03798418341839019,
+        "vy": -0.006672968763734672
+      },
+      {
+        "uid": "preview-fish-10",
+        "id": "discus",
+        "x": 0.3021927109513421,
+        "y": 0.2953580957282546,
+        "z": 0.5361089616582333,
+        "sx": 394.49578682061014,
+        "sy": 176.34041339290988,
+        "heading": 3.141592653589793,
+        "vx": -0.02299809218002276,
+        "vy": 0.002362100438083592
+      },
+      {
+        "uid": "preview-fish-11",
+        "id": "platy",
+        "x": 0.32384203425368735,
+        "y": 0.2701616003840703,
+        "z": 0.331658505418967,
+        "sx": 419.88784513546483,
+        "sy": 163.94542159403528,
+        "heading": 3.141592653589793,
+        "vx": -0.04792609552899886,
+        "vy": -0.00926731133620096
+      },
+      {
+        "uid": "preview-fish-12",
+        "id": "molly",
+        "x": 0.6843653300589061,
+        "y": 0.45855970304198285,
+        "z": 0.717506801628318,
+        "sx": 842.73840831949,
+        "sy": 234.98465323090457,
+        "heading": 3.141592653589793,
+        "vx": -0.036455773352423844,
+        "vy": 0.009641062910773929
+      },
+      {
+        "uid": "preview-fish-13",
+        "id": "swordtail",
+        "x": 0.6703335142972962,
+        "y": 0.40251728270305626,
+        "z": 0.47919118028665636,
+        "sx": 826.2807722490129,
+        "sy": 211.51355656434475,
+        "heading": 0,
+        "vx": 0.043066936622090594,
+        "vy": -0.0021151671674710356
+      },
+      {
+        "uid": "preview-fish-14",
+        "id": "zebra-danio",
+        "x": 0.8122789575194026,
+        "y": 0.5475241061014978,
+        "z": 0.8111288196856107,
+        "sx": 992.7657436953571,
+        "sy": 266.8531540538227,
+        "heading": 0,
+        "vx": 0.05206737731554475,
+        "vy": -0.02026368096693884
+      },
+      {
+        "uid": "preview-fish-15",
+        "id": "rainbowfish",
+        "x": 0.7871399219811184,
+        "y": 0.3009812856120189,
+        "z": 0.7060927063738496,
+        "sx": 963.2806716932141,
+        "sy": 181.46132450487872,
+        "heading": 3.141592653589793,
+        "vx": -0.040929326669158904,
+        "vy": -0.011374944950664389
+      }
+    ],
+    "decor": [
+      {
+        "uid": "preview-decor-0",
+        "id": "treasure-chest",
+        "sx": 274.636,
+        "sy": 401.9635294117647,
+        "x": 20,
+        "y": 82,
+        "mount": "floor"
+      },
+      {
+        "uid": "preview-decor-1",
+        "id": "pebble-arch",
+        "sx": 861.076,
+        "sy": 401.9635294117647,
+        "x": 70,
+        "y": 82,
+        "mount": "floor"
+      },
+      {
+        "uid": "preview-decor-2",
+        "id": "hanging-shell",
+        "sx": 589.212,
+        "sy": 240.3592,
+        "x": 46.82081713389264,
+        "y": 53.67515060944286,
+        "mount": "hanging"
+      },
+      {
+        "uid": "preview-decor-3",
+        "id": "hanging-fern",
+        "sx": 959.72,
+        "sy": 215.3592,
+        "x": 78.41040856694632,
+        "y": 47.837575304721426,
+        "mount": "hanging"
+      },
+      {
+        "uid": "preview-decor-4",
+        "id": "glass-coral",
+        "sx": 626.5,
+        "sy": 190.3592,
+        "x": 50,
+        "y": 42,
+        "mount": "wall"
+      },
+      {
+        "uid": "preview-decor-5",
+        "id": "floating-lily",
+        "sx": 802.432,
+        "sy": 62.82406108419025,
+        "x": 65,
+        "y": 12,
+        "mount": "surface"
+      }
+    ],
+    "tier": 2,
+    "width": 1,
+    "height": 1,
+    "depth": 1,
+    "feeding": false,
+    "food": 0,
+    "paused": false,
+    "night": false,
+    "fps": 20,
+    "elapsed": 9.249233999999998,
+    "firstFrameMs": 62.89999999999418
+  }
+}

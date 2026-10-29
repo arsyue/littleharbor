@@ -1,7 +1,7 @@
 {
   "success": false,
   "error": "Error: frame.waitForFunction: Target page, context or browser has been closed",
-  "activeKind": "inn",
+  "activeKind": "lighthouse",
   "activeStep": 4,
   "checks": [
     "library: all five stages, saved progress and a single reward",
@@ -10,15 +10,7 @@
     "harbor: all five stages, saved progress and a single reward",
     "aquarium: all five stages, saved progress and a single reward",
     "cafe: all five stages, saved progress and a single reward",
-    "garden: all five stages, saved progress and a single reward",
-    "lighthouse: all five stages, saved progress and a single reward",
-    "studio: all five stages, saved progress and a single reward",
-    "post: all five stages, saved progress and a single reward",
-    "music: all five stages, saved progress and a single reward",
-    "inn: all five stages, saved progress and a single reward",
-    "studio: mobile controls work",
-    "market: mobile controls work",
-    "music: mobile controls work"
+    "garden: all five stages, saved progress and a single reward"
   ],
   "errors": [],
   "save": null,
