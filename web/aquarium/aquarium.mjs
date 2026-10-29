@@ -1,5 +1,6 @@
 import {advanceFish} from './motion.mjs';
 import {decorLayout,dragDecor} from './decor-layout.mjs';
+import {tankLayout,projectWater,unprojectWater} from './depth-layout.mjs';
 // Original Little Harbor aquarium. No third-party aquarium code or artwork.
 const canvas=document.querySelector('canvas'), ctx=canvas.getContext('2d',{alpha:false});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), mix=(a,b,t)=>a+(b-a)*t;
@@ -34,12 +35,12 @@ function requestSprite(kind,id){
  const img=new Image(),record={img,ready:false,error:false};loadedImages.set(key,record);
  img.onload=()=>{record.ready=true;if(paused)draw();};img.onerror=()=>record.error=true;img.src='../assets/'+kind+'/'+id+'.webp';
 }
-function fishScreen(f){return{x:area.x+f.x*area.w,y:area.top+f.y*area.swimH+(f.z-.5)*h*.035};}
+function fishScreen(f){return projectWater(f.x,f.y,f.z,area);}
 function drawFish(f){
  const s=species[f.id]||species.goldfish,p=fishScreen(f);
  const density=fish.length>40?.62:fish.length>24?.73:fish.length>12?.85:1;
- const size=1.6*(s.scale||1)*density*clamp(w*.09,52,116)*[1,.93,.85][tank]*mix(.7,1.12,f.z)*(f.id==='guppy'?.78:1);
- f.sx=p.x;f.sy=p.y;f.radius=size*.42;
+ const size=1.6*(s.scale||1)*density*clamp(w*.09,52,116)*[1,.93,.85][tank]*p.scale*(f.id==='guppy'?.78:1);
+ f.sx=p.x;f.sy=p.y;f.radius=size*.42;f.screenSize=size;
  const photo=loadedImages.get('fish/'+f.id);if(!photo?.ready)return;
  if(scene3d){scene3d.fish(f,photo.img,p,size,time);return;}
  const im=photo.img,ratio=im.naturalHeight/im.naturalWidth;
@@ -67,31 +68,40 @@ function plant(c,x,y,size,rnd,clock=0,tint=0){
   }
  }
 }
-function layout(){
- const top=w<700?150:clamp(h*.14,55,90),bottom=w<700?h-80:h-clamp(h*.17,73,115),inset=w*[.07,.04,.02][tank];
- floorFront=w<700?h-30:h-37;
- area={x:inset+15,w:w-inset*2-30,top,swimH:bottom-top-35,bottom,inset};
-}
+function layout(){area=tankLayout(w,h,tank);floorFront=area.floorFront;}
 function rebuildBackground(){
  background.width=Math.round(w*dpr);background.height=Math.round(h*dpr);bg.setTransform(dpr,0,0,dpr,0,0);layout();
- const c=bg,r=seed('little-harbor-floor-'+tank), floor=area.bottom;
- const water=c.createLinearGradient(0,0,0,h);water.addColorStop(0,'#103c42');water.addColorStop(.3,'#0c3037');water.addColorStop(.78,'#123c3e');water.addColorStop(1,'#061c25');c.fillStyle=water;c.fillRect(0,0,w,h);
- const glow=c.createRadialGradient(w*.5,h*.05,0,w*.5,h*.2,w*.65);glow.addColorStop(0,'#83c2a42e');glow.addColorStop(1,'#0d373600');c.fillStyle=glow;c.fillRect(0,0,w,h);
- // Rear slopes and a subtle perspective substrate.
- shape(c,[['M',area.x,floor-28],['Q',w*.28,floor-57,w*.5,floor-24],['Q',w*.8,floor-50,w-area.x,floor-27],['L',w-12,floorFront],['L',12,floorFront],['Z']],'#3f5a50');
- const sand=c.createLinearGradient(0,floor-20,0,floorFront);sand.addColorStop(0,'#8f9673');sand.addColorStop(.35,'#c6b993');sand.addColorStop(1,'#625d4d');
- shape(c,[['M',area.x,floor-17],['Q',w*.35,floor-29,w*.5,floor-11],['Q',w*.8,floor-19,w-area.x,floor-18],['L',w-10,floorFront-2],['L',10,floorFront-2],['Z']],sand);
- for(let i=0;i<1000;i++){const x=r()*w,y=floor-12+r()*Math.max(1,floorFront-floor+10);oval(c,x,y,.4+r()*1.5,.4+r()*.7,i%3?'#2f402d22':'#fff6cd33');}
- // Established background planting is part of the habitat, purchased ornaments remain separate.
- for(let i=0;i<13;i++){const x=(.04+i*.075+r()*.02)*w,edge=Math.abs(x/w-.5);const height=clamp((area.bottom-area.top)*(.26+edge*.32+r()*.15),55,235);plant(c,x,floor-11-r()*20,height,r,0,i%3===0);}
- for(let i=0;i<18;i++){const x=r()*w;stone(c,x,floor+r()*28,5+r()*16,['#6a7b70','#a4a189','#879489'][i%3],r);}
- // Driftwood forms a quiet central focal point.
- c.save();c.translate(w*.25,floor+5);c.rotate(-.12);
- const wood=c.createLinearGradient(0,-35,0,15);wood.addColorStop(0,'#6e6d4b');wood.addColorStop(.4,'#423e30');wood.addColorStop(1,'#26392f');
- shape(c,[['M',-w*.08,5],['C',-10,-20,w*.08,-1,w*.15,-20],['L',w*.21,-65],['L',w*.195,-14],['L',w*.32,-27],['L',w*.25,-8],['Q',w*.13,17,-w*.08,5]],wood);
- c.strokeStyle='#b0a17535';c.lineWidth=2;for(let i=0;i<4;i++){c.beginPath();c.moveTo(-w*.05,i*3);c.quadraticCurveTo(w*.08,-8+i*3,w*.24,-13+i*2);c.stroke();}c.restore();
- for(let i=0;i<7;i++)stone(c,w*(.15+i*.04),floor+11,12+r()*20,['#7b8e7c','#6a7e74','#a0a18b'][i%3],r);
- plantSprites=[.065,.935].map((x,i)=>{const size=Math.min((area.bottom-area.top)*(i?.58:.48),235);const img=document.createElement('canvas');img.width=180;img.height=Math.ceil(size+30);plant(img.getContext('2d'),90,size+15,size,seed('front-'+x),0,1);return {img,x};});
+ const c=bg,r=seed('little-harbor-floor-'+tank),floor=area.bottom,backTop=area.top-34,front=14;
+ const water=c.createLinearGradient(0,0,0,h);water.addColorStop(0,'#168ecb');water.addColorStop(.28,'#147db9');water.addColorStop(.7,'#0d568d');water.addColorStop(1,'#063357');c.fillStyle=water;c.fillRect(0,0,w,h);
+ const rear=c.createLinearGradient(0,backTop,0,floor);rear.addColorStop(0,'#198fca');rear.addColorStop(.6,'#12699f');rear.addColorStop(1,'#0a487d');
+ c.fillStyle=rear;c.fillRect(area.x,backTop,area.w,floor-backTop);
+ const glow=c.createRadialGradient(w*.46,backTop,0,w*.46,backTop,w*.56);glow.addColorStop(0,'#80d9ff30');glow.addColorStop(1,'#3ab6ee00');c.fillStyle=glow;c.fillRect(0,0,w,floorFront);
+ // Receding glass panels meet the rear wall, above a deep trapezoid of sand.
+ const left=c.createLinearGradient(front,0,area.x,0);left.addColorStop(0,'#55b6dd33');left.addColorStop(1,'#00457955');
+ shape(c,[['M',front,32],['L',area.x,backTop],['L',area.x,floor],['L',front,floorFront],['Z']],left);
+ const right=c.createLinearGradient(w-area.x,0,w-front,0);right.addColorStop(0,'#00457955');right.addColorStop(1,'#55b6dd33');
+ shape(c,[['M',w-front,32],['L',w-area.x,backTop],['L',w-area.x,floor],['L',w-front,floorFront],['Z']],right);
+ const sand=c.createLinearGradient(0,floor,0,floorFront);sand.addColorStop(0,'#477b91');sand.addColorStop(.35,'#9eafa5');sand.addColorStop(1,'#d4c9aa');
+ shape(c,[['M',area.x,floor],['L',w-area.x,floor],['L',w-front,floorFront],['L',front,floorFront],['Z']],sand);
+ for(let i=0;i<1200;i++){
+  const z=r(),left=mix(area.x,front,z),span=mix(area.w,w-front*2,z),x=left+r()*span,y=mix(floor,floorFront,z);
+  oval(c,x,y,(.3+r()*1.2)*mix(.5,1.4,z),(.25+r()*.65)*mix(.5,1.2,z),i%3?'#24425c25':'#f7f4de55');
+ }
+ // Small, blue-filtered planting stays against the back wall.
+ for(let i=0;i<10;i++){
+  const x=area.x+area.w*(.025+i*.106),edge=Math.abs(i/9-.5),height=clamp(area.swimH*(.22+edge*.3+r()*.13),45,150);
+  plant(c,x,floor+2,height,r,0,i%3===0);
+ }
+ c.fillStyle='#2a80b02b';c.fillRect(area.x,backTop,area.w,floor-backTop+3);
+ for(let i=0;i<24;i++){const z=r(),x=mix(area.x,front,z)+r()*mix(area.w,w-front*2,z);stone(c,x,mix(floor+3,floorFront-8,z),mix(3,13,z)*(1+r()),['#6f919b','#a9b6af','#879b9f'][i%3],r);}
+ // A low piece of wood in the rear leaves a wide swimming corridor.
+ c.save();c.translate(w*.30,floor+18);c.scale(.75,.75);c.rotate(-.08);
+ const wood=c.createLinearGradient(0,-35,0,15);wood.addColorStop(0,'#7d806c');wood.addColorStop(.4,'#4b534a');wood.addColorStop(1,'#294c58');
+ shape(c,[['M',-w*.08,5],['C',-10,-20,w*.08,-1,w*.15,-20],['L',w*.21,-55],['L',w*.195,-14],['L',w*.28,-25],['L',w*.25,-8],['Q',w*.13,17,-w*.08,5]],wood);c.restore();
+ // Soft caustic arcs follow the widening floor rather than a flat horizontal strip.
+ c.save();c.strokeStyle='#def5ed23';c.lineWidth=1;
+ for(let i=0;i<5;i++){const z=(i+1)/6,y=mix(floor,floorFront,z),span=mix(area.w,w-front*2,z);c.beginPath();c.ellipse(w*.5,y,span*.43,4+z*7,0,Math.PI*.04,Math.PI*.96);c.stroke();}c.restore();
+ plantSprites=[.035,.965].map((x,i)=>{const size=Math.min(area.swimH*(i?.64:.53),185);const img=document.createElement('canvas');img.width=180;img.height=Math.ceil(size+30);plant(img.getContext('2d'),90,size+15,size,seed('front-'+x),0,1);return {img,x};});
 }
 function resize(){if(innerWidth<2||innerHeight<2)return;w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,1.75);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);rebuildBackground();scene3d?.resize(w,h,dpr);if(paused)draw();}
 function drawDecor(d){
@@ -132,37 +142,44 @@ function update(dt){
  bubbles.forEach(b=>{b.y-=dt*(.05+b.r*.008);});bubbles=bubbles.filter(b=>b.y>0);
 }
 function glass(){
- const c=ctx;
- // Side glass and the water line add a shallow three dimensional frame.
- shape(c,[['M',10,28],['L',area.x,area.top-15],['L',area.x,area.bottom],['L',10,floorFront],['Z']],'#a6e8d40a','#b5ecdf23',1);
- shape(c,[['M',w-10,28],['L',w-area.x,area.top-15],['L',w-area.x,area.bottom],['L',w-10,floorFront],['Z']],'#90cfcf0b','#b5ecdf23',1);
- c.strokeStyle='#c7ffea35';c.lineWidth=2;c.beginPath();c.moveTo(11,32);for(let x=11;x<w-10;x+=12)c.lineTo(x,32+Math.sin(x*.018+time*.9)*1.5);c.stroke();
- const led=c.createLinearGradient(0,0,0,24);led.addColorStop(0,'#dcf8dc44');led.addColorStop(1,'#caffdd00');c.fillStyle=led;c.fillRect(15,0,w-30,30);
- const reflection=c.createLinearGradient(0,0,w,0);reflection.addColorStop(0,'#ffffff00');reflection.addColorStop(.2,'#ffffff03');reflection.addColorStop(.22,'#ffffff09');reflection.addColorStop(.25,'#ffffff00');reflection.addColorStop(1,'#ffffff00');c.fillStyle=reflection;c.fillRect(0,0,w,floorFront-2);
- c.fillStyle='#0b2028';c.fillRect(0,floorFront+1,w,h-floorFront);c.fillStyle='#78999155';c.fillRect(9,floorFront,w-18,2);
+ const c=ctx,backTop=area.top-34;
+ // Four rear corners and converging edges describe the tank's actual depth.
+ c.lineWidth=1; c.strokeStyle='#b7eaff33';
+ c.strokeRect(area.x,backTop,area.w,area.bottom-backTop);
+ for(const [x,backX]of [[14,area.x],[w-14,w-area.x]]){
+  c.beginPath();c.moveTo(x,32);c.lineTo(backX,backTop);c.moveTo(backX,area.bottom);c.lineTo(x,floorFront);c.stroke();
+  const shine=c.createLinearGradient(x< w/2?0:w-28,0,x<w/2?28:w,0);shine.addColorStop(0,'#c5eeff00');shine.addColorStop(.5,'#c5eeff32');shine.addColorStop(1,'#c5eeff00');c.fillStyle=shine;c.fillRect(x-12,32,24,floorFront-32);
+ }
+ const surface=c.createLinearGradient(0,25,0,backTop);surface.addColorStop(0,'#c3f0ff1c');surface.addColorStop(1,'#80cfff08');
+ shape(c,[['M',14,32],['L',area.x,backTop],['L',w-area.x,backTop],['L',w-14,32],['Z']],surface);
+ c.strokeStyle='#c4efff66';c.lineWidth=1.5;c.beginPath();c.moveTo(14,32);for(let x=14;x<w-14;x+=12)c.lineTo(x,32+Math.sin(x*.018+time*.9)*1.3);c.stroke();
+ const led=c.createLinearGradient(0,0,0,30);led.addColorStop(0,'#dcf4ff55');led.addColorStop(1,'#c9edff00');c.fillStyle=led;c.fillRect(14,0,w-28,30);
+ const reflection=c.createLinearGradient(0,0,w,0);reflection.addColorStop(0,'#ffffff00');reflection.addColorStop(.09,'#ffffff03');reflection.addColorStop(.12,'#ffffff0a');reflection.addColorStop(.15,'#ffffff00');reflection.addColorStop(1,'#ffffff00');c.fillStyle=reflection;c.fillRect(0,0,w,floorFront-2);
+ c.fillStyle='#082b43';c.fillRect(0,floorFront+1,w,h-floorFront);c.fillStyle='#b5ddeb77';c.fillRect(14,floorFront,w-28,2);
 }
 function draw(){
  ctx.drawImage(background,0,0,w,h);
  // Soft moving beams, never opaque stripes.
  ctx.save();ctx.globalCompositeOperation='screen';
- for(let i=0;i<4;i++){const x=w*(.15+i*.23)+Math.sin(time*.12+i)*20;const beam=ctx.createLinearGradient(x,0,x,h);beam.addColorStop(0,'#bdfad507');beam.addColorStop(1,'#bdfad500');shape(ctx,[['M',x,20],['L',x+w*.035,20],['L',x+w*.13,floorFront-8],['L',x-w*.06,floorFront-8],['Z']],beam);}
+ for(let i=0;i<4;i++){const x=w*(.15+i*.23)+Math.sin(time*.12+i)*20;const beam=ctx.createLinearGradient(x,0,x,h);beam.addColorStop(0,'#cbecff0d');beam.addColorStop(1,'#cbecff00');shape(ctx,[['M',x,20],['L',x+w*.035,20],['L',x+w*.13,floorFront-8],['L',x-w*.06,floorFront-8],['Z']],beam);}
  ctx.restore();
  // A few moving stems layered among the permanent planting.
- for(const p of plantSprites){ctx.save();ctx.translate(w*p.x,area.bottom+7);ctx.transform(1,0,Math.sin(time*.45+p.x)*.025,1,0,0);ctx.drawImage(p.img,-90,-p.img.height+15);ctx.restore();}
+ 
  for(const b of bubbles){const x=area.x+b.x*area.w+Math.sin(time*1.5+b.phase)*6,y=area.top+b.y*(area.bottom-area.top);ctx.strokeStyle='#bce7dc55';ctx.lineWidth=.8;ctx.beginPath();ctx.arc(x,y,b.r,0,TAU);ctx.stroke();oval(ctx,x-b.r*.25,y-b.r*.3,.6,.7,'#dbfffaaa');}
  scene3d?.begin(night,fish.length);
  const layers=[...fish.map(f=>({z:f.z,draw:()=>drawFish(f)})),...decor.map(d=>({z:.45+(d.y-60)/50,draw:()=>drawDecor(d)}))];layers.sort((a,b)=>a.z-b.z).forEach(l=>l.draw());scene3d?.finish(ctx);
- for(const p of food){const x=area.x+p.x*area.w+Math.sin(time+p.phase)*2,y=area.top+p.y*area.swimH;oval(ctx,x,y,2.1,1.4,'#d9aa63',p.phase);}
+ for(const p of plantSprites){ctx.save();ctx.translate(w*p.x,floorFront-6);ctx.transform(1,0,Math.sin(time*.45+p.x)*.025,1,0,0);ctx.drawImage(p.img,-90,-p.img.height+15);ctx.restore();}
+ for(const p of food){const pt=projectWater(p.x,p.y,.72,area);oval(ctx,pt.x+Math.sin(time+p.phase)*2,pt.y,2.1,1.4,'#d9aa63',p.phase);}
  glass();
  if(night){ctx.fillStyle='#07183277';ctx.fillRect(0,0,w,h);const moon=ctx.createRadialGradient(w*.65,20,0,w*.65,20,w*.7);moon.addColorStop(0,'#609bb11a');moon.addColorStop(1,'#609bb100');ctx.fillStyle=moon;ctx.fillRect(0,0,w,h);}
  if(!firstFrameMs&&fish.length){firstFrameMs=performance.now()-started;}
- window.harborDiagnostics={renderer:renderMode,assets:[...loadedImages].map(([key,r])=>({key,ready:r.ready,error:r.error,url:r.img.src})),volumes:scene3d?.items.size||0,editing,fish:fish.map(f=>({uid:f.uid,id:f.id,x:f.x,y:f.y,z:f.z,sx:f.sx,sy:f.sy,heading:f.heading,vx:f.vx,vy:f.vy})),decor:decor.map(d=>({uid:d.uid,id:d.id,sx:d.sx,sy:d.sy,x:d.x,y:d.y,mount:d.mount})),tier:tank,width:1,height:1,depth:1,feeding:time<feedingUntil,food:food.length,paused,night,fps:Math.round(fps),elapsed:time,firstFrameMs};
+ window.harborDiagnostics={renderer:renderMode,assets:[...loadedImages].map(([key,r])=>({key,ready:r.ready,error:r.error,url:r.img.src})),volumes:scene3d?.items.size||0,waterColor:'clear-blue',depthLayout:area,editing,fish:fish.map(f=>({uid:f.uid,id:f.id,x:f.x,y:f.y,z:f.z,sx:f.sx,sy:f.sy,heading:f.heading,vx:f.vx,vy:f.vy,screenSize:f.screenSize})),decor:decor.map(d=>({uid:d.uid,id:d.id,sx:d.sx,sy:d.sy,x:d.x,y:d.y,mount:d.mount})),tier:tank,width:1,height:1,depth:1,feeding:time<feedingUntil,food:food.length,paused,night,fps:Math.round(fps),elapsed:time,firstFrameMs};
 }
 function loop(now){const dt=previous?Math.min((now-previous)/1000,.05):.016;previous=now;if(dt>0)fps=mix(fps,1/dt,.03);if(!paused&&!document.hidden){time+=dt;update(dt);}if(!document.hidden&&!paused)draw();requestAnimationFrame(loop);}
 function coords(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
 canvas.addEventListener('pointerdown',e=>{const p=coords(e);down={...p};if(editing){drag=decor.filter(d=>Math.hypot(p.x-d.sx,p.y-d.sy)<d.radius+15).sort((a,b)=>Math.hypot(p.x-a.sx,p.y-a.sy)-Math.hypot(p.x-b.sx,p.y-b.sy))[0]||null;if(drag){drag.offsetX=p.x-drag.sx;drag.offsetY=p.y-drag.sy;canvas.setPointerCapture(e.pointerId);}}});
 canvas.addEventListener('pointermove',e=>{const p=coords(e);if(drag){dragDecor(drag,p,{x:drag.offsetX,y:drag.offsetY},area,w,floorFront);draw();}else canvas.style.cursor=editing?'grab':fish.some(f=>Math.hypot(p.x-f.sx,p.y-f.sy)<f.radius)?'pointer':'crosshair';});
-canvas.addEventListener('pointerup',e=>{const p=coords(e);if(drag){const item=drag;drag=null;send({type:'move',uid:item.uid,x:item.x,y:item.y});down=null;return;}if(down&&Math.hypot(p.x-down.x,p.y-down.y)<8&&!editing){const hit=fish.filter(f=>Math.hypot(p.x-f.sx,p.y-f.sy)<f.radius).sort((a,b)=>b.z-a.z)[0];if(hit)send({type:'fish',uid:hit.uid});else send({type:'feed-request',point:{x:(p.x-area.x)/area.w,y:(p.y-area.top)/area.swimH}});}down=null;});
+canvas.addEventListener('pointerup',e=>{const p=coords(e);if(drag){const item=drag;drag=null;send({type:'move',uid:item.uid,x:item.x,y:item.y});down=null;return;}if(down&&Math.hypot(p.x-down.x,p.y-down.y)<8&&!editing){const hit=fish.filter(f=>Math.hypot(p.x-f.sx,p.y-f.sy)<f.radius).sort((a,b)=>b.z-a.z)[0];if(hit)send({type:'fish',uid:hit.uid});else send({type:'feed-request',point:unprojectWater(p.x,p.y,.72,area)});}down=null;});
 canvas.addEventListener('pointercancel',()=>{drag=null;down=null;});
 canvas.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();send({type:'feed-request'});}});
 function updateButtons(){document.querySelector('#light').textContent=night?'☾ Moonlight':'☀ Daylight';document.querySelector('#light').setAttribute('aria-pressed',String(night));document.querySelector('#pause').textContent=paused?'▶ Resume':'Ⅱ Pause';document.querySelector('#pause').setAttribute('aria-pressed',String(paused));}

@@ -1,18 +1,14 @@
 import * as THREE from '../vendor/three.module.mjs';
 import {volumeData} from './volume.mjs';
-const profiles={
- goldfish:{thickness:.21,bodyX:.59},guppy:{thickness:.105,bodyX:.65},'blue-tang':{thickness:.15,bodyX:.58},clownfish:{thickness:.19},
- angelfish:{thickness:.12,bodyRY:.23},betta:{thickness:.12,bodyX:.65,bodyRX:.28},pufferfish:{thickness:.31,bodyRX:.4},
- seahorse:{thickness:.09,bodyX:.48,bodyRX:.27},discus:{thickness:.14,bodyRY:.42}
-};
+import {fishProfiles} from './fish-shape.mjs';
 export class AquariumScene{
  constructor(){
   this.renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true,powerPreference:'high-performance'});
   this.renderer.setClearColor(0x000000,0);this.renderer.outputColorSpace=THREE.SRGBColorSpace;
   this.scene=new THREE.Scene();this.camera=new THREE.OrthographicCamera(-500,500,300,-300,1,2000);this.camera.position.z=1000;
-  this.ambient=new THREE.HemisphereLight(0xd7fbff,0x698e8d,2.25);this.scene.add(this.ambient);
-  const light=new THREE.DirectionalLight(0xfff1ce,2.3);light.position.set(-250,500,650);this.scene.add(light);
-  const rim=new THREE.DirectionalLight(0x68d9e7,1.0);rim.position.set(350,80,-250);this.scene.add(rim);
+  this.ambient=new THREE.HemisphereLight(0xe6f6ff,0x33618d,1.8);this.scene.add(this.ambient);
+  const light=new THREE.DirectionalLight(0xfff6e5,1.55);light.position.set(-250,500,650);this.scene.add(light);
+  const rim=new THREE.DirectionalLight(0x88caff,.65);rim.position.set(350,80,-250);this.scene.add(rim);
   this.templates=new Map();this.items=new Map();this.width=1000;this.height=600;this.dense=false;this.dpr=1;
  }
  resize(w,h,dpr){this.width=w;this.height=h;this.dpr=dpr;this.renderer.setPixelRatio(this.dense?Math.min(dpr,1):Math.min(dpr,1.5));this.renderer.setSize(w,h,false);Object.assign(this.camera,{left:-w/2,right:w/2,top:h/2,bottom:-h/2});this.camera.updateProjectionMatrix();}
@@ -20,7 +16,7 @@ export class AquariumScene{
   const key=kind+'/'+id+(kind==='fish'&&this.dense?'/small':'');if(this.templates.has(key))return this.templates.get(key);
   const canvas=document.createElement('canvas');canvas.width=160;canvas.height=Math.max(8,Math.round(160*image.naturalHeight/image.naturalWidth));
   const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0,canvas.width,canvas.height);
-  const profile=kind==='fish'?(profiles[id]||{}):{thickness:.055,bodyX:.5,bodyRX:.48,bodyRY:.47};
+  const profile=kind==='fish'?(fishProfiles[id]||{}):{thickness:.055,bodyX:.5,bodyRX:.48,bodyRY:.47};
   const data=volumeData(ctx.getImageData(0,0,canvas.width,canvas.height).data,canvas.width,canvas.height,{...profile,cols:this.dense?28:56,rows:this.dense?12:20});
   const geometry=kind==='decor'?new THREE.PlaneGeometry(1,image.naturalHeight/image.naturalWidth):new THREE.BufferGeometry();if(kind==='fish'){geometry.setAttribute('position',new THREE.Float32BufferAttribute(data.positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(data.uvs,2));geometry.setIndex(data.indices);geometry.computeVertexNormals();}
   // Bleed the existing edge colours underneath the mesh seam. The silhouette
@@ -34,13 +30,13 @@ export class AquariumScene{
    textureImage=padded;
   }
   const texture=new THREE.Texture(textureImage);texture.colorSpace=THREE.SRGBColorSpace;texture.needsUpdate=true;
-  const material=new THREE.MeshStandardMaterial({map:texture,alphaTest:.12,roughness:kind==='fish'?.48:.82,metalness:kind==='fish'?.08:0,side:THREE.DoubleSide});
+  const material=new THREE.MeshStandardMaterial({map:texture,alphaTest:.12,roughness:kind==='fish'?.62:.82,metalness:0,side:THREE.DoubleSide});
   const template={geometry,material};this.templates.set(key,template);return template;
  }
  item(kind,id,uid,image){
   const key=kind+'/'+uid,t=this.template(kind,id,image);if(this.items.has(key)){const mesh=this.items.get(key);mesh.geometry=t.geometry;return mesh;}
   const material=t.material.clone(),mesh=new THREE.Mesh(t.geometry,material);
-  const motion={time:{value:0},phase:{value:0},amount:{value:kind==='fish'&&id!=='seahorse'?.07:0}};
+  const motion={time:{value:0},phase:{value:0},amount:{value:kind==='fish'&&id!=='seahorse'?.035:0}};
   material.onBeforeCompile=shader=>{shader.uniforms.uSwimTime=motion.time;shader.uniforms.uSwimPhase=motion.phase;shader.uniforms.uSwimAmount=motion.amount;
    shader.vertexShader='uniform float uSwimTime; uniform float uSwimPhase; uniform float uSwimAmount;\n'+shader.vertexShader;
    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nfloat tail = pow(clamp((0.15 - position.x) / 0.65, 0.0, 1.0), 1.8);\ntransformed.z += sin(uSwimTime + uSwimPhase - position.x * 7.0) * uSwimAmount * tail;');
@@ -48,11 +44,12 @@ export class AquariumScene{
   material.customProgramCacheKey=()=>kind==='fish'?'swimming-volume':'static-volume';
   mesh.userData.motion=motion;mesh.frustumCulled=false;this.scene.add(mesh);this.items.set(key,mesh);return mesh;
  }
- begin(night,count=0){const dense=count>24;if(dense!==this.dense){this.dense=dense;this.resize(this.width,this.height,this.dpr);}this.ambient.intensity=night?1.0:2.25;for(const mesh of this.items.values())mesh.visible=false;}
+ begin(night,count=0){const dense=count>24;if(dense!==this.dense){this.dense=dense;this.resize(this.width,this.height,this.dpr);}this.ambient.intensity=night?.8:1.8;for(const mesh of this.items.values())mesh.visible=false;}
  fish(f,image,p,size,time){
   const mesh=this.item('fish',f.id,f.uid,image);mesh.visible=true;
   mesh.position.set(p.x-this.width/2,this.height/2-p.y,(f.z-.5)*180);
-  mesh.scale.set(size,size*(1+Math.sin(time*2+f.phase)*.012),size);
+  mesh.material.color.setRGB(1,1,1).lerp(new THREE.Color(0x78b7df),(1-f.z)*.19);
+  mesh.scale.set(size,size*(1+Math.sin(time*2+f.phase)*.003),size);
   const depthYaw=f.target?Math.max(-.24,Math.min(.24,(f.target.z-f.z)*.9))+.04*Math.sin(time*.45+f.phase):0;
   mesh.rotation.set(0,-f.heading+depthYaw*Math.cos(f.heading),-Math.max(-.18,Math.min(.18,f.vy*2.2))*Math.cos(f.heading));
   mesh.userData.motion.time.value=time*(5+f.speed*55);mesh.userData.motion.phase.value=f.phase;

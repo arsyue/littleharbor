@@ -1,5 +1,5 @@
 // Build a closed, rounded volume from the same cutout used by the shop.
-export function volumeData(pixels,width,height,{thickness=.15,bodyX=.58,bodyY=.5,bodyRX=.4,bodyRY=.34,cols=56,rows=20}={}){
+export function volumeData(pixels,width,height,{thickness=.065,bodyX=.58,bodyY=.5,bodyRX=.4,bodyRY=.34,cols=56,rows=20}={}){
  const positions=[],uvs=[],indices=[],stride=rows+1;
  const alpha=(x,y)=>pixels[(Math.max(0,Math.min(height-1,y))*width+Math.max(0,Math.min(width-1,x)))*4+3];
  const bounds=[];
@@ -12,7 +12,7 @@ export function volumeData(pixels,width,height,{thickness=.15,bodyX=.58,bodyY=.5
  for(let side=0;side<2;side++)for(let i=0;i<=cols;i++)for(let j=0;j<=rows;j++){
   const u=i/cols,t=j/rows,v=bounds[i][0]+(bounds[i][1]-bounds[i][0])*t;
   const oval=Math.max(0,1-((u-bodyX)/bodyRX)**2-((v-bodyY)/bodyRY)**2);
-  const edge=Math.sin(t*Math.PI),z=(.004+thickness*Math.sqrt(oval))*Math.sqrt(Math.max(0,edge))*(side?-1:1);
+  const edge=Math.sin(t*Math.PI),z=(.0015+thickness*Math.sqrt(oval))*Math.sqrt(Math.max(0,edge))*(side?-1:1);
   positions.push(u-.5,(.5-v)*height/width,z);uvs.push(u,1-v);
  }
  const count=(cols+1)*stride;

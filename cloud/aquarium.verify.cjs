@@ -10,6 +10,9 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{try{const
  await page.goto('http://127.0.0.1:8895/');await page.waitForSelector('#aquarium-engine');await ready();
  await page.evaluate(async()=>{const {newState,SAVE_KEY}=await import('./state.mjs'),{fish,decor,decorLimits}=await import('./content.mjs');const s=newState();s.coins=10000;s.tank=2;s.fish=fish.map((f,i)=>({uid:'preview-fish-'+i,id:f.id,name:f.name}));s.decor=['treasure-chest','pebble-arch','hanging-shell','hanging-fern','glass-coral','floating-lily'].map((id,i)=>({uid:'preview-decor-'+i,id,x:[20,70,40,75,50,65][i],y:decorLimits(id).start}));localStorage.setItem(SAVE_KEY,JSON.stringify(s));});await page.reload();await ready();
  await frame.waitForFunction(()=>harborDiagnostics.volumes===22);await page.screenshot({path:'qa-output/aquarium-volume-overview.jpg',quality:88,fullPage:true});
+ const depth=await frame.evaluate(()=>harborDiagnostics.depthLayout);assert.ok(depth.front.w>depth.w&&depth.floorFront-depth.bottom>=80);
+ const blue=await frame.evaluate(()=>Array.from(document.querySelector('canvas').getContext('2d').getImageData(Math.round(innerWidth*.65*(devicePixelRatio||1)),Math.round(40*(devicePixelRatio||1)),1,1).data));
+ assert.ok(blue[2]>blue[1]+12&&blue[2]>blue[0]+35,'water has a clear blue palette');
  const sources=await frame.evaluate(()=>harborDiagnostics.assets.map(x=>x.url));
  for(const id of fish.map(x=>x.id))assert.ok(sources.some(s=>s.endsWith('/assets/fish/'+id+'.webp')));
 
@@ -20,7 +23,7 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{try{const
   const image=new Image();image.src='assets/fish/goldfish.webp';await image.decode();preview.begin(false);
   [0,.8,Math.PI/2].forEach((heading,i)=>preview.fish({id:'goldfish',uid:'turn-'+i,heading,vy:0,z:.5,phase:0,speed:.05},image,{x:250+i*450,y:310},340,0));
   preview.finish(ctx);ctx.fillStyle='#e6f6e7';ctx.textAlign='center';ctx.font='bold 26px system-ui';['Side view','Turning','Facing you'].forEach((s,i)=>ctx.fillText(s,250+i*450,90));
-  const pixels=ctx.getImageData(1000,160,300,300).data;let visible=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]>90&&pixels[i]>pixels[i+2]*1.2)visible++;if(visible<600)throw Error('Head-on fish lost its body thickness');
+  const pixels=ctx.getImageData(1000,160,300,300).data;let visible=0,minX=300,maxX=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]>90&&pixels[i]>pixels[i+2]*1.2){visible++;minX=Math.min(minX,(i/4)%300);maxX=Math.max(maxX,(i/4)%300);}if(visible<600)throw Error('Head-on fish lost its body thickness');if(maxX-minX>72)throw Error('Head-on goldfish is inflated');
   preview.renderer.dispose();
  });await page.screenshot({path:'qa-output/aquarium-fish-turns.jpg',quality:90});await page.locator('#turn-review').evaluate(el=>el.remove());
  await page.locator('[data-action="fish-shop"]').click();await page.locator('.item-card').first().waitFor();
@@ -48,6 +51,6 @@ const root=path.resolve('public'),server=http.createServer((req,res)=>{try{const
  const elapsed=await frame.evaluate(()=>harborDiagnostics.elapsed);await frame.waitForFunction(t=>harborDiagnostics.elapsed>t+.3,elapsed,{timeout:15000});
  await page.screenshot({path:'qa-output/aquarium-volume-capacity.jpg',quality:82});
  const capacityFps=await frame.evaluate(()=>harborDiagnostics.fps);
- assert.deepEqual(errors,[]);fs.writeFileSync('qa-output/aquarium-volume-results.json',JSON.stringify({success:true,fish:16,decorations:20,matchingShopArtwork:true,volumetricFish:true,mounts:['floor','hanging','wall','surface'],dragging:true,saves:true,capacity:{fish:60,decorations:48,fps:capacityFps},errors},null,2));
+ assert.deepEqual(errors,[]);fs.writeFileSync('qa-output/aquarium-volume-results.json',JSON.stringify({success:true,fish:16,decorations:20,matchingShopArtwork:true,volumetricFish:true,naturalFishShapes:true,clearBlueWater:true,perspectiveDepth:true,mounts:['floor','hanging','wall','surface'],dragging:true,saves:true,capacity:{fish:60,decorations:48,fps:capacityFps},errors},null,2));
  }catch(e){await page.screenshot({path:'qa-output/aquarium-volume-failure.jpg',fullPage:true}).catch(()=>{});fs.writeFileSync('qa-output/aquarium-volume-results.json',JSON.stringify({success:false,error:String(e),errors,diagnostics:await frame?.evaluate(()=>window.harborDiagnostics).catch(()=>null)},null,2));throw e;}finally{await browser.close();server.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

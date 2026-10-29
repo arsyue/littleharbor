@@ -1,5 +1,5 @@
 {
-  "release": "2026-10-29-living-aquarium-v10",
+  "release": "2026-10-29-blue-depth-aquarium-v11",
   "world": [
     5400,
     2400
@@ -42,5 +42,8 @@
     "hanging",
     "wall",
     "surface"
-  ]
+  ],
+  "aquariumDepth": "perspective",
+  "waterColor": "clear-blue",
+  "fishShape": "species-proportioned"
 }
