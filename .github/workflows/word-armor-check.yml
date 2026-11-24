@@ -1,0 +1,25 @@
+name: Verify Word Armor multiplayer
+on:
+  push:
+    branches: [main]
+    paths: ['web/word-armor/**', 'cloud/word-armor.verify.cjs', '.github/workflows/word-armor-check.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test tools
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install chromium
+      - name: Verify independent player sessions
+        run: |
+          python3 -m http.server --bind 127.0.0.1 --directory web/word-armor 8997 &
+          node cloud/word-armor.verify.cjs
