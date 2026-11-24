@@ -1,7 +1,7 @@
 name: Verify Word Armor multiplayer
 on:
   push:
-    branches: [main]
+    branches: [main, feature/word-armor-online]
     paths: ['web/word-armor/**', 'cloud/word-armor.verify.cjs', '.github/workflows/word-armor-check.yml']
   workflow_dispatch:
 permissions:
