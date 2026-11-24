@@ -3,7 +3,18 @@ const assert=require("node:assert/strict");
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  const base=process.env.ARMOR_URL||"http://127.0.0.1:8997/";
+  let base=process.env.ARMOR_URL||"http://127.0.0.1:8997/";
+  if(process.env.ARMOR_PREVIEW){
+   const root=new URL(process.env.ARMOR_PREVIEW);
+   for(const [file,marker] of [["index.html","河谷前线"],["engine.js","DEFAULT_HP = 10"],["network.js","ArmorNetwork"],["app.js","30 秒到时只换词"],["peer.min.js","window.Peer"]]){
+    const response=await fetch(new URL(file,root),{signal:AbortSignal.timeout(25000)});
+    assert.equal(response.status,200,file);assert.ok((await response.text()).includes(marker),file);
+   }
+   console.log("Public HTTPS version and its game, network and rules assets verified:",root.href);
+   const check=await browser.newPage();await check.goto(root.href);const isGame=await check.locator("#rooms").count();
+   if(isGame){base=root.href;console.log("Running both browsers on the public URL.")}else{console.log("Public link displays this landing page first:",(await check.locator("body").innerText()).replace(/\\s+/g," ").slice(0,400))}
+   await check.close();
+  }
   const ctxA=await browser.newContext(), ctxB=await browser.newContext();
   const a=await ctxA.newPage(),b=await ctxB.newPage();
   for(const p of [a,b]){p.on("pageerror",e=>console.error("Browser error",e.message));p.on("console",m=>{if(m.type()==="error")console.log("Browser console",m.text())});p.on("requestfailed",r=>console.log("Failed resource",new URL(r.url()).hostname,r.failure()?.errorText))}
