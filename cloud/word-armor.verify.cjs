@@ -11,14 +11,23 @@ const assert=require("node:assert/strict");
     assert.equal(response.status,200,file);assert.ok((await response.text()).includes(marker),file);
    }
    console.log("Public HTTPS version and its game, network and rules assets verified:",root.href);
-   const check=await browser.newPage();await check.goto(root.href);await check.locator("#rooms, button:visible, a:visible").first().waitFor({timeout:12000}).catch(()=>{});await check.waitForTimeout(1200);const isGame=await check.locator("#rooms").count();
-   if(isGame){base=root.href;console.log("Running both browsers on the public URL.")}else{console.log("Public link displays this landing page first:",(await check.locator("body").innerText()).replace(/\\s+/g," ").slice(0,400))}
-   await check.close();
+   base=root.href;
   }
   const ctxA=await browser.newContext(), ctxB=await browser.newContext();
-  const a=await ctxA.newPage(),b=await ctxB.newPage();
+  let a=await ctxA.newPage(),b=await ctxB.newPage();
   for(const p of [a,b]){p.on("pageerror",e=>console.error("Browser error",e.message));p.on("console",m=>{if(m.type()==="error")console.log("Browser console",m.text())});p.on("requestfailed",r=>console.log("Failed resource",new URL(r.url()).hostname,r.failure()?.errorText))}
-  await Promise.all([a.goto(base),b.goto(base)]);
+  async function openGame(p){
+   await p.goto(base);
+   const entry=p.locator("#rooms"), confirm=p.getByText("Open the page",{exact:true});
+   await Promise.race([entry.waitFor({timeout:19000}),confirm.waitFor({timeout:19000})]);
+   if(await confirm.isVisible()){
+    const pop=p.waitForEvent("popup",{timeout:3500}).catch(()=>null);
+    await confirm.click();p=(await pop)||p;
+   }
+   await p.locator("#rooms").waitFor({timeout:25000});return p;
+  }
+  [a,b]=await Promise.all([openGame(a),openGame(b)]);
+  console.log("Two independent browsers reached the game through its normal public entry:",await a.url());
   await a.locator("#rooms").click();await a.locator("#rsize").selectOption("1");
   await a.locator("#createRoom").click();await a.locator(".roomCode").waitFor({timeout:25000});
   const code=(await a.locator(".roomCode").innerText()).trim();
