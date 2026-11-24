@@ -21,7 +21,7 @@ jobs:
           npx playwright install chromium
       - name: Verify independent player sessions
         env:
-          ARMOR_PREVIEW: 'https://rawcdn.githack.com/arsyue/littleharbor/9d213c65eaffa739d6d5bf6f63487f990a08db44/web/word-armor/index.html'
+          ARMOR_PREVIEW: 'https://rawcdn.githack.com/${{ github.repository }}/${{ github.sha }}/web/word-armor/index.html'
         run: |
           python3 -m http.server --bind 127.0.0.1 --directory web/word-armor 8997 &
           node cloud/word-armor.verify.cjs

@@ -11,7 +11,7 @@ const assert=require("node:assert/strict");
     assert.equal(response.status,200,file);assert.ok((await response.text()).includes(marker),file);
    }
    console.log("Public HTTPS version and its game, network and rules assets verified:",root.href);
-   const check=await browser.newPage();await check.goto(root.href);const isGame=await check.locator("#rooms").count();
+   const check=await browser.newPage();await check.goto(root.href);await check.locator("#rooms, button:visible, a:visible").first().waitFor({timeout:12000}).catch(()=>{});await check.waitForTimeout(1200);const isGame=await check.locator("#rooms").count();
    if(isGame){base=root.href;console.log("Running both browsers on the public URL.")}else{console.log("Public link displays this landing page first:",(await check.locator("body").innerText()).replace(/\\s+/g," ").slice(0,400))}
    await check.close();
   }
