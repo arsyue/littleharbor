@@ -6,7 +6,7 @@ const assert=require("node:assert/strict");
   const base=process.env.ARMOR_URL||"http://127.0.0.1:8997/";
   const ctxA=await browser.newContext(), ctxB=await browser.newContext();
   const a=await ctxA.newPage(),b=await ctxB.newPage();
-  for(const p of [a,b])p.on("pageerror",e=>{console.error("Browser",e.message)});
+  for(const p of [a,b]){p.on("pageerror",e=>console.error("Browser error",e.message));p.on("console",m=>{if(m.type()==="error")console.log("Browser console",m.text())});p.on("requestfailed",r=>console.log("Failed resource",new URL(r.url()).hostname,r.failure()?.errorText))}
   await Promise.all([a.goto(base),b.goto(base)]);
   await a.locator("#rooms").click();await a.locator("#rsize").selectOption("1");
   await a.locator("#createRoom").click();await a.locator(".roomCode").waitFor({timeout:25000});
